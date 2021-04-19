@@ -1,0 +1,3 @@
+2
+coca,1.50,5,12,soda
+whisky,5,40,3,alcool
