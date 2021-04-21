@@ -1,19 +1,10 @@
 
-#ifndef THEO
-#define THEO
+#ifndef MENU
+#define MENU
 
-int demanderQuitter();
+
 int afficherMenu();
-
-
-
-
-
-
-
-
-
-
+char afficherInterfaceAdmin ();
 
 
 
