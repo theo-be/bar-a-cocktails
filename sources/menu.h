@@ -1,13 +1,13 @@
 
-#ifndef MENU
-#define MENU
+#ifndef _MENU_
+#define _MENU_
 
 
-int afficherMenu();
+char afficherMenu ();
 char afficherInterfaceAdmin ();
 
 
 
-
+char foo ();
 
 #endif
