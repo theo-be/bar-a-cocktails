@@ -11,6 +11,7 @@ char ajouterBoisson();
 char ajouterCocktail();
 // char afficherDetailsBoisson();
 char commanderBoisson();
+char inputMenu();
 char foo();
 
 #endif

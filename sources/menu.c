@@ -5,15 +5,8 @@
 
 char afficherMenu() {
 
-	
-
 	char retourFonction = 0;
 	int erreurSaisie = 0;
-	
-	size_t bufsize = 2;
-	char* buffer = NULL;
-	buffer = (char*)malloc(bufsize * sizeof(char));
-	int taille = 0;
 
 	do {
 		// on affiche le menu
@@ -28,9 +21,7 @@ char afficherMenu() {
 			erreurSaisie = 0;
 			printf("Votre option : ");
 
-			taille = getline(&buffer, &bufsize, stdin);
-
-			switch (buffer[0]) {
+			switch (inputMenu()) {
 			case '1':
 				retourFonction = commanderBoisson();
 				break;
@@ -53,7 +44,6 @@ char afficherMenu() {
 		} while (erreurSaisie == 1);
 	} while (retourFonction != 'q');
 
-	free(buffer);
 	return retourFonction;
 }
 
@@ -62,11 +52,6 @@ char commanderBoisson () {
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 	int quittterMenu = 0;
-
-	size_t bufsize = 2;
-	char* buffer = NULL;
-	buffer = (char*)malloc(bufsize * sizeof(char));
-	int taille = 0;
 
 	do {
 		system("clear");
@@ -80,9 +65,8 @@ char commanderBoisson () {
 		do{
 			erreurSaisie = 0;
 			printf("Votre option : ");
-			taille = getline(&buffer, &bufsize, stdin);
 
-			switch (buffer[0]) {
+			switch (inputMenu()) {
 			case 'a':
 				quittterMenu = 1;
 				break;
@@ -95,7 +79,6 @@ char commanderBoisson () {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
-	free(buffer);
 	return 'b';
 }
 
@@ -105,15 +88,9 @@ char afficherInterfaceAdmin () {
 	// afficher cocktails
 	// creer cocktail
 
-	
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 	int quittterMenu = 0;
-
-	size_t bufsize = 2;
-	char* buffer = NULL;
-	buffer = (char*)malloc(bufsize * sizeof(char));
-	int taille = 0;
 
 	do {
 		system("clear");
@@ -128,9 +105,8 @@ char afficherInterfaceAdmin () {
 		do{
 			erreurSaisie = 0;
 			printf("Votre option : ");
-			taille = getline(&buffer, &bufsize, stdin);
 
-			switch (buffer[0]) {
+			switch (inputMenu()) {
 			case '1':
 				retourFonction = afficherListeAdmin("boisson");
 				break;
@@ -155,22 +131,14 @@ char afficherInterfaceAdmin () {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
-	free(buffer);
 	return 'b';
 }
 
 char afficherListeAdmin (char *typeAjout) {
 
-	
-
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 	int quittterMenu = 0;
-
-	size_t bufsize = 2;
-	char* buffer = NULL;
-	buffer = (char*)malloc(bufsize * sizeof(char));
-	int taille = 0;
 
 	do {
 		system("clear");
@@ -186,9 +154,9 @@ char afficherListeAdmin (char *typeAjout) {
 		do{
 			erreurSaisie = 0;
 			printf("Votre option : ");
-			taille = getline(&buffer, &bufsize, stdin);
+			
 
-			switch (buffer[0]) {
+			switch (inputMenu()) {
 			case 'a':
 				retourFonction = ajouterBoisson();
 				break;
@@ -204,22 +172,14 @@ char afficherListeAdmin (char *typeAjout) {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
-	free(buffer);
 	return 'b';
 }
 
 char afficherListe (char *typeAjout) {
 
-
-
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 	int quittterMenu = 0;
-
-	size_t bufsize = 2;
-	char* buffer = NULL;
-	buffer = (char*)malloc(bufsize * sizeof(char));
-	int taille = 0;
 
 	do {
 		system("clear");
@@ -231,12 +191,11 @@ char afficherListe (char *typeAjout) {
 
 		// afficher les boissons
 
-		do{
+		do {
 			erreurSaisie = 0;
 			printf("Votre option : ");
-			taille = getline(&buffer, &bufsize, stdin);
-
-			switch (buffer[0]) {
+			
+			switch (inputMenu()) {
 			case 'a':
 				retourFonction = ajouterBoisson();
 				break;
@@ -252,7 +211,6 @@ char afficherListe (char *typeAjout) {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
-	free(buffer);
 	return 'b';
 }
 
@@ -265,6 +223,20 @@ char ajouterBoisson () {
 char ajouterCocktail () {
 	printf("Ajout.\n");
 	return 0;
+}
+
+
+char inputMenu () {
+	size_t bufsize = 2;
+	char* buffer = NULL;
+	buffer = (char*)malloc(bufsize * sizeof(char));
+	int taille = 0;
+
+	taille = getline(&buffer, &bufsize, stdin);
+	
+	char caractere = buffer[0];
+	free(buffer);
+	return caractere;
 }
 
 char foo () {
