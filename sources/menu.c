@@ -52,6 +52,8 @@ char afficherMenu() {
 			// printf("%d", (int)taille);
 		} while (erreurSaisie == 1);
 	} while (retourFonction != 'q');
+
+	free(buffer);
 	return retourFonction;
 }
 
@@ -93,6 +95,7 @@ char commanderBoisson () {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
+	free(buffer);
 	return 'b';
 }
 
@@ -152,6 +155,7 @@ char afficherInterfaceAdmin () {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
+	free(buffer);
 	return 'b';
 }
 
@@ -200,6 +204,7 @@ char afficherListeAdmin (char *typeAjout) {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
+	free(buffer);
 	return 'b';
 }
 
@@ -247,6 +252,7 @@ char afficherListe (char *typeAjout) {
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
+	free(buffer);
 	return 'b';
 }
 
@@ -305,6 +311,7 @@ char foo () {
 
 	} while (!quitterMenu);
 
+	free(buffer);
 	return 'b';
 }
 
