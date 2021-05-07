@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../sources/cocktail.h"
+#include "../sources/menu.h"
 
 
 char afficherMenu(boisson_struc *stock) {
@@ -228,10 +230,11 @@ char ajouterCocktail () {
 
 char* saisie(){
     
+
     size_t bufsize = 30;
 	char* chaine = malloc(bufsize * sizeof(char));
-	gets(chaine);
-	
+	scanf("%s",chaine);
+
 	return chaine;
 
 }

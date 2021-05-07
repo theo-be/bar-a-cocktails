@@ -1,6 +1,7 @@
 #ifndef _MENU_
 #define _MENU_
 
+
 char afficherMenu(boisson_struc *stock);
 char afficherInterfaceAdmin();
 char afficherListe(char *typeAjout);

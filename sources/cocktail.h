@@ -15,7 +15,9 @@ struct boisson_struc
 int taille_stock();
 boisson_struc *remplirstock();
 char* commande(boisson_struc *stock,int boisson_id,int quantite,int id_client);
+char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
+int* tableau_id(char* type,boisson_struc *stock);
 char* message_id(char* type,boisson_struc *stock);
 char* message_quantite(boisson_struc *stock,int id);
 long conversion_long(char* chaine);

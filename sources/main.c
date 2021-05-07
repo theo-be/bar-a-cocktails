@@ -5,9 +5,7 @@
 #include <string.h>
 
 #include "../sources/cocktail.h"
-#include "../sources/cocktail.c"
 #include "../sources/menu.h"
-#include "../sources/menu.c"
 
 int main(int argc, char** argv) {
 
