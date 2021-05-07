@@ -3,16 +3,16 @@
 
 
 char afficherMenu(boisson_struc *stock);
-char afficherInterfaceAdmin();
+char afficherInterfaceAdmin(boisson_struc *stock);
 char afficherListe(char *typeAjout);
-char afficherListeAdmin(char *typeAjout);
+char afficherListeAdmin(char *typeAjout,boisson_struc *stock);
 char ajouterBoisson();
 char ajouterCocktail();
 // char afficherDetailsBoisson();
 char commanderBoisson();
 char* saisie();
 char inputMenu();
-char foo();
+//char foo();
 char* saisie_commande(boisson_struc *stock);
 
 #endif

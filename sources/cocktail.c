@@ -139,9 +139,6 @@ char* message_id(char* type,boisson_struc *stock){
     char* conversion = calloc(8 * taille, sizeof(char));
     int i = 0;
     for (int i = 0; i< taille; i++){
-        printf("%d",tableau[i]);
-    }
-    for (int i = 0; i< taille; i++){
         
         if(tableau[i] != 0 ){
 
@@ -174,6 +171,21 @@ char* message_quantite(boisson_struc *stock,int id){
     strcat(chaine, conversion);
     strcat(chaine, " : ");
 
+    return chaine;
+
+}
+
+char* affichage_boisson(boisson_struc *stock){
+
+    int taille = taille_stock();
+    char* chaine = calloc(40 * taille, sizeof(char));
+
+    for (int i = 0; i< taille; i++){
+
+        strcat(chaine,stock[i].nom);
+        strcat(chaine," ");
+    }
+    strcat(chaine,"\n");
     return chaine;
 
 }

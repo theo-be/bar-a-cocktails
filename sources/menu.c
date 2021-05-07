@@ -30,7 +30,7 @@ char afficherMenu(boisson_struc *stock) {
 				break;
 			case '2':
 			    // si opt admin, demander le mdp
-				retourFonction = afficherInterfaceAdmin();
+				retourFonction = afficherInterfaceAdmin(stock);
 				
 				break;
 			case '3':
@@ -85,7 +85,7 @@ char commanderBoisson (boisson_struc *stock) {
 	return 'b';
 }
 
-char afficherInterfaceAdmin () {
+char afficherInterfaceAdmin (boisson_struc *stock) {
 	// afficher boissons
 	// -> les lister et pour plus de details les selectionner manuellement
 	// afficher cocktails
@@ -111,13 +111,13 @@ char afficherInterfaceAdmin () {
 
 			switch (inputMenu()) {
 			case '1':
-				retourFonction = afficherListeAdmin("boisson");
+				retourFonction = afficherListeAdmin("boisson",stock);
 				break;
 			case '2':
 				retourFonction = ajouterBoisson();
 				break;
 			case '3':
-				retourFonction = afficherListeAdmin("cocktail");
+				retourFonction = afficherListeAdmin("cocktail",stock);
 				break;
 			case '4':
 				retourFonction = ajouterCocktail();
@@ -137,7 +137,7 @@ char afficherInterfaceAdmin () {
 	return 'b';
 }
 
-char afficherListeAdmin (char *typeAjout) {
+char afficherListeAdmin (char *typeAjout,boisson_struc *stock) {
 
 	char retourFonction = 0;
 	int erreurSaisie = 0;
@@ -152,7 +152,7 @@ char afficherListeAdmin (char *typeAjout) {
 
 		printf("Voici les boissons enregistrees :\n");
 
-		// afficher les boissons
+		printf("\t %s",affichage_boisson(stock));
 
 		do{
 			erreurSaisie = 0;
@@ -252,8 +252,8 @@ char inputMenu () {
 	free(buffer);
 	return caractere;
 }
-
-char foo () {
+/*
+char foo (bac) {
 
 	// system("clear");
 
@@ -280,7 +280,7 @@ char foo () {
 
 			switch (buffer[0]) {
 			case '1':
-				retourFonction = afficherInterfaceAdmin();
+				retourFonction = afficherInterfaceAdmin(stock);
 				break;
 			case '2':
 				quitterMenu = 1;
@@ -299,7 +299,7 @@ char foo () {
 
 	free(buffer);
 	return 'b';
-}
+}*/
 
 char* saisie_commande(boisson_struc *stock){
 

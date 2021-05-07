@@ -20,6 +20,7 @@ char* message_type(boisson_struc *stock);
 int* tableau_id(char* type,boisson_struc *stock);
 char* message_id(char* type,boisson_struc *stock);
 char* message_quantite(boisson_struc *stock,int id);
+char* affichage_boisson(boisson_struc *stock);
 long conversion_long(char* chaine);
 
 #endif
