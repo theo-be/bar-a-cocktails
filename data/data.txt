@@ -1,5 +1,6 @@
-4
-coca 1.50 5 12 soda
-whisky 5 40 3 alcool
-grenadine 2 8 3 sucre
-limonade 1.20 5 8 soda
+5
+coca 1.50 5 12 soda boisson
+whisky 5 40 3 alcool boisson
+grenadine 2 8 3 sucre boisson
+limonade 1.20 5 8 soda boisson
+mojito 5.00 5 5 alcool cocktail

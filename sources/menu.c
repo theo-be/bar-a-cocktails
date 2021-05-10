@@ -25,8 +25,7 @@ char afficherMenu(boisson_struc *stock) {
 
 			switch (inputMenu()) {
 			case '1':
-				saisie_commande(stock);
-				retourFonction = 'q';
+			retourFonction = saisie_commande(stock);
 				break;
 			case '2':
 			    // si opt admin, demander le mdp
@@ -61,7 +60,7 @@ char commanderBoisson (boisson_struc *stock) {
 		printf("Tapez l\'id de la boisson que vous souhaitez commander.\n");
 		printf("Que souhaitez-vous faire ?\n\n");
 
-		afficherListe("boisson");
+		afficherListe("boisson",stock);
 
 		printf("Entrez \'a\' pour annuler la commande\n\n");
 
@@ -99,11 +98,12 @@ char afficherInterfaceAdmin (boisson_struc *stock) {
 		system("clear");
 		printf("Bienvenue dans l'interface d\'administration.\n");
 		printf("Que souhaitez-vous faire ?\n\n");
-		printf("\t1. Afficher les boissons.\n\n");
-		printf("\t2. Ajouter une boisson.\n\n");
-		printf("\t3. Afficher les cocktails.\n\n");
-		printf("\t4. Ajouter un cocktail.\n\n");
-		printf("\t5. Revenir au menu principal.\n\n");
+		printf("\t1. Afficher les stocks.\n\n");
+		printf("\t2. Afficher les boissons.\n\n");
+		printf("\t3. Ajouter une boisson.\n\n");
+		printf("\t4. Afficher les cocktails.\n\n");
+		printf("\t5. Ajouter un cocktail.\n\n");
+		printf("\t6. Revenir au menu principal.\n\n");
 
 		do{
 			erreurSaisie = 0;
@@ -111,18 +111,21 @@ char afficherInterfaceAdmin (boisson_struc *stock) {
 
 			switch (inputMenu()) {
 			case '1':
-				retourFonction = afficherListeAdmin("boisson",stock);
+				retourFonction = afficherStocks(stock,"tout");
 				break;
 			case '2':
-				retourFonction = ajouterBoisson();
+				retourFonction = afficherStocks(stock,"boisson");
 				break;
 			case '3':
-				retourFonction = afficherListeAdmin("cocktail",stock);
+				retourFonction = ajouterBoisson();
 				break;
 			case '4':
-				retourFonction = ajouterCocktail();
+				retourFonction = afficherStocks(stock,"cocktail");
 				break;
 			case '5':
+				retourFonction = ajouterCocktail();
+				break;
+			case '6':
 				quittterMenu = 1;
 				break;
 			
@@ -152,7 +155,8 @@ char afficherListeAdmin (char *typeAjout,boisson_struc *stock) {
 
 		printf("Voici les boissons enregistrees :\n");
 
-		printf("\t %s",affichage_boisson(stock));
+		printf("\t %s",message_id("tout",stock));
+		printf("\n");
 
 		do{
 			erreurSaisie = 0;
@@ -178,7 +182,7 @@ char afficherListeAdmin (char *typeAjout,boisson_struc *stock) {
 	return 'b';
 }
 
-char afficherListe (char *typeAjout) {
+char afficherListe (char *typeAjout,boisson_struc *stock) {
 
 	char retourFonction = 0;
 	int erreurSaisie = 0;
@@ -192,7 +196,8 @@ char afficherListe (char *typeAjout) {
 
 		printf("Voici les boissons enregistrees :\n");
 
-		// afficher les boissons
+		printf("\t %s",message_id("tout",stock));
+		printf("\n");
 
 		do {
 			erreurSaisie = 0;
@@ -301,10 +306,9 @@ char foo (bac) {
 	return 'b';
 }*/
 
-char* saisie_commande(boisson_struc *stock){
+char saisie_commande(boisson_struc *stock){
 
 	char* interraction= calloc(30, sizeof(char));
-	char* affichage_ecran;
 	long id;
 	long quantite;
 	int etape = 0;
@@ -353,7 +357,7 @@ char* saisie_commande(boisson_struc *stock){
 			break;
 		
 		default:
-			return "Il y a eu un probleme avec la saisie de votre commande";
+			return 'q';
 			break;
 		}
 
@@ -364,8 +368,31 @@ char* saisie_commande(boisson_struc *stock){
 	return commande(stock,id,quantite,0);
 	}
 	else{
-		return "Retour au menu";
+		return 'q';
 	}
+}
+
+char afficherStocks(boisson_struc *stock,char* categorie){
+
+	int taille = taille_stock();
+	system("clear");
+	printf("Si vous souhaitez quitter, faite entrer\n\n");
+
+	printf("\tVoici l'état des stocks :\n\n");
+	for(int i = 0; i<taille; i++){
+
+			if( categorie == "boisson" && strcmp(stock[i].categorie,"boisson") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"boisson") == 0){
+				printf("Boisson : %s, Quantite : %d, Id : %d\n",stock[i].nom,stock[i].quantite, stock[i].id);
+
+			}
+			else if( categorie == "cocktail" && strcmp(stock[i].categorie,"cocktail") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"cocktail") == 0){
+				printf("Cocktail : %s, Quantite : %d, Id : %d\n",stock[i].nom,stock[i].quantite, stock[i].id);
+			}
+	}
+	getchar();
+
+
+	return('0');
 }
 
 /*

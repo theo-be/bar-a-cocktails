@@ -37,7 +37,7 @@ boisson_struc *remplirstock(){
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );
 
         for( int i = 0; i<taille;i++ ){
-            fscanf(lecture, "%s%*c %f%*c %f%*c %d%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,boisson.type );
+            fscanf(lecture, "%s%*c %f%*c %f%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,boisson.type,boisson.categorie );
             boisson.id = i +1 ;
             tab_boisson[i] = boisson;
         }
@@ -52,23 +52,27 @@ boisson_struc *remplirstock(){
         
 }
 
-char* commande(boisson_struc *stock,int boisson_id,int quantite,int id_client){
-
+char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client){
    boisson_id -= 1;
 
     if(stock[boisson_id].quantite >= quantite){
 
         stock[boisson_id].quantite -= quantite;
 
-
         FILE* ecriture = NULL;
         ecriture = fopen("../data/commande.txt", "a");
-        fprintf(ecriture,"%s %.2f %d %d\n",stock[boisson_id].nom ,stock[boisson_id].prix * quantite ,quantite ,id_client);
-        fclose(ecriture);
-        return "Votre commande a bien ete enregistre";
+        if (ecriture != NULL){
+                fprintf(ecriture,"%s %.2f %ld %d %s \n",stock[boisson_id].nom ,stock[boisson_id].prix * quantite ,quantite ,id_client,stock[boisson_id].categorie);
+                fclose(ecriture);
+                return 'v';
+            }
+        else{
+            fclose(ecriture);
+            exit(-1);
+        }  
     }
     else{
-        return "Votre commande n'a pas ete enregistre, quantite insuffisante";
+      return 'q';
     }
 }
 
@@ -121,9 +125,12 @@ int* tableau_id(char* type,boisson_struc *stock){
     int i = 0;
     for(int i = 0; i<taille; i++){
 
+        if( type == "tout"){
+            tableau_id[i] = stock[i].id;
 
-        if(strcmp(stock[i].type,type) == 0){
-                tableau_id[i] = stock[i].id;
+        }
+        else if(strcmp(stock[i].type,type) == 0){
+            tableau_id[i] = stock[i].id;
             }
     }
     return tableau_id;
