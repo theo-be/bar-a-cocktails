@@ -105,7 +105,7 @@ char * message_type(boisson_struc *stock){
 
     for(int i =0; i<taille;i++){
 
-           if( strstr(chaine,tableau[i]) == NULL){
+           if( strstr(chaine,tableau[i]) == 0){
 
                     strcat(chaine,tableau[i]);
                     strcat(chaine, " ");     
@@ -116,9 +116,34 @@ char * message_type(boisson_struc *stock){
     return chaine;
 }
 
+int verification_type(boisson_struc *stock,char* type){
 
+    char** tableau = tableau_type(stock);
+    int taille = taille_stock();
 
-int* tableau_id(char* type,boisson_struc *stock){
+    for(int i =0; i<taille; i++){
+
+        if (strcmp(type,tableau[i]) == 0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int verification_id(boisson_struc *stock,char* type,long id){
+
+    int* tableau = tableau_id(stock,type);
+    int taille = taille_stock();
+
+    for(int i = 0; i<taille; i++){
+        if (tableau[i] == id){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int* tableau_id(boisson_struc *stock,char* type){
 
     int taille = taille_stock();
     int* tableau_id = calloc(taille, sizeof(int));
@@ -137,10 +162,9 @@ int* tableau_id(char* type,boisson_struc *stock){
 
 }
 
+char* message_id(boisson_struc *stock,char* type){
 
-char* message_id(char* type,boisson_struc *stock){
-
-    int* tableau = tableau_id(type,stock);
+    int* tableau = tableau_id(stock,type);
     int taille = taille_stock();
     char* chaine = calloc(40 * taille, sizeof(char));
     char* conversion = calloc(8 * taille, sizeof(char));

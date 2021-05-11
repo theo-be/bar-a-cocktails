@@ -9,7 +9,7 @@ char afficherListeAdmin(char *typeAjout,boisson_struc *stock);
 char ajouterBoisson();
 char ajouterCocktail();
 // char afficherDetailsBoisson();
-char commanderBoisson();
+//char commanderBoisson();
 char* saisie();
 char inputMenu();
 //char foo();

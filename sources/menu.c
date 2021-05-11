@@ -25,7 +25,7 @@ char afficherMenu(boisson_struc *stock) {
 
 			switch (inputMenu()) {
 			case '1':
-			retourFonction = saisie_commande(stock);
+				retourFonction = saisie_commande(stock);
 				break;
 			case '2':
 			    // si opt admin, demander le mdp
@@ -48,7 +48,7 @@ char afficherMenu(boisson_struc *stock) {
 
 	return retourFonction;
 }
-
+/*
 char commanderBoisson (boisson_struc *stock) {
 	
 	char retourFonction = 0;
@@ -83,7 +83,7 @@ char commanderBoisson (boisson_struc *stock) {
 
 	return 'b';
 }
-
+*/
 char afficherInterfaceAdmin (boisson_struc *stock) {
 	// afficher boissons
 	// -> les lister et pour plus de details les selectionner manuellement
@@ -155,7 +155,7 @@ char afficherListeAdmin (char *typeAjout,boisson_struc *stock) {
 
 		printf("Voici les boissons enregistrees :\n");
 
-		printf("\t %s",message_id("tout",stock));
+		printf("\t %s",message_id(stock,"tout"));
 		printf("\n");
 
 		do{
@@ -196,7 +196,7 @@ char afficherListe (char *typeAjout,boisson_struc *stock) {
 
 		printf("Voici les boissons enregistrees :\n");
 
-		printf("\t %s",message_id("tout",stock));
+		printf("\t %s",message_id(stock,"tout"));
 		printf("\n");
 
 		do {
@@ -308,10 +308,12 @@ char foo (bac) {
 
 char saisie_commande(boisson_struc *stock){
 
-	char* interraction= calloc(30, sizeof(char));
+	char* type = calloc(30, sizeof(char));
+	char* interraction = calloc(30,sizeof(char));
 	long id;
 	long quantite;
 	int etape = 0;
+	char retourFonction;
 
 	do{
 		system("clear");
@@ -322,54 +324,79 @@ char saisie_commande(boisson_struc *stock){
 
 			printf("\t Veuillez choisir le type de boisson :\n");
 			printf("\t %s", message_type(stock));
-			interraction = saisie();
-			if (strstr(interraction,"-1") != NULL){
-				etape = -1;
-			}
-			else{
-			etape = 1;
-			}
+			type = saisie();
+				if (strcmp(type,"p") == 0){
+					etape = -1;
+					break;
+				}
+				else if(verification_type(stock,type)){
+				etape = 1;
+				}
 
 			break;
 
 		case 1:
 			printf("\t Veuillez choisir l'id de la boisson :\n");
-			printf("\t %s", message_id(interraction,stock));
-			id = conversion_long(saisie());
-			if (id == -1){
-				etape = 0;
-			}
-			else{
-			etape = 2;
-			}
+			printf("\t %s", message_id(stock,type));
+			interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = -1;
+					break;
+				}
+			
+				id = conversion_long(interraction);
+				if (id == -1){
+					etape = 0;
+				}
+				else if(verification_id(stock,type,id)){
+				etape = 2;
+				}
+
 			break;
 
 		case 2:
 			printf("\t Veuillez choisir la quantite : \n");
 			printf("\t %s", message_quantite(stock,id));
-			quantite = conversion_long(saisie());
-			if (quantite == -1){
-				etape = 1;
-			}
-			else if( stock[id-1].quantite >= quantite){
-			etape = 3;
-			}
+			interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = -1;
+					break;
+				}
+			quantite = conversion_long(interraction);
+				if (quantite == -1){
+					etape = 1;
+				}
+				else if( stock[id-1].quantite >= quantite){
+				etape = 3;
+				}
+
+			break;
+
+		case 3:
+			retourFonction = commande(stock,id,quantite,0);
+				if(retourFonction == 'v'){
+						printf("Taper sur entrer pour continuer\n\n");
+						printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",quantite,stock[id-1].nom,stock[id-1].prix * quantite);
+						getchar();
+						etape = 4;
+					}
+					else{
+						etape = 0;
+						printf("\tIl y a eu un pronlème dans la saisie de votre commande. \n\n");
+					}
+					
+			getchar();
 			break;
 		
 		default:
-			return 'q';
+			return '0';
 			break;
 		}
 
 	}
-	while(etape != 3);
+	while(etape != 4);
 
-	if(etape == 3){
-	return commande(stock,id,quantite,0);
-	}
-	else{
-		return 'q';
-	}
+	return 'v';
 }
 
 char afficherStocks(boisson_struc *stock,char* categorie){
@@ -406,7 +433,7 @@ codes de retour des fonctions
 (idee : renvoyer des parametres si on a besoin 
 d'afficher le menu differemment) :
 	0 : rien
-	b : juste revenir au menu precedent
+	p : juste revenir au menu precedent
 	q : quitter
 trucs a faire :
 voir la securite des inputs
