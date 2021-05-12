@@ -29,10 +29,7 @@ boisson_struc *remplirstock(){
     lecture = fopen("../data/data.txt", "r");
     if (lecture != NULL)
     {
-        int taille;
-        rewind(lecture);
-        fscanf(lecture,"%d", &taille);
-
+        int taille = taille_stock();
         boisson_struc boisson;
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );
 
@@ -226,4 +223,59 @@ long conversion_long(char* chaine){
     char* fin_pointeur;
 
     return strtol(chaine, &fin_pointeur,0);
+}
+
+boisson_struc *ajouterBoisson(boisson_struc *stock){
+
+    FILE* ecriture = NULL;
+    int taille = taille_stock();
+    ecriture = fopen("../data/data.txt", "w");
+
+        if (ecriture != NULL){
+                fprintf(ecriture,"%d\n",taille+1);
+
+                for(int i = 0 ;i<taille; i++){
+                fprintf(ecriture,"%s %.2f %f %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+                }
+                 fprintf(ecriture,"%s %.2f %f %d %s %s\n","sirop" ,1.50,2,5,"sucre","boisson");
+                 fclose(ecriture);
+            }
+        else{
+            fclose(ecriture);
+            exit(-1);
+        }  
+
+    //free(stock);
+
+   // stock = remplirstock();
+   // return stock;
+    
+}
+
+boisson_struc *ajouterCocktail(boisson_struc *stock){
+
+    FILE* ecriture = NULL;
+    int taille = taille_stock();
+    ecriture = fopen("../data/data.txt", "w");
+
+        if (ecriture != NULL){
+
+                fprintf(ecriture,"%d\n",taille+1);
+
+                for(int i = 0 ;i<taille; i++){
+                fprintf(ecriture,"%s %.2f %f %d %s %s \n",stock[i].nom,stock[i].prix,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+                }
+                 fprintf(ecriture,"%s %.2f %f %d %s %s \n","sirop" ,1.50,2,5,"sucre","boisson");
+                 fclose(ecriture);
+            }
+        else{
+            fclose(ecriture);
+            exit(-1);
+        }  
+
+    //free(stock);
+
+    //stock = remplirstock();
+    //return stock;
+    
 }

@@ -25,5 +25,6 @@ char* message_id(boisson_struc *stock,char* type);
 char* message_quantite(boisson_struc *stock,int id);
 char* affichage_boisson(boisson_struc *stock);
 long conversion_long(char* chaine);
+boisson_struc *ajouterBoisson(boisson_struc *stock);
 
 #endif
