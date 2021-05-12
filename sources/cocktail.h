@@ -9,14 +9,23 @@ struct boisson_struc
     float degre;
     int quantite;
     char type[30];
+    char categorie[30];
     int id;
 };
-boisson_struc *remplirstock();
-int commande(boisson_struc *stock,int boisson_id,int quantite,int id_client);
-void affichage(boisson_struc *stock);
-void centrage(int colonne);
-void affichage_emplacement(int colonne,char* affichage_ecran, int emplacement);
-int saisie_int(int colonne,char* affichage_message);
+
 int taille_stock();
+boisson_struc *remplirstock();
+char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client);
+char**tableau_type(boisson_struc *stock);
+char* message_type(boisson_struc *stock);
+int verification_type(boisson_struc *stock,char* type);
+int verification_id(boisson_struc *stock,char* type,long id);
+int* tableau_id(boisson_struc *stock,char* type);
+char* message_id(boisson_struc *stock,char* type);
+char* message_quantite(boisson_struc *stock,int id);
+char* affichage_boisson(boisson_struc *stock);
+long conversion_long(char* chaine);
+boisson_struc *ajouterBoisson(boisson_struc *stock);
+boisson_struc *ajouterCocktail(boisson_struc *stock);
 
 #endif

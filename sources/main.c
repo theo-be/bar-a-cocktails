@@ -5,25 +5,31 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include "cocktail.h"
 #include "menu.h"
 
 
 
-int main(int argc, char** argv) {
+int main (int argc, char** argv) {
     // boisson_struc* stock = remplirstock();
 
     char quitter = 0;
     char arborescence[100] = {0};
 
-    do {
-        quitter = afficherMenu(arborescence);
-    } while (quitter != 'q');
+    // do {
+    //     quitter = afficherMenu(arborescence);
+    // } while (quitter != 'q');
 
 
-    // char oui[] = "Je suis un papillon";
-    // supprimerAPartirDe(oui, "un");
-    // printf("%s\n", oui);
-    // char chaine[] = "bonjour coucou";
-    // affichageCentre(chaine);
+	struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    printf ("lines %d\n", w.ws_row);
+    printf ("columns %d\n", w.ws_col);
+
+    afficherTableau();
+
+    // printf("%c%c\n", "coucou"[0], "coucou"[4]);
+
+
     return 0;
 }
