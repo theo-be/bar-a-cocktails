@@ -6,7 +6,7 @@ struct boisson_struc
 {
     char nom[30];
     float prix;
-    float degre;
+    int degre;
     int quantite;
     char type[30];
     char categorie[30];
@@ -23,8 +23,11 @@ int verification_id(boisson_struc *stock,char* type,long id);
 int* tableau_id(boisson_struc *stock,char* type);
 char* message_id(boisson_struc *stock,char* type);
 char* message_quantite(boisson_struc *stock,int id);
+int verification_nom(boisson_struc *stock,char* nom);
 char* affichage_boisson(boisson_struc *stock);
 long conversion_long(char* chaine);
 boisson_struc *ajouterBoisson(boisson_struc *stock);
+int ajoutQuantite(boisson_struc *stock,int id,int quantite);
+boisson_struc *ajouterCocktail(boisson_struc *stock);
 
 #endif
