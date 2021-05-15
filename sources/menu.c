@@ -76,9 +76,11 @@ char afficherInterfaceAdmin (boisson_struc *stock) {
 			switch (inputMenu()) {
 			case '1':
 				retourFonction = afficherStocks(stock,"tout");
+				retourFonction = 0;
 				break;
 			case '2':
 				retourFonction = afficherStocks(stock,"boisson");
+				retourFonction = 0;
 				break;
 			case '3':
 				stock = ajouterBoisson(stock);
@@ -404,7 +406,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 			break;
 
 		case 5:
-			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon faite entrer \'v\'\n");
+			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");
 			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s\n",boisson.nom ,boisson.prix ,boisson.quantite,boisson.degre,boisson.type);
 			interraction = saisie();
 			if(strcmp(interraction,"p") == 0){
@@ -413,6 +415,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 			}
 			else if(strcmp(interraction,"v") == 0){
 				etape = 6;
+				boisson.id = -1;
 			}
 			break;
 
@@ -426,19 +429,21 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				break;
 			}
 			else if(strcmp(interraction,"") != 0){
+				boisson.quantite = (int) conversion_long(interraction);
 				etape = 11;
 			}
 			break;
 
 		case 11:
-			ajoutQuantite(stock,id,conversion_long(interraction));
-			printf("\tLa quantite de %s est maintenant de : %d\n",stock[id].nom,stock[id].quantite);
-			strcpy(boisson.nom,"");
+			boisson.id = id;
+			printf("\tLa quantite de %s sera de : %d\n",stock[id].nom,stock[id].quantite+boisson.quantite);
+			rewind(stdin);
+			getchar();
 			etape = 6;
 			break;
 		
 		default:
-			strcpy(boisson.nom,"");
+			boisson.id = -2;
 			return boisson;
 			break;
 		}

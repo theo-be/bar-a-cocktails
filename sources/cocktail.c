@@ -240,43 +240,49 @@ long conversion_long(char* chaine){
 
 boisson_struc *ajouterBoisson(boisson_struc *stock){
 
-    FILE* ecriture = NULL;
+
     boisson_struc boisson = saisie_boisson(stock);
-    int taille = taille_stock();
 
-    ecriture = fopen("../data/data.txt", "w");
+    if ( boisson.id != -2){
 
-        if (ecriture != NULL){
-                fprintf(ecriture,"%d\n",taille+1);
+            FILE* ecriture = NULL;
+            int taille = taille_stock();
 
-                for(int i = 0 ;i<taille; i++){
-                fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+            ecriture = fopen("../data/data.txt", "w");
+            if (ecriture != NULL){
+
+                    if(boisson.id == -1){
+                        fprintf(ecriture,"%d\n",taille+1);                 
+                    }
+                    else{
+                        fprintf(ecriture,"%d\n",taille);
+                    }
+
+                    for(int i = 0 ;i<taille; i++){
+                        if(boisson.id == i){
+                            fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);
+                        }
+                        else{
+                            fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+                        }
+                    }
+                    if(boisson.id == -1){
+                        fprintf(ecriture,"%s %.2f %d %d %s %s\n",boisson.nom ,boisson.prix ,boisson.degre,boisson.quantite,boisson.type,"boisson");
+                    }
+                    fclose(ecriture);
                 }
-                if(strcmp(boisson.nom,"") != 0){
-                    fprintf(ecriture,"%s %.2f %d %d %s %s\n",boisson.nom ,boisson.prix ,boisson.degre,boisson.quantite,boisson.type,"boisson");
-                 }
-                 fclose(ecriture);
-            }
-        else{
-            fclose(ecriture);
-            exit(-1);
-        }  
+            else{
+                fclose(ecriture);
+                exit(-1);
+            }  
 
-    free(stock);
-
-    stock = remplirstock();
+        free(stock);
+        stock = remplirstock();
+    }
     return stock;
     
 }
 
-int ajoutQuantite(boisson_struc *stock,int id,int quantite){
-
-    id--;
-
-    stock[id].quantite += quantite;
-
-    return stock[id].quantite;
-}
 
 boisson_struc *ajouterCocktail(boisson_struc *stock){
 

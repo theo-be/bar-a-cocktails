@@ -27,7 +27,6 @@ int verification_nom(boisson_struc *stock,char* nom);
 char* affichage_boisson(boisson_struc *stock);
 long conversion_long(char* chaine);
 boisson_struc *ajouterBoisson(boisson_struc *stock);
-int ajoutQuantite(boisson_struc *stock,int id,int quantite);
 boisson_struc *ajouterCocktail(boisson_struc *stock);
 
 #endif
