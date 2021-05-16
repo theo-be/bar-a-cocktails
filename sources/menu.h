@@ -2,12 +2,12 @@
 #define _MENU_
 
 
-char afficherMenu(char *arborescence);
-char afficherMenuClient(char *arborescence);
-char afficherInterfaceAdmin(char *arborescence);
-char afficherListe(char *typeAjout);
-char afficherListeAdmin(char *typeAjout);
-char commanderBoisson(char *arborescence);
+char afficherMenu(boisson_struc *stock, char *arborescence);
+char afficherMenuClient(boisson_struc *stock, char *arborescence);
+char afficherInterfaceAdmin(boisson_struc *stock, char *arborescence);
+char afficherListe(boisson_struc *stock, char *typeAjout);
+char afficherListeAdmin(boisson_struc *stock, char *typeAjout);
+char commanderBoisson(boisson_struc *stock, char *arborescence);
 
 char inputMenu();
 void supprimerAPartirDe (char *chaine, char* supp);
@@ -15,6 +15,7 @@ void supprimerAPartirDe (char *chaine, char* supp);
 char* saisie();
 char saisie_commande(boisson_struc *stock);
 char afficherStocks(boisson_struc *stock,char* categorie);
+boisson_struc saisie_boisson(boisson_struc *stock);
 
 void affichageCentre(char *chaine);
 void affichageMarge(char *chaine, int ratio);
@@ -22,6 +23,5 @@ void affichageMarge(char *chaine, int ratio);
 void afficherTableau();
 void remplirEspaces(char tab[], int debut, int fin);
 
-char foo();
 
 #endif

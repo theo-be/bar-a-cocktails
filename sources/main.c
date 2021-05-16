@@ -11,7 +11,7 @@
 
 
 int main (int argc, char** argv) {
-    // boisson_struc* stock = remplirstock();
+    boisson_struc* stock = remplirstock();
 
     char quitter = 0;
     char arborescence[100] = {0};
@@ -26,7 +26,7 @@ int main (int argc, char** argv) {
     printf ("lines %d\n", w.ws_row);
     printf ("columns %d\n", w.ws_col);
 
-    afficherTableau();
+    afficherTableau(stock);
 
     // printf("%c%c\n", "coucou"[0], "coucou"[4]);
 
