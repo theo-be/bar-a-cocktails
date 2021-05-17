@@ -444,7 +444,10 @@ char saisie_commande(boisson_struc *stock,char *arborescence,int id_personne){
 
 	do{
 		system("clear");
-		printf("\tSi vous souhaitez quitter entrer \'p\' \n");
+		affichageCentre(arborescence);
+		printf("\n");
+
+		affichageCentre("\tSi vous souhaitez quitter entrer \'p\' \n");
 
 		switch (etape)
 		{
@@ -532,7 +535,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 
 	do{
 		system("clear");
-		printf("\tSi vous souhaitez quitter entrer \'p\' \n");
+		printf("Si vous souhaitez quitter entrer \'p\' \n");
 
 		switch (etape)
 		{
