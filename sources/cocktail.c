@@ -3,8 +3,8 @@
 #include <string.h>
 #include <math.h>
 
-#include "../sources/cocktail.h"
-#include "../sources/menu.h"
+#include "cocktail.h"
+#include "menu.h"
 
 int taille_stock(){
     FILE* lecture = NULL;
@@ -49,7 +49,7 @@ boisson_struc *remplirstock(){
         
 }
 
-char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client){
+char commande(boisson_struc *stock,long boisson_id,long quantite,int id_personne){
    boisson_id -= 1;
 
     if(stock[boisson_id].quantite >= quantite){
@@ -59,7 +59,7 @@ char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client){
         FILE* ecriture = NULL;
         ecriture = fopen("../data/commande.txt", "a");
         if (ecriture != NULL){
-                fprintf(ecriture,"%s %.2f %ld %d %s \n",stock[boisson_id].nom ,stock[boisson_id].prix * quantite ,quantite ,id_client,stock[boisson_id].categorie);
+                fprintf(ecriture,"%s %.2f %ld %d %s \n",stock[boisson_id].nom ,stock[boisson_id].prix * quantite ,quantite ,id_personne,stock[boisson_id].categorie);
                 fclose(ecriture);
                 return 'v';
             }

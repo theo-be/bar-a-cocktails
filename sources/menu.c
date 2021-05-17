@@ -6,6 +6,7 @@
 
 #include "cocktail.h"
 #include "menu.h"
+#include "cryptage.h"
 
 char afficherMenu (boisson_struc *stock, char *arborescence) {
 	char retourFonction = 0;
@@ -17,18 +18,14 @@ char afficherMenu (boisson_struc *stock, char *arborescence) {
 	do {
 		// on affiche le menu
 		system("clear");
-		printf("\t%s\n\n", arborescence);
-		// printf("Bonjour, bienvenue dans notre interface de commande de cocktails.\n");
-		// printf("Que souhaitez-vous faire ?\n\n");
-		// printf("\t1. Commander une boisson\n\n");
-		// printf("\t2. Administration\n\n");
-		// printf("\t3. Quitter\n\n");
+		affichageCentre(arborescence);
+		printf("\n");
 
 		affichageCentre("Bonjour, bienvenue dans notre interface de commande de cocktails.");
-		affichageCentre("Etes-vous un client ou bien un administrateur ?\n");
-		affichageMarge("1. Client\n", 45);
-		affichageMarge("2. Administrateur\n", 45);
-		affichageMarge("3. Quitter\n", 45);
+		affichageCentre("Etes-vous un client ou bien un barman ?\n");
+		affichageMarge("1. Client\n", 48);
+		affichageMarge("2. Barman\n", 48);
+		affichageMarge("3. Quitter\n", 48);
 
 		do {
 			erreurSaisie = 0;
@@ -39,7 +36,7 @@ char afficherMenu (boisson_struc *stock, char *arborescence) {
 				retourFonction = afficherMenuClient(stock, arborescence);
 				break;
 			case '2':
-				retourFonction = afficherInterfaceAdmin(stock, arborescence);
+				retourFonction = afficherInterfaceBarman(stock, arborescence);
 				break;
 			case '3':
 				retourFonction = 'q';
@@ -64,7 +61,8 @@ char afficherMenuClient (boisson_struc *stock, char *arborescence) {
 
 	do {
 		system("clear");
-		printf("\t%s\n\n", arborescence);
+		affichageCentre(arborescence);
+		printf("\n");
 	
 		affichageCentre("Que souhaitez-vous faire ?\n");
 		affichageMarge("1. Commander une boisson\n", 45);
@@ -77,10 +75,10 @@ char afficherMenuClient (boisson_struc *stock, char *arborescence) {
 
 			switch (inputMenu()) {
 			case '1':
-				retourFonction = commanderBoisson(stock, arborescence);
+				retourFonction = saisie_commande(stock,arborescence,0);
 				break;
 			case '2':
-				retourFonction = commanderBoisson(stock, arborescence);
+				retourFonction = saisie_commande(stock,arborescence,0);
 				break;
 			case 'p':
 				retourFonction = 'p';
@@ -97,12 +95,21 @@ char afficherMenuClient (boisson_struc *stock, char *arborescence) {
 	return retourFonction;
 }
 
-char afficherInterfaceAdmin (boisson_struc *stock, char *arborescence) {
+char afficherInterfaceBarman (boisson_struc *stock, char *arborescence) {
 	// afficher boissons
 	// -> les lister et pour plus de details les selectionner manuellement
 	// afficher cocktails
 	// creer cocktail
 
+	do {
+		system("clear");
+		affichageCentre(arborescence);
+		printf("\n");
+		affichageCentre("Veuillez saisir le mot de passe pour acceder à l\'interface barman .\n");
+
+
+	}
+	while(verification_mdp(saisie()) == 0);
 
 
 	char retourFonction = 0;
@@ -110,19 +117,22 @@ char afficherInterfaceAdmin (boisson_struc *stock, char *arborescence) {
 	int quittterMenu = 0;
 
 		
-	char menuActuel[] = "/administration";
+	char menuActuel[] = "/Barman";
 	strcat(arborescence, menuActuel);
 
 	do {
 		system("clear");
-		printf("Bienvenue dans l'interface d\'administration.\n");
-		printf("Que souhaitez-vous faire ?\n\n");
-		printf("\t1. Afficher les stocks.\n\n");
-		printf("\t2. Afficher les boissons.\n\n");
-		printf("\t3. Ajouter une boisson.\n\n");
-		printf("\t4. Afficher les cocktails.\n\n");
-		printf("\t5. Ajouter un cocktail.\n\n");
-		printf("\t6. Revenir au menu principal.\n\n");
+		affichageCentre(arborescence);
+		printf("\n");
+
+		affichageCentre("Bienvenue dans l\'interface Barman .\n");
+		affichageCentre("Que souhaitez-vous faire ?\n\n");
+		affichageMarge("\t1. Afficher les stocks.\n\n", 30);
+		affichageMarge("\t2. Afficher les boissons.\n\n", 30);
+		affichageMarge("\t3. Ajouter une boisson.\n\n", 30);
+		affichageMarge("\t4. Afficher les cocktails.\n\n", 30);
+		affichageMarge("\t5. Ajouter un cocktail.\n\n", 30);
+		affichageMarge("\t6. Revenir au menu principal.\n\n", 30);
 
 		do{
 			erreurSaisie = 0;
@@ -130,11 +140,11 @@ char afficherInterfaceAdmin (boisson_struc *stock, char *arborescence) {
 
 			switch (inputMenu()) {
 			case '1':
-				retourFonction = afficherStocks(stock,"tout");
+				afficherTableau (stock,"tout");
 				retourFonction = 0;
 				break;
 			case '2':
-				retourFonction = afficherStocks(stock,"boisson");
+				afficherTableau (stock,"boisson");
 				retourFonction = 0;
 				break;
 			case '3':
@@ -142,7 +152,7 @@ char afficherInterfaceAdmin (boisson_struc *stock, char *arborescence) {
 				retourFonction = 0;
 				break;
 			case '4':
-				retourFonction = afficherStocks(stock,"cocktail");
+				afficherTableau (stock,"cocktail");
 				break;
 			case '5':
 				ajouterCocktail(stock);
@@ -165,124 +175,6 @@ char afficherInterfaceAdmin (boisson_struc *stock, char *arborescence) {
 	return 'p';
 }
 
-char commanderBoisson (boisson_struc *stock, char *arborescence) {
-	
-	char retourFonction = 0;
-	int erreurSaisie = 0;
-	int quittterMenu = 0;
-
-	char menuActuel[] = "/commander";
-	strcat(arborescence, menuActuel);
-
-	do {
-		system("clear");
-		printf("\t%s\n\n", arborescence);
-		printf("Tapez l\'id de la boisson que vous souhaitez commander.\n");
-		printf("Que souhaitez-vous faire ?\n\n");
-
-		printf("Entrez \'a\' pour annuler la commande\n\n");
-
-		do {
-			erreurSaisie = 0;
-			printf("Votre option : ");
-
-			switch (inputMenu()) {
-			case 'a':
-				quittterMenu = 1;
-				break;
-			
-			default:
-				printf("Erreur dans la saisie\n");
-				erreurSaisie = 1;
-				break;
-			}
-		} while (erreurSaisie == 1);
-	} while (!quittterMenu);
-
-	supprimerAPartirDe(arborescence, menuActuel);
-
-	return 'p';
-}
-
-char afficherListeAdmin (boisson_struc *stock, char *typeAjout) {
-
-	char retourFonction = 0;
-	int erreurSaisie = 0;
-	int quittterMenu = 0;
-
-	do {
-		system("clear");
-		printf("Que souhaitez-vous faire ?\n\n");
-		printf("\tEntrez l\'id d\'une boisson pour connaitre plus de details.\n\n");
-		printf("\tEntrez \'a\' pour ajouter une boisson.\n\n");
-		printf("\tEntrez \'p\' pour revenir au menu precedent.\n\n");
-
-		printf("Voici les boissons enregistrees :\n");
-
-		// afficher les boissons
-
-		do{
-			erreurSaisie = 0;
-			printf("Votre option : ");
-			
-
-			switch (inputMenu()) {
-			case 'a':
-				// retourFonction = ajouterBoisson("/");
-				break;
-			case 'p':
-				quittterMenu = 1;
-				break;
-			
-			default:
-				printf("Erreur dans la saisie\n");
-				erreurSaisie = 1;
-				break;
-			}
-		} while (erreurSaisie == 1);
-	} while (!quittterMenu);
-
-	return 'p';
-}
-
-char afficherListe (boisson_struc *stock, char *typeAjout) {
-
-	char retourFonction = 0;
-	int erreurSaisie = 0;
-	int quittterMenu = 0;
-
-	do {
-		system("clear");
-		printf("Que souhaitez-vous faire ?\n\n");
-		printf("\tEntrez l\'id d\'une boisson pour connaitre plus de details.\n\n");
-		printf("\tEntrez \'p\' pour revenir au menu precedent.\n\n");
-
-		printf("Voici les boissons enregistrees :\n");
-
-		// afficher les boissons
-
-		do {
-			erreurSaisie = 0;
-			printf("Votre option : ");
-			
-			switch (inputMenu()) {
-			case 'a':
-				// retourFonction = ajouterBoisson("/");
-				break;
-			case 'p':
-				quittterMenu = 1;
-				break;
-			
-			default:
-				printf("Erreur dans la saisie\n");
-				erreurSaisie = 1;
-				break;
-			}
-		} while (erreurSaisie == 1);
-	} while (!quittterMenu);
-
-	return 'b';
-}
 
 void remplirEspaces (char tab[], int debut, int fin) {
 	// fin non incluse
@@ -291,7 +183,9 @@ void remplirEspaces (char tab[], int debut, int fin) {
 	}
 } 
 
-void afficherTableau (boisson_struc *stock) {
+void afficherTableau (boisson_struc *stock,char* categorie) {
+
+	system("clear");
 	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     // printf ("lines %d\n", w.ws_row);
@@ -311,7 +205,7 @@ void afficherTableau (boisson_struc *stock) {
 	int tailleColonnesFlex = (w.ws_col - tailleTotaleColSatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
 	if (tailleColonnesFlex > tailleMaxColFlex) tailleColonnesFlex = tailleMaxColFlex;
 
-	printf("taille col flex : %d\n", tailleColonnesFlex);
+	//printf("taille col flex : %d\n", tailleColonnesFlex);
 
 	int taillesColonnes[] = {tailleColId, tailleColonnesFlex, tailleColPrix, tailleColDegre, tailleColonnesFlex};
 
@@ -331,86 +225,77 @@ void afficherTableau (boisson_struc *stock) {
 	int tailleStock = taille_stock();
 
 
-	// variable de test
-	char *nom = "023";
-
-	// structure de test
-	boisson_struc test = {"boisson", 0.50, 0, 100, "doux", "boisson", 1};
-
-
 	for (int id = 0; id < tailleStock; id++) {
-		// initialisation
-		remplirEspaces(ligne, 0,  w.ws_col - 1);
 
-		indiceSeparation = -1;
-		for (int i = 0; i < nombreColonnesTotal - 1; i++) {
-			indiceSeparation += (taillesColonnes[i] + 1);
-			ligne[indiceSeparation] = '|';
+		if(strcmp(stock[id].categorie,categorie) == 0 || strcmp("tout",categorie) == 0  ){
+
+			// initialisation
+			remplirEspaces(ligne, 0,  w.ws_col - 1);
+
+			indiceSeparation = -1;
+			for (int i = 0; i < nombreColonnesTotal - 1; i++) {
+				indiceSeparation += (taillesColonnes[i] + 1);
+				ligne[indiceSeparation] = '|';
+			}
+
+			// incice de colonne global
+			indiceDebutCol = 0;
+			colonne = 0;
+
+
+			// ID
+			sprintf(chaineTemporaire, "%d", stock[id].id);
+			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
+			// NOM
+			tailleChaineAAjouter = (int)strlen(stock[id].nom);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = stock[id].nom[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
+			// PRIX
+			sprintf(chaineTemporaire, "%f", stock[id].prix);
+			for (int j = 0; j < 4; j++) {
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
+			// DEGRE
+			sprintf(chaineTemporaire, "%d", stock[id].degre);
+			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
+			// TYPE
+			tailleChaineAAjouter = (int)strlen(stock[id].type);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = stock[id].type[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
+			// QT
+			sprintf(chaineTemporaire, "%d", stock[id].quantite);
+			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+			printf("%s\n", ligne);
+
 		}
-
-		// incice de colonne global
-		indiceDebutCol = 0;
-		colonne = 0;
-
-
-		// ID
-		sprintf(chaineTemporaire, "%d", stock[id].id);
-		tailleChaineAAjouter = (int)strlen(chaineTemporaire);
-		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
-		}
-		indiceDebutCol += (taillesColonnes[colonne] + 1);
-		colonne++;
-
-		// NOM
-		tailleChaineAAjouter = (int)strlen(stock[id].nom);
-		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = stock[id].nom[j]; // <- nom de l'array qui contient les infos a afficher
-		}
-		indiceDebutCol += (taillesColonnes[colonne] + 1);
-		colonne++;
-
-		// PRIX
-		sprintf(chaineTemporaire, "%f", stock[id].prix);
-		for (int j = 0; j < 4; j++) {
-			ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
-		}
-		indiceDebutCol += (taillesColonnes[colonne] + 1);
-		colonne++;
-
-		// DEGRE
-		sprintf(chaineTemporaire, "%d", stock[id].degre);
-		tailleChaineAAjouter = (int)strlen(chaineTemporaire);
-		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
-		}
-		indiceDebutCol += (taillesColonnes[colonne] + 1);
-		colonne++;
-
-		// TYPE
-		tailleChaineAAjouter = (int)strlen(stock[id].type);
-		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = stock[id].type[j]; // <- nom de l'array qui contient les infos a afficher
-		}
-		indiceDebutCol += (taillesColonnes[colonne] + 1);
-		colonne++;
-
-		// QT
-		sprintf(chaineTemporaire, "%d", stock[id].quantite);
-		tailleChaineAAjouter = (int)strlen(chaineTemporaire);
-		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
-		}
-		indiceDebutCol += (taillesColonnes[colonne] + 1);
-		colonne++;
-
-
-
-
-
-
-
-		printf("%s\n", ligne);
 	}
 
 
@@ -423,7 +308,7 @@ void afficherTableau (boisson_struc *stock) {
 
 
 
-
+	getchar();
 	free(ligne);
 
 	// si moins de 5 cols par colonne, demander d'agrandir la fenetre
@@ -537,7 +422,6 @@ void supprimerAPartirDe (char *chaine, char* sousChaine) {
 
 char* saisie() {
     
-
     size_t bufsize = 30;
 	char* chaine = malloc(bufsize * sizeof(char));
 	scanf("%s",chaine);
@@ -546,7 +430,10 @@ char* saisie() {
 
 }
 
-char saisie_commande(boisson_struc *stock){
+char saisie_commande(boisson_struc *stock,char *arborescence,int id_personne){
+
+	char menuActuel[] = "/commander";
+	strcat(arborescence, menuActuel);
 
 	char* type = calloc(30, sizeof(char));
 	char* interraction = calloc(30,sizeof(char));
@@ -609,7 +496,7 @@ char saisie_commande(boisson_struc *stock){
 			break;
 
 		case 3:
-			retourFonction = commande(stock,id,quantite,0);
+			retourFonction = commande(stock,id,quantite,id_personne);
 				if(retourFonction == 'v'){
 						printf("Taper sur entrer pour continuer\n\n");
 						printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",quantite,stock[id-1].nom,stock[id-1].prix * quantite);
@@ -631,7 +518,7 @@ char saisie_commande(boisson_struc *stock){
 
 	}
 	while(etape != 4);
-
+	supprimerAPartirDe(arborescence, menuActuel);
 	return 'v';
 }
 
@@ -788,7 +675,7 @@ char afficherStocks(boisson_struc *stock,char* categorie){
 	system("clear");
 	printf("Si vous souhaitez quitter, faite entrer\n\n");
 
-	printf("\tVoici l'état des stocks :\n\n");
+	printf("\tVoici l'etat des stocks :\n\n");
 	for(int i = 0; i<taille; i++){
 
 			if( categorie == "boisson" && strcmp(stock[i].categorie,"boisson") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"boisson") == 0){
