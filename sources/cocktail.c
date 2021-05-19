@@ -6,9 +6,20 @@
 #include "cocktail.h"
 #include "menu.h"
 
-int taille_stock(){
+int taille_stock(char* data){
+
     FILE* lecture = NULL;
-    lecture = fopen("../data/data.txt", "r");
+
+    if( strcmp(data,"data_boisson") == 0){
+        lecture = fopen("../data/data_boisson.txt", "r");
+    }
+    else if(strcmp(data,"data_cocktail") == 0){
+        lecture = fopen("../data/data_cocktail.txt", "r");
+    }
+    else{
+        exit(-1);
+    }
+
     if (lecture != NULL)
     {
         int taille;
@@ -20,22 +31,32 @@ int taille_stock(){
     fclose(lecture);
     exit(-1);
     }  
+
 }
 
-boisson_struc *remplirstock(){
+boisson_struc *remplirstock_boisson(){
 
     FILE* lecture = NULL;
-    lecture = fopen("../data/data.txt", "r");
+    lecture = fopen("../data/data_boisson.txt", "r");
     if (lecture != NULL)
     {
         int taille;
+        int cocktail_id = 1;
         fscanf(lecture,"%d", &taille);
         boisson_struc boisson;
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );
 
         for( int i = 0; i<taille;i++ ){
-            fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,boisson.type,boisson.categorie);
-            boisson.id = i+1 ;
+             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,boisson.type,boisson.categorie);
+
+            if (strcmp(boisson.categorie,"boisson") == 0){
+                boisson.id = i+1 ;
+            }
+            else{
+                boisson.id = cocktail_id ;
+                cocktail_id ++;
+            }
+
             tab_boisson[i] = boisson;
         }
 
@@ -49,16 +70,41 @@ boisson_struc *remplirstock(){
         
 }
 
+cocktail_struc *remplirstock_cocktail(){
+
+    FILE* lecture = NULL;
+    lecture = fopen("../data/data_cocktail.txt", "r");
+    if (lecture != NULL)
+    {
+        int taille;
+        fscanf(lecture,"%d", &taille);
+        cocktail_struc cocktail;
+        cocktail_struc *tab_cocktail = malloc(taille * sizeof(cocktail_struc) );
+
+        for( int i = 0; i<taille; i++ ){
+            fscanf(lecture, "%s%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d",cocktail.nom,&cocktail.id_boisson[0],&cocktail.id_boisson[1],&cocktail.id_boisson[2],&cocktail.id_boisson[3],&cocktail.id_boisson[4],&cocktail.id_boisson[5]);
+            tab_cocktail[i] = cocktail;
+        }
+
+        fclose(lecture);
+        return tab_cocktail;
+    }
+    else{
+        fclose(lecture);
+        exit(-1);
+    }  
+        
+}
+
 char commande(boisson_struc *stock,long boisson_id,long quantite,int id_personne){
-   boisson_id -= 1;
-
-    if(stock[boisson_id].quantite >= quantite){
-
-        stock[boisson_id].quantite -= quantite;
 
         FILE* ecriture = NULL;
         ecriture = fopen("../data/commande.txt", "a");
         if (ecriture != NULL){
+
+                boisson_id -= 1;
+                stock[boisson_id].quantite -= quantite;
+
                 fprintf(ecriture,"%s %.2f %ld %d %s \n",stock[boisson_id].nom ,stock[boisson_id].prix * quantite ,quantite ,id_personne,stock[boisson_id].categorie);
                 fclose(ecriture);
                 return 'v';
@@ -66,20 +112,17 @@ char commande(boisson_struc *stock,long boisson_id,long quantite,int id_personne
         else{
             fclose(ecriture);
             exit(-1);
-        }  
-    }
-    else{
-      return 'q';
-    }
+        }
 }
 
 char**tableau_type(boisson_struc *stock){
 
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     char** chaine;
     chaine = calloc(taille, sizeof(int*));
+
     for(int i = 0 ; i< taille; i++){
-    chaine[i] = calloc(30, sizeof(char));
+         chaine[i] = calloc(30, sizeof(char));
     }
 
     for (int i = 0; i< taille; i++){
@@ -97,15 +140,15 @@ char**tableau_type(boisson_struc *stock){
 char * message_type(boisson_struc *stock){
 
     char** tableau = tableau_type(stock);
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     char* chaine = calloc(8 * taille, sizeof(char));
 
     for(int i =0; i<taille;i++){
 
            if( strstr(chaine,tableau[i]) == 0){
 
-                    strcat(chaine,tableau[i]);
-                    strcat(chaine, " ");     
+                strcat(chaine,tableau[i]);
+                strcat(chaine, " ");     
         }
 
     }
@@ -116,7 +159,7 @@ char * message_type(boisson_struc *stock){
 int verification_type(boisson_struc *stock,char* type){
 
     char** tableau = tableau_type(stock);
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
 
     for(int i =0; i<taille; i++){
 
@@ -130,7 +173,7 @@ int verification_type(boisson_struc *stock,char* type){
 int verification_id(boisson_struc *stock,char* type,long id){
 
     int* tableau = tableau_id(stock,type);
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
 
     for(int i = 0; i<taille; i++){
         if (tableau[i] == id){
@@ -142,7 +185,7 @@ int verification_id(boisson_struc *stock,char* type,long id){
 
 int* tableau_id(boisson_struc *stock,char* type){
 
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     int* tableau_id = calloc(taille, sizeof(int));
     int i = 0;
     for(int i = 0; i<taille; i++){
@@ -162,7 +205,7 @@ int* tableau_id(boisson_struc *stock,char* type){
 char* message_id(boisson_struc *stock,char* type){
 
     int* tableau = tableau_id(stock,type);
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
     char* conversion = calloc(8 * taille, sizeof(char));
     int i = 0;
@@ -183,7 +226,7 @@ char* message_id(boisson_struc *stock,char* type){
 
 char* message_quantite(boisson_struc *stock,int id){
 
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
 
     char* conversion = calloc(8 * taille, sizeof(char));
@@ -205,7 +248,7 @@ char* message_quantite(boisson_struc *stock,int id){
 
 int verification_nom(boisson_struc *stock,char* nom){
 
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
 
     for(int i = 0; i<taille; i++){
 
@@ -218,7 +261,7 @@ int verification_nom(boisson_struc *stock,char* nom){
 
 char* affichage_boisson(boisson_struc *stock){
 
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
 
     for (int i = 0; i< taille; i++){
@@ -246,7 +289,7 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
     if ( boisson.id != -2){
 
             FILE* ecriture = NULL;
-            int taille = taille_stock();
+            int taille = taille_stock("data_boisson");
 
             ecriture = fopen("../data/data.txt", "w");
             if (ecriture != NULL){
@@ -277,7 +320,7 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
             }  
 
         free(stock);
-        stock = remplirstock();
+        stock = remplirstock_boisson();
     }
     return stock;
     
@@ -287,7 +330,7 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 boisson_struc *ajouterCocktail(boisson_struc *stock){
 
     FILE* ecriture = NULL;
-    int taille = taille_stock();
+    int taille = taille_stock("data_boisson");
     ecriture = fopen("../data/data.txt", "w");
 
         if (ecriture != NULL){

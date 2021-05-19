@@ -222,7 +222,7 @@ void afficherTableau (boisson_struc *stock,char* categorie) {
 
 	char chaineTemporaire[10] = {0};
 
-	int tailleStock = taille_stock();
+	int tailleStock = taille_stock("data_boisson");
 
 
 	for (int id = 0; id < tailleStock; id++) {
@@ -492,7 +492,7 @@ char saisie_commande(boisson_struc *stock,char *arborescence,int id_personne){
 				}
 
 				quantite = conversion_long(interraction);
-				if( stock[id-1].quantite >= quantite){
+				if( stock[id-1].quantite >= quantite || id_personne == 0){
 				etape = 3;
 				}
 
@@ -674,7 +674,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 
 char afficherStocks(boisson_struc *stock,char* categorie){
 
-	int taille = taille_stock();
+	int taille = taille_stock("data_boisson");
 	system("clear");
 	printf("Si vous souhaitez quitter, faite entrer\n\n");
 

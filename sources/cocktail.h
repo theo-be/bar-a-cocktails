@@ -4,17 +4,26 @@
 typedef struct boisson_struc boisson_struc;
 struct boisson_struc
 {
+    char categorie[30];
     char nom[30];
     float prix;
     int degre;
     int quantite;
     char type[30];
-    char categorie[30];
     int id;
 };
 
-int taille_stock();
-boisson_struc *remplirstock();
+typedef struct cocktail_struc cocktail_struc;
+struct cocktail_struc
+{
+    char nom[30];
+    int id_boisson[6];
+};
+
+int taille_stock(char* data);
+boisson_struc *remplirstock_boisson();
+cocktail_struc *remplirstock_cocktail();
+
 char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client);
 char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
