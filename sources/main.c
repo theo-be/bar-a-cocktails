@@ -36,12 +36,17 @@ int main (int argc, char** argv) {
 
 */
 
-    char quitter = 0;
-    char arborescence[100] = {0};
+    // char quitter = 0;
+    // char arborescence[100] = {0};
 
-     do {
-         quitter = afficherMenu(stock,cocktail_liste,arborescence);
-     } while (quitter != 'q');
+    //  do {
+    //      quitter = afficherMenu(stock,cocktail_liste,arborescence);
+    //  } while (quitter != 'q');
+
+
+
+
+    afficherTableau(stock, cocktail_liste, "boisson");
 
     return 0;
 }

@@ -179,6 +179,40 @@ void remplirEspaces (char tab[], int debut, int fin) {
 	}
 } 
 
+void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur) {
+	// initialisation
+	remplirEspaces(ligne, 0,  largeur);
+
+	int indiceSeparation = -1;
+	for (int i = 0; i < nbColonnes - 1; i++) {
+		indiceSeparation += (taillesColonnes[i] + 1);
+		ligne[indiceSeparation] = '|';
+	}
+
+	// incice de colonne global
+	int indiceDebutCol = 0;
+	int colonne = 0;
+	int tailleChaineAAjouter = 0;
+	char entetes[6][9] = {
+		"id",
+		"nom",
+		"prix",
+		"degre",
+		"type",
+		"quantite"
+	};
+
+	for (int i = 0; i < 6; i++) {
+		tailleChaineAAjouter = (int)strlen(entetes[i]);
+		for (int j = 0; j < tailleChaineAAjouter; j++) {
+			ligne[indiceDebutCol + j] = entetes[i][j]; // <- nom de l'array qui contient les infos a afficher
+		}
+		indiceDebutCol += (taillesColonnes[colonne] + 1);
+		colonne++;
+	}
+	printf("%s\n", ligne);
+}
+
 void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie) {
 
 	system("clear");
@@ -201,14 +235,14 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 	int tailleColonnesFlex = (w.ws_col - tailleTotaleColSatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
 	if (tailleColonnesFlex > tailleMaxColFlex) tailleColonnesFlex = tailleMaxColFlex;
 
-	//printf("taille col flex : %d\n", tailleColonnesFlex);
+	//printf("taille colonnes flexibles : %d\n", tailleColonnesFlex);
 
 	int taillesColonnes[] = {tailleColId, tailleColonnesFlex, tailleColPrix, tailleColDegre, tailleColonnesFlex};
 
-	// affichage ligne
-	char *ligne = malloc(w.ws_col * sizeof(char));
+	// tableau de ligne
+	char *ligne = malloc((w.ws_col + 1) * sizeof(char));
 
-	ligne[w.ws_col - 1] = '\0';
+	ligne[w.ws_col] = '\0';
 
 
 	int tailleChaineAAjouter = 0;
@@ -220,6 +254,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 	int tailleStock = taille_stock("data_boisson");
 
+	afficherEntete(ligne, taillesColonnes, nombreColonnesTotal, w.ws_col);
 
 	for (int id = 0; id < tailleStock; id++) {
 
@@ -856,5 +891,12 @@ d'afficher le menu differemment) :
 trucs a faire :
 
 voir la securite des inputs
+
+différencier cocktail et boisson /
+
+faire les entetes de tbl /
+faire des fonctions différentes pour chaque entete /
+
+
 
 */
