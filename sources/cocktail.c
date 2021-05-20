@@ -47,7 +47,7 @@ boisson_struc *remplirstock_boisson(){
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );
 
         for( int i = 0; i<taille;i++ ){
-             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,boisson.type,boisson.categorie);
+             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.contenance,&boisson.quantite,boisson.type,boisson.categorie);
 
             if (strcmp(boisson.categorie,"boisson") == 0){
                 boisson.id = i+1 ;
@@ -170,13 +170,12 @@ int verification_type(boisson_struc *stock,char* type){
     return 0;
 }
 
-int verification_id(boisson_struc *stock,char* type,long id){
+int verification_id(boisson_struc *stock,long id){
 
-    int* tableau = tableau_id(stock,type);
     int taille = taille_stock("data_boisson");
 
     for(int i = 0; i<taille; i++){
-        if (tableau[i] == id){
+        if (stock[i].id == id){
             return 1;
         }
     }
@@ -190,12 +189,12 @@ int* tableau_id(boisson_struc *stock,char* type){
     int i = 0;
     for(int i = 0; i<taille; i++){
 
-        if( type == "tout"){
-            tableau_id[i] = stock[i].id;
+        if(strcmp(type,"tout") == 0){
+            tableau_id[i] = i+1;
 
         }
         else if(strcmp(stock[i].type,type) == 0){
-            tableau_id[i] = stock[i].id;
+            tableau_id[i] = i+1;
             }
     }
     return tableau_id;
@@ -207,8 +206,7 @@ char* message_id(boisson_struc *stock,char* type){
     int* tableau = tableau_id(stock,type);
     int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
-    char* conversion = calloc(8 * taille, sizeof(char));
-    int i = 0;
+    char* conversion = calloc(10, sizeof(char));
     for (int i = 0; i< taille; i++){
         
         if(tableau[i] != 0 ){
@@ -229,7 +227,7 @@ char* message_quantite(boisson_struc *stock,int id){
     int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
 
-    char* conversion = calloc(8 * taille, sizeof(char));
+    char* conversion = calloc(10, sizeof(char));
     id --;
 
     strcat(chaine,"Quantite disponible de ");
@@ -253,10 +251,35 @@ int verification_nom(boisson_struc *stock,char* nom){
     for(int i = 0; i<taille; i++){
 
         if(strcmp(stock[i].nom,nom) == 0){
-            return stock[i].id;
+            return i+1;
         }
     }
     return -1;
+}
+
+char* recherche_boisson(boisson_struc *stock,char* recherche){
+
+    int taille = taille_stock("data_boisson");
+    char* chaine = calloc(40 * taille, sizeof(char));
+    char* conversion = calloc(10, sizeof(char));
+    int vide = 0;
+
+    for (int i = 0; i< taille; i++){
+        if ( strstr(stock[i].nom,recherche)){
+                strcat(chaine, stock[i].nom);
+                strcat(chaine, " : ");
+                sprintf(conversion,"%d",i+1);
+                strcat(chaine, conversion);
+                strcat(chaine, " ");
+                vide++;
+        }
+    }
+
+    if(vide == 0){
+        return "Il n'existe pas de boisson qui correspond à votre recherche";
+    }
+    return chaine;
+
 }
 
 char* affichage_boisson(boisson_struc *stock){
@@ -291,7 +314,7 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
             FILE* ecriture = NULL;
             int taille = taille_stock("data_boisson");
 
-            ecriture = fopen("../data/data.txt", "w");
+            ecriture = fopen("../data/data_boisson.txt", "w");
             if (ecriture != NULL){
 
                     if(boisson.id == -1){
@@ -303,14 +326,14 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 
                     for(int i = 0 ;i<taille; i++){
                         if(boisson.id == i){
-                            fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite+boisson.quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
                         }
                         else{
-                            fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
                         }
                     }
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%s %.2f %d %d %s %s\n",boisson.nom ,boisson.prix ,boisson.degre,boisson.quantite,boisson.type,"boisson");
+                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom ,boisson.prix ,boisson.degre,boisson.quantite,boisson.contenance,boisson.type,"boisson");
                     }
                     fclose(ecriture);
                 }
@@ -327,31 +350,65 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 }
 
 
-boisson_struc *ajouterCocktail(boisson_struc *stock){
+cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
+
+    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);
+
+    if( strcmp(cocktail.nom,"") != 0){
 
     FILE* ecriture = NULL;
-    int taille = taille_stock("data_boisson");
-    ecriture = fopen("../data/data.txt", "w");
+    int taille = taille_stock("data_cocktail");
+    ecriture = fopen("../data/data_cocktail.txt", "w");
 
         if (ecriture != NULL){
 
                 fprintf(ecriture,"%d\n",taille+1);
 
                 for(int i = 0 ;i<taille; i++){
-                fprintf(ecriture,"%s %.2f %d %d %s %s \n",stock[i].nom,stock[i].prix,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+                fprintf(ecriture,"%s %d %d %d %d %d %d \n",cocktail_liste[i].nom,cocktail_liste[i].id_boisson[0],cocktail_liste[i].id_boisson[1],cocktail_liste[i].id_boisson[2],cocktail_liste[i].id_boisson[3],cocktail_liste[i].id_boisson[4],cocktail_liste[i].id_boisson[5]);
                 }
 
-                 fprintf(ecriture,"%s %.2f %d %d %s %s \n","sirop" ,1.50,2,5,"sucre","boisson");
+                 fprintf(ecriture,"%s %d %d %d %d %d %d \n",cocktail.nom,cocktail.id_boisson[0]&cocktail.id_boisson[1],cocktail.id_boisson[2],cocktail.id_boisson[3],cocktail.id_boisson[4],cocktail.id_boisson[5]);
                  fclose(ecriture);
             }
         else{
             fclose(ecriture);
             exit(-1);
-        }  
+        }
 
-    //free(stock);
+    ecriture = fopen("../data/data_boisson.txt", "w");
 
-    //stock = remplirstock();
-    //return stock;
+        if (ecriture != NULL){
+
+                fprintf(ecriture,"%d\n",taille+1);
+
+                for(int i = 0 ;i<taille; i++){
+                    fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
+                }
+
+                int degre_cocktail = stock[cocktail.id_boisson[0]].degre;
+                char* type_cocktail = calloc( 30, sizeof(char));
+                strcat(type_cocktail,"sans-alcool");
+                for(int i = 0 ; i<taille; i++){
+                    if (stock[cocktail.id_boisson[i]].degre < degre_cocktail){
+                        degre_cocktail = stock[cocktail.id_boisson[i]].degre;
+                    }
+                    if( strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0){
+                        strcpy(type_cocktail,"alcool");
+                    }
+                }
+
+                fprintf(ecriture,"%s %.2f %d %d %s %s\n",cocktail.nom ,cocktail.prix ,degre_cocktail,0,type_cocktail,"cocktail");
+            }
+        else{
+            fclose(ecriture);
+            exit(-1);
+        }
+
+    free(cocktail_liste);
+    cocktail_liste = remplirstock_cocktail();
+    }
+
+    return cocktail_liste;
     
 }

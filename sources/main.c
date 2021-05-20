@@ -40,7 +40,7 @@ int main (int argc, char** argv) {
     char arborescence[100] = {0};
 
      do {
-         quitter = afficherMenu(stock,arborescence);
+         quitter = afficherMenu(stock,cocktail_liste,arborescence);
      } while (quitter != 'q');
 
     return 0;

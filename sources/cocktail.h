@@ -9,6 +9,7 @@ struct boisson_struc
     float prix;
     int degre;
     int quantite;
+    int contenance;
     char type[30];
     int id;
 };
@@ -18,6 +19,7 @@ struct cocktail_struc
 {
     char nom[30];
     int id_boisson[6];
+    float prix;
 };
 
 int taille_stock(char* data);
@@ -28,14 +30,18 @@ char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client);
 char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
 int verification_type(boisson_struc *stock,char* type);
-int verification_id(boisson_struc *stock,char* type,long id);
+int verification_id(boisson_struc *stock,long id);
 int* tableau_id(boisson_struc *stock,char* type);
 char* message_id(boisson_struc *stock,char* type);
 char* message_quantite(boisson_struc *stock,int id);
 int verification_nom(boisson_struc *stock,char* nom);
+char* recherche_boisson(boisson_struc *stock,char* recherche);
+
 char* affichage_boisson(boisson_struc *stock);
+
 long conversion_long(char* chaine);
+
 boisson_struc *ajouterBoisson(boisson_struc *stock);
-boisson_struc *ajouterCocktail(boisson_struc *stock);
+cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
 #endif
