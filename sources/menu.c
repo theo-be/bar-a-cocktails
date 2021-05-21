@@ -491,7 +491,7 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 		printf("Le prix total est de : %.2f € \n",prix_total);
 		printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez valider commander votre panier entrer \'v\' ");
 		interraction = saisie();
-		if(strcmp(interraction,"v")){
+		if(strcmp(interraction,"v") == 0){
 			commande(stock,panier,id_personne);
 			panier.taille = 0;
 		}
@@ -501,6 +501,8 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 		printf("Votre panier est vide");
 		getchar();
 	}
+	getchar();
+
 	return panier;
 }
 
@@ -609,7 +611,7 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 				commande_boisson = stock[id-1];
 				commande_boisson.quantite = quantite;
 				commande_boisson.prix = stock[id-1].prix * quantite;
-				panier = ajouterPanier(panier,commande_boisson,id_personne);
+				panier = ajouterPanier(panier,commande_boisson);
 				etape = 8;
 			}
 		break;

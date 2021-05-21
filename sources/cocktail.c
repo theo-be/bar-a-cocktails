@@ -100,6 +100,7 @@ int commande(boisson_struc* stock,panier_struc panier,int id_personne){
 
         FILE* ecriture = NULL;
         ecriture = fopen("../data/commande.txt", "a");
+
         if (ecriture != NULL){
                 for( int i = 0; i<panier.taille; i++){
                     stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;

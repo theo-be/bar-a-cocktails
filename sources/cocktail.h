@@ -68,7 +68,7 @@ float prix_boisson(int degre, int contenance);
 boisson_struc *ajouterBoisson(boisson_struc *stock);
 bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
-panier_struc ajouterPanier(panier_struc panier,boisson_struc commande,int id_personne);
+panier_struc ajouterPanier(panier_struc panier,boisson_struc commande);
 
 
 #endif
