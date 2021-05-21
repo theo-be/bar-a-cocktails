@@ -19,7 +19,7 @@ struct cocktail_struc
 {
     char nom[30];
     int id_boisson[6];
-    int contenance;
+    int contenance[6];
     float prix;
 };
 
@@ -41,6 +41,12 @@ char* recherche_boisson(boisson_struc *stock,char* recherche);
 char* affichage_boisson(boisson_struc *stock);
 
 long conversion_long(char* chaine);
+
+int contenance_cocktail(cocktail_struc cocktail);
+int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail);
+char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail);
+int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail);
+float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail);
 
 boisson_struc *ajouterBoisson(boisson_struc *stock);
 cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);

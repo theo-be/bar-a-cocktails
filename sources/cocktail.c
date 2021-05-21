@@ -82,7 +82,7 @@ cocktail_struc *remplirstock_cocktail(){
         cocktail_struc *tab_cocktail = malloc(taille * sizeof(cocktail_struc) );
 
         for( int i = 0; i<taille; i++ ){
-            fscanf(lecture, "%s%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c",cocktail.nom,&cocktail.id_boisson[0],&cocktail.id_boisson[1],&cocktail.id_boisson[2],&cocktail.id_boisson[3],&cocktail.id_boisson[4],&cocktail.id_boisson[5],&cocktail.contenance);
+            fscanf(lecture, "%s%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d",cocktail.nom,&cocktail.id_boisson[0],&cocktail.id_boisson[1],&cocktail.id_boisson[2],&cocktail.id_boisson[3],&cocktail.id_boisson[4],&cocktail.id_boisson[5],&cocktail.contenance[0],&cocktail.contenance[1],&cocktail.contenance[2],&cocktail.contenance[3],&cocktail.contenance[4],&cocktail.contenance[5]);
             tab_cocktail[i] = cocktail;
         }
 
@@ -303,6 +303,74 @@ long conversion_long(char* chaine){
     return strtol(chaine, &fin_pointeur,0);
 }
 
+int contenance_cocktail(cocktail_struc cocktail){
+
+    int contenance = 0;
+
+    for(int i = 0; i< 5;i++){
+        if ( cocktail.id_boisson[i] != -1){
+           contenance += cocktail.contenance[i];
+        }
+
+    }
+    return contenance;
+}
+
+int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
+
+    int quantite = stock[cocktail.id_boisson[0]].quantite;
+
+    for(int i = 0; i< 5;i++){
+        if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){
+           quantite = stock[cocktail.id_boisson[i]].quantite;
+        }
+
+    }
+    return quantite;
+}
+
+char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail){
+
+    char* type = calloc(20, sizeof(char));
+    strcpy(type,"sans-alcool");
+
+    for(int i = 0; i< 5;i++){
+        if ( cocktail.id_boisson[i] != -1 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0){
+           strcpy(type,"alcool");
+        }
+    }
+
+    return type;
+}
+
+int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
+
+    int alcool = 0;
+    int degre;
+
+    for(int i = 0; i< 5;i++){
+        if ( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) == 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0 ){
+           alcool += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
+        }
+        else if( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) != 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") != 0){
+            alcool += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
+        }
+    }
+
+    degre = alcool / contenance_cocktail(cocktail);
+
+    return degre;
+}
+
+float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
+
+    int contenance = contenance_cocktail(cocktail);
+    int degre = degre_cocktail(stock,cocktail);
+    float prix = contenance * degre * 1.10;
+
+    return prix;
+}
+
 boisson_struc *ajouterBoisson(boisson_struc *stock){
 
 
@@ -384,19 +452,7 @@ cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_li
                     fprintf(ecriture,"%s %.2f %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].type,stock[i].categorie);
                 }
 
-                int degre_cocktail = stock[cocktail.id_boisson[0]].degre;
-                char* type_cocktail = calloc( 30, sizeof(char));
-                strcat(type_cocktail,"sans-alcool");
-                for(int i = 0 ; i<taille; i++){
-                    if (stock[cocktail.id_boisson[i]].degre < degre_cocktail){
-                        degre_cocktail = stock[cocktail.id_boisson[i]].degre;
-                    }
-                    if( strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0){
-                        strcpy(type_cocktail,"alcool");
-                    }
-                }
-
-                fprintf(ecriture,"%s %.2f %d %d %s %s\n",cocktail.nom ,cocktail.prix ,degre_cocktail,0,type_cocktail,"cocktail");
+                fprintf(ecriture,"%s %.2f %d %d %s %s\n",cocktail.nom ,prix_cocktail(stock,cocktail) ,degre_cocktail(stock,cocktail),0,type_cocktail(stock,cocktail),"cocktail");
             }
         else{
             fclose(ecriture);
