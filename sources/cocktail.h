@@ -31,11 +31,19 @@ struct bdd
 
 };
 
+typedef struct panier_struc panier_struc;
+struct panier_struc
+{
+    boisson_struc stock[20];
+    int taille;
+
+};
+
 int taille_stock(char* data);
 boisson_struc *remplirstock_boisson();
 cocktail_struc *remplirstock_cocktail();
+int commande(boisson_struc* stock,panier_struc panier,int id_personne);
 
-char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client);
 char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
 int verification_type(boisson_struc *stock,char* type);
@@ -59,5 +67,8 @@ float prix_boisson(int degre, int contenance);
 
 boisson_struc *ajouterBoisson(boisson_struc *stock);
 bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
+
+panier_struc ajouterPanier(panier_struc panier,boisson_struc commande,int id_personne);
+
 
 #endif

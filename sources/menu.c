@@ -56,6 +56,9 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 
+	panier_struc panier;
+	panier.taille = 0;
+
 	char *menuActuel = "/client";
 	strcat(arborescence, menuActuel);
 
@@ -66,6 +69,7 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 	
 		affichageCentre("Que souhaitez-vous faire ?\n");
 		affichageMarge("1. Commander une boisson\n", 45);
+		affichageMarge("2. Afficher le panier\n", 45);
 		affichageMarge("Appuyez sur \'p\' pour revenir au menu precedent\n", 45);
 
 		do {
@@ -74,7 +78,10 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 
 			switch (inputMenu()) {
 			case '1':
-				retourFonction = saisie_commande(stock,cocktail_liste,arborescence,0);
+				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,0);
+				break;
+			case '2':
+				panier = panier_affichage(stock,cocktail_liste,panier,0);
 				break;
 			case 'p':
 				retourFonction = 'p';
@@ -137,16 +144,16 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 
 			switch (inputMenu()) {
 			case '1':
-				afficherTableau (stock,cocktail_liste,"tout");
+				afficherTableau (stock,cocktail_liste,"tout",taille_stock("data_boisson"));
 				break;
 			case '2':
-				afficherTableau (stock,cocktail_liste,"boisson");
+				afficherTableau (stock,cocktail_liste,"boisson",taille_stock("data_boisson"));
 				break;
 			case '3':
 				stock = ajouterBoisson(stock);
 				break;
 			case '4':
-				afficherTableau (stock,cocktail_liste,"cocktail");
+				afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"));
 				break;
 			case '5':
 				base_de_donne = ajouterCocktail(stock,cocktail_liste);
@@ -229,7 +236,7 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 	printf("%s\n", ligne);
 }
 
-void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie) {
+void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau) {
 
 	system("clear");
 	struct winsize w;
@@ -272,11 +279,9 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 	char chaineTemporaire[10] = {0};
 
-	int tailleStock = taille_stock("data_boisson");
-
 	afficherEntete(ligne, taillesColonnes, nombreColonnesTotal, tailleTotaleTableau);
 
-	for (int id = 0; id < tailleStock; id++) {
+	for (int id = 0; id < taille_tableau; id++) {
 
 		if (strcmp(stock[id].categorie, categorie) == 0 || strcmp("tout", categorie) == 0){
 
@@ -369,8 +374,10 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 	// ID NOM PRIX  CONTENANCE DEGRE TYPE CATEGORIE QT
 	// 3   30  4         9       5    30     30     8
 
+	if( taille_stock("data_boisson") == taille_tableau){
+		getchar();
+	}
 
-	getchar();
 	free(ligne);
 }
 
@@ -470,7 +477,35 @@ char* saisie() {
 
 }
 
-char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,char *arborescence,int id_personne){
+panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne){
+
+	char* interraction = calloc(10,sizeof(char));
+	afficherTableau(panier.stock,cocktail_liste,"tout",panier.taille);
+
+	if (panier.taille > 0){
+		float prix_total;
+
+		for(int i = 0 ; i<panier.taille; i++){
+			prix_total += panier.stock[i].prix;
+		}
+		printf("Le prix total est de : %.2f € \n",prix_total);
+		printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez valider commander votre panier entrer \'v\' ");
+		interraction = saisie();
+		if(strcmp(interraction,"v")){
+			commande(stock,panier,id_personne);
+			panier.taille = 0;
+		}
+
+	}
+	else{
+		printf("Votre panier est vide");
+		getchar();
+	}
+	return panier;
+}
+
+
+panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,char *arborescence,int id_personne){
 
 	char menuActuel[] = "/commander";
 	strcat(arborescence, menuActuel);
@@ -480,7 +515,7 @@ char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,char *a
 	long id;
 	long quantite;
 	int etape = 0;
-	char retourFonction;
+	boisson_struc commande_boisson;
 
 	do{
 		system("clear");
@@ -565,40 +600,29 @@ char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,char *a
 
 		case 5:
 			printf(" Votre commande : %s, Quantite : %d, Prix : %.2f€ , Type : %s\n",stock[id-1].nom,((int) quantite) ,stock[id-1].prix * quantite,stock[id-1].type);
-			printf("Taper \'v\' pour valider la commande, sinon taper \'p\' ");
+			printf("Taper \'v\' pour mettre votre commande au panier, sinon taper \'p\' ");
 			interraction = saisie();
 			if (strcmp(interraction,"p") == 0){
 				etape --;
 			}
 			if (strcmp(interraction,"v") == 0){
-				etape ++;
+				commande_boisson = stock[id-1];
+				commande_boisson.quantite = quantite;
+				commande_boisson.prix = stock[id-1].prix * quantite;
+				panier = ajouterPanier(panier,commande_boisson,id_personne);
+				etape = 8;
 			}
 		break;
-		
-		case 6:
-			retourFonction = commande(stock,id,quantite,id_personne);
-			if(retourFonction == 'v'){
-				printf("Taper sur entrer pour continuer\n\n");
-				printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",((int) quantite),stock[id-1].nom,stock[id-1].prix * quantite);
-				getchar();
-				etape ++;
-				}
-			else{
-				etape = 0;
-				printf("\tIl y a eu un problème dans la saisie de votre commande. \n\n");
-				getchar();
-			}
-		break;	
 
 		default:
-			return 0;
+			return panier;
 			break;
 		}
 
 	}
 	while(etape != 8);
 	supprimerAPartirDe(arborescence, menuActuel);
-	return 'v';
+	return panier;
 }
 
 boisson_struc saisie_boisson(boisson_struc *stock){
@@ -842,7 +866,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				for( int i = compteur_id; i< 6; i++){
 					cocktail.id_boisson[i] = -1;
 				}
-				if( verification_id(stock,"tout",conversion_long(interraction)) != 0){
+				if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(stock[conversion_long(interraction)-1].categorie,"boisson")){
 					cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;
 					compteur_id ++;
 				}

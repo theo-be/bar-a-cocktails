@@ -96,23 +96,24 @@ cocktail_struc *remplirstock_cocktail(){
         
 }
 
-char commande(boisson_struc *stock,long boisson_id,long quantite,int id_personne){
+int commande(boisson_struc* stock,panier_struc panier,int id_personne){
 
         FILE* ecriture = NULL;
         ecriture = fopen("../data/commande.txt", "a");
         if (ecriture != NULL){
+                for( int i = 0; i<panier.taille; i++){
+                    stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
 
-                boisson_id -= 1;
-                stock[boisson_id].quantite -= quantite;
-
-                fprintf(ecriture,"%s %.2f %ld %d %s \n",stock[boisson_id].nom ,stock[boisson_id].prix * quantite ,quantite ,id_personne,stock[boisson_id].categorie);
+                    fprintf(ecriture,"%s %.2f %d %d %d %s \n",panier.stock[i].nom ,panier.stock[i].prix * panier.stock[i].quantite,panier.stock[i].quantite,id_personne,panier.stock[i].id,panier.stock[i].categorie);
+                }
                 fclose(ecriture);
-                return 'v';
+                return 1;
             }
         else{
             fclose(ecriture);
             exit(-1);
         }
+    return 0;
 }
 
 char**tableau_type(boisson_struc *stock){
@@ -477,4 +478,13 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
     }
 
     return base_de_donne;
+}
+
+panier_struc ajouterPanier(panier_struc panier,boisson_struc commande){
+
+	panier.stock[panier.taille] = commande;
+    panier.taille ++;
+
+	return panier;
+
 }
