@@ -6,7 +6,6 @@
 char* vigenere(char* saisie){
 
     char* cleVigenere = "barman";
-    char* cryptage;
     int valeurCryptage;
     int i = 0;
     int longCle = strlen(cleVigenere)-1;

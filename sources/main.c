@@ -14,8 +14,6 @@
 int main (int argc, char** argv) {
     boisson_struc* stock = remplirstock_boisson();
     cocktail_struc* cocktail_liste = remplirstock_cocktail();
-    int taille = taille_stock("data_boisson");
-
 
   /* for(int i = 0;i<taille;i++){
         
