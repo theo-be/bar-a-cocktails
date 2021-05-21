@@ -16,6 +16,9 @@ int taille_stock(char* data){
     else if(strcmp(data,"data_cocktail") == 0){
         lecture = fopen("../data/data_cocktail.txt", "r");
     }
+    else if(strcmp(data,"data_commande") == 0){
+        lecture = fopen("../data/commande.txt", "r");
+    }
     else{
         exit(-1);
     }
@@ -98,22 +101,52 @@ cocktail_struc *remplirstock_cocktail(){
 
 int commande(boisson_struc* stock,panier_struc panier,int id_personne){
 
-        FILE* ecriture = NULL;
-        ecriture = fopen("../data/commande.txt", "a");
+    int taille = taille_stock("data_commande");
+    boisson_struc *boisson = malloc(taille * sizeof(boisson_struc));
+    int *id_personne_lecture = malloc(taille * sizeof(int));
 
-        if (ecriture != NULL){
-                for( int i = 0; i<panier.taille; i++){
-                    stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
+    FILE* lecture = NULL;
+    lecture = fopen("../data/commande.txt", "r");
+    if (lecture != NULL){
+        fscanf(lecture,"%d",&taille);
 
-                    fprintf(ecriture,"%s %.2f %d %d %d %s \n",panier.stock[i].nom ,panier.stock[i].prix * panier.stock[i].quantite,panier.stock[i].quantite,id_personne,panier.stock[i].id,panier.stock[i].categorie);
-                }
-                fclose(ecriture);
-                return 1;
-            }
-        else{
-            fclose(ecriture);
-            exit(-1);
+        for( int i = 0; i<taille; i++ ){
+            fscanf(lecture,"%s%*c %f%*c %d%*c %d%*c %d%*c %s",boisson[i].nom ,&boisson[i].prix,&boisson[i].quantite,&id_personne_lecture[i],&boisson[i].id,boisson[i].categorie);
         }
+    }
+    else{
+        fclose(lecture);
+        exit(-1);
+    }  
+
+
+    FILE* ecriture = NULL;
+
+    ecriture = fopen("../data/commande.txt", "w");
+    if (ecriture != NULL){
+
+            fprintf(ecriture,"%d\n",taille+1);
+
+            for( int i = 0; i<taille; i++){
+                fprintf(ecriture,"%s %.2f %d %d %d %s\n",boisson[i].nom ,boisson[i].prix,boisson[i].quantite,id_personne_lecture[i],boisson[i].id,boisson[i].categorie);
+            }
+            free(boisson);
+            free(id_personne_lecture);
+
+            for( int i = 0; i<panier.taille; i++){
+                if( id_personne != 0){
+                stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
+                }
+
+                fprintf(ecriture,"%s %.2f %d %d %d %s\n",panier.stock[i].nom ,panier.stock[i].prix,panier.stock[i].quantite,id_personne,panier.stock[i].id,panier.stock[i].categorie);
+            }
+            fclose(ecriture);
+            return 1;
+        }
+    else{
+        fclose(ecriture);
+        exit(-1);
+    }
     return 0;
 }
 
@@ -155,6 +188,7 @@ char * message_type(boisson_struc *stock){
 
     }
     strcat(chaine, " : ");
+    free(tableau);
     return chaine;
 }
 
@@ -166,9 +200,11 @@ int verification_type(boisson_struc *stock,char* type){
     for(int i =0; i<taille; i++){
 
         if (strcmp(type,tableau[i]) == 0){
+            free(tableau);
             return 1;
         }
     }
+    free(tableau);
     return 0;
 }
 
@@ -219,6 +255,7 @@ char* message_id(boisson_struc *stock,char* type){
                 strcat(chaine, " : ");
         }
     }
+    free(conversion);
     return chaine;
 
 }
@@ -240,7 +277,7 @@ char* message_quantite(boisson_struc *stock,int id){
     sprintf(conversion,"%d",stock[id].quantite);
     strcat(chaine, conversion);
     strcat(chaine, " : ");
-
+    free(conversion);
     return chaine;
 
 }
@@ -376,7 +413,7 @@ float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
 float prix_boisson(int degre, int contenance){
 
-    float prix = contenance * degre * 0.01;
+    float prix = contenance * degre * 0.003;
 
     return prix;
 }

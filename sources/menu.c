@@ -78,18 +78,18 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 
 			switch (inputMenu()) {
 			case '1':
-				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,0);
-				break;
+				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,1);
+			break;
 			case '2':
-				panier = panier_affichage(stock,cocktail_liste,panier,0);
-				break;
+				panier = panier_affichage(stock,cocktail_liste,panier,1);
+			break;
 			case 'p':
 				retourFonction = 'p';
-				break;
+			break;
 			default:
 				printf("Erreur dans la saisie\n");
 				erreurSaisie = 1;
-				break;
+			break;
 			}
 		} while (erreurSaisie == 1);
 	} while (retourFonction != 'p');
@@ -103,6 +103,9 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 	// -> les lister et pour plus de details les selectionner manuellement
 	// afficher cocktails
 	// creer cocktail
+
+	panier_struc panier;
+	panier.taille = 0;
 
 	do {
 		system("clear");
@@ -133,10 +136,14 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 		affichageCentre("Que souhaitez-vous faire ?\n\n");
 		affichageMarge("\t1. Afficher les stocks.\n\n", 30);
 		affichageMarge("\t2. Afficher les boissons.\n\n", 30);
+		affichageMarge("\t2. Afficher les boissons.\n\n", 30);
 		affichageMarge("\t3. Ajouter une boisson.\n\n", 30);
 		affichageMarge("\t4. Afficher les cocktails.\n\n", 30);
 		affichageMarge("\t5. Ajouter un cocktail.\n\n", 30);
-		affichageMarge("\t6. Revenir au menu principal.\n\n", 30);
+		affichageMarge("\t6. Ajouter une boisson au plateau du serveur.\n\n", 30);
+		affichageMarge("\t7. Servir le plateau.\n\n", 30);
+		affichageMarge("\t8. Administration.\n\n", 30);
+		affichageMarge("\t9. Revenir au menu principal.\n\n", 30);
 
 		do{
 			erreurSaisie = 0;
@@ -145,24 +152,33 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 			switch (inputMenu()) {
 			case '1':
 				afficherTableau (stock,cocktail_liste,"tout",taille_stock("data_boisson"));
-				break;
+			break;
 			case '2':
 				afficherTableau (stock,cocktail_liste,"boisson",taille_stock("data_boisson"));
-				break;
+			break;
 			case '3':
 				stock = ajouterBoisson(stock);
-				break;
+			break;
 			case '4':
 				afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"));
-				break;
+			break;
 			case '5':
 				base_de_donne = ajouterCocktail(stock,cocktail_liste);
 				stock = base_de_donne.stock;
 				cocktail_liste = base_de_donne.cocktail_liste;
-				break;
+			break;
 			case '6':
+				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,0);
+			break;
+			case '7':
+				panier = panier_affichage(stock,cocktail_liste,panier,0);
+			break;
+			case '8':
+				administration();
+			break;
+			case '9':
 				quittterMenu = 1;
-				break;
+			break;
 			
 			default:
 				printf("Erreur dans la saisie\n");
@@ -501,7 +517,6 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 		printf("Votre panier est vide");
 		getchar();
 	}
-	getchar();
 
 	return panier;
 }
@@ -538,7 +553,7 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 				etape ++;
 			}
 			else if( conversion_long(interraction) == 1){
-				etape = 2;
+				etape = 3;
 			}
 		break;
 
@@ -963,6 +978,44 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 
 }
 
+void administration(){
+
+	system("clear");
+    affichageCentre("Les commandes enregistrés :");
+    FILE* lecture = NULL;
+    int taille;
+    float chiffre_daffaire = 0;
+
+    lecture = fopen("../data/commande.txt", "r");
+
+    if (lecture != NULL)
+    {
+        boisson_struc boisson;
+        int id_personne;
+        fscanf(lecture,"%d", &taille);
+
+        for( int i = 0; i<taille;i++ ){
+            fscanf(lecture, "%s %f %d %d %d %s",boisson.nom,&boisson.prix,&boisson.quantite,&id_personne,&boisson.id,boisson.categorie);
+            if(id_personne){
+                printf("\t%s : %d %s au prix de : %.2f€, %s par un client\n",boisson.categorie,boisson.quantite,boisson.nom,boisson.prix,boisson.type);
+            }
+            else{
+                printf("\t%s : %d %s au prix de : %.2f€, %s par un serveur\n",boisson.categorie,boisson.quantite,boisson.nom,boisson.prix,boisson.type);
+            }
+            chiffre_daffaire += boisson.prix;
+        }
+
+        fclose(lecture);
+    }
+    else{
+        fclose(lecture);
+        exit(-1);
+    }  
+
+    printf("\n\t Nombre de commande %d, chiffre d'affaire : %.2f€",taille,chiffre_daffaire);
+	getchar();
+        
+}
 
 
 /*

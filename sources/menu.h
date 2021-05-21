@@ -27,4 +27,6 @@ void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes);
 boisson_struc saisie_boisson(boisson_struc *stock);
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
+void administration();
+
 #endif
