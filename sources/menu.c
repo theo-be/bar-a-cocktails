@@ -107,6 +107,8 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 	}
 	while(verification_mdp(saisie()) == 0);
 
+
+	char retourFonction = 0;
 	int erreurSaisie = 0;
 	int quittterMenu = 0;
 
@@ -135,18 +137,22 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 			switch (inputMenu()) {
 			case '1':
 				afficherTableau (stock,cocktail_liste,"tout");
+				retourFonction = 0;
 				break;
 			case '2':
 				afficherTableau (stock,cocktail_liste,"boisson");
+				retourFonction = 0;
 				break;
 			case '3':
 				stock = ajouterBoisson(stock);
+				retourFonction = 0;
 				break;
 			case '4':
 				afficherTableau (stock,cocktail_liste,"cocktail");
 				break;
 			case '5':
 				ajouterCocktail(stock,cocktail_liste);
+				retourFonction = 0;
 				break;
 			case '6':
 				quittterMenu = 1;
@@ -173,30 +179,38 @@ void remplirEspaces (char tab[], int debut, int fin) {
 	}
 } 
 
-void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur) {
-	// initialisation
-	remplirEspaces(ligne, 0,  largeur);
-
+void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes) {
 	int indiceSeparation = -1;
 	for (int i = 0; i < nbColonnes - 1; i++) {
 		indiceSeparation += (taillesColonnes[i] + 1);
 		ligne[indiceSeparation] = '|';
 	}
+}
+
+void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur) {
+	// initialisation
+	struct winsize w;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	remplirEspaces(ligne, 0, w.ws_col);
+
+	separerColonnes(ligne, nbColonnes, taillesColonnes);
 
 	// incice de colonne global
 	int indiceDebutCol = 0;
 	int colonne = 0;
 	int tailleChaineAAjouter = 0;
-	char entetes[6][9] = {
+	char entetes[8][11] = {
 		"id",
 		"nom",
 		"prix",
+		"contenance",
 		"degre",
 		"type",
+		"categorie",
 		"quantite"
 	};
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 8; i++) {
 		tailleChaineAAjouter = (int)strlen(entetes[i]);
 		for (int j = 0; j < tailleChaineAAjouter; j++) {
 			ligne[indiceDebutCol + j] = entetes[i][j]; // <- nom de l'array qui contient les infos a afficher
@@ -204,6 +218,15 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 		indiceDebutCol += (taillesColonnes[colonne] + 1);
 		colonne++;
 	}
+
+	printf("%s\n", ligne);
+
+	remplirEspaces(ligne, 0, w.ws_col);
+
+	for (int i = 0; i < largeur; i++) {
+		ligne[i] = '=';
+	}
+	separerColonnes(ligne, nbColonnes, taillesColonnes);
 	printf("%s\n", ligne);
 }
 
@@ -217,21 +240,26 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 	int tailleColId = 3;
 	int tailleColPrix = 4;
+	int tailleColContenance = 10;
 	int tailleColDegre = 5;
 	int tailleColQuantite = 8;
+
 	int tailleMaxColFlex = 30;
 
-	int tailleTotaleColSatiques =  tailleColId + tailleColPrix + tailleColDegre + tailleColQuantite;
+	int tailleTotaleColSatiques =  tailleColId + tailleColPrix + tailleColContenance + tailleColDegre + tailleColQuantite;
 
-	int nombreColonnesFlex = 2;
-	int nombreColonnesTotal = nombreColonnesFlex + 4;
+	int nombreColonnesFlex = 3;
+	int nombreColonnesTotal = nombreColonnesFlex + 5;
 
 	int tailleColonnesFlex = (w.ws_col - tailleTotaleColSatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
 	if (tailleColonnesFlex > tailleMaxColFlex) tailleColonnesFlex = tailleMaxColFlex;
 
+	int tailleTotaleTableau = tailleTotaleColSatiques + tailleColonnesFlex * nombreColonnesFlex + nombreColonnesTotal;
+	
+
 	//printf("taille colonnes flexibles : %d\n", tailleColonnesFlex);
 
-	int taillesColonnes[] = {tailleColId, tailleColonnesFlex, tailleColPrix, tailleColDegre, tailleColonnesFlex};
+	int taillesColonnes[] = {tailleColId, tailleColonnesFlex, tailleColPrix, tailleColContenance, tailleColDegre, tailleColonnesFlex, tailleColonnesFlex};
 
 	// tableau de ligne
 	char *ligne = malloc((w.ws_col + 1) * sizeof(char));
@@ -240,7 +268,6 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 
 	int tailleChaineAAjouter = 0;
-	int indiceSeparation = -1;
 	int indiceDebutCol = 0;
 	int colonne = 0;
 
@@ -248,25 +275,21 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 	int tailleStock = taille_stock("data_boisson");
 
-	afficherEntete(ligne, taillesColonnes, nombreColonnesTotal, w.ws_col);
+	afficherEntete(ligne, taillesColonnes, nombreColonnesTotal, tailleTotaleTableau);
 
 	for (int id = 0; id < tailleStock; id++) {
 
-		if(strcmp(stock[id].categorie,categorie) == 0 || strcmp("tout",categorie) == 0  ){
+		if (strcmp(stock[id].categorie, categorie) == 0 || strcmp("tout", categorie) == 0){
 
 			// initialisation
-			remplirEspaces(ligne, 0,  w.ws_col - 1);
+			remplirEspaces(ligne, 0,  w.ws_col);
 
-			indiceSeparation = -1;
-			for (int i = 0; i < nombreColonnesTotal - 1; i++) {
-				indiceSeparation += (taillesColonnes[i] + 1);
-				ligne[indiceSeparation] = '|';
-			}
+			separerColonnes(ligne, nombreColonnesTotal, taillesColonnes);
 
 			// incice de colonne global
 			indiceDebutCol = 0;
 			colonne = 0;
-
+// 
 
 			// ID
 			sprintf(chaineTemporaire, "%d", stock[id].id);
@@ -293,6 +316,15 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
 
+			// CONTENANCE
+			sprintf(chaineTemporaire, "%d", stock[id].contenance);
+			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
 			// DEGRE
 			sprintf(chaineTemporaire, "%d", stock[id].degre);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
@@ -310,52 +342,37 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
 
+			// CATEGORIE
+			tailleChaineAAjouter = (int)strlen(stock[id].categorie);
+			for (int j = 0; j < tailleChaineAAjouter; j++) {
+				ligne[indiceDebutCol + j] = stock[id].categorie[j]; // <- nom de l'array qui contient les infos a afficher
+			}
+			indiceDebutCol += (taillesColonnes[colonne] + 1);
+			colonne++;
+
 			// QT
 			sprintf(chaineTemporaire, "%d", stock[id].quantite);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
 				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
 			}
-			indiceDebutCol += (taillesColonnes[colonne] + 1);
-			colonne++;
+			// indiceDebutCol += (taillesColonnes[colonne] + 1);
+			// colonne++;
 			printf("%s\n", ligne);
 
 		}
 	}
 
-
 	// affichage
-	// exemple : 1 coca 1.50 0 boisson 20
-
+	// exemple : 1 coca 1.50 33 0 soda boisson 20
+	// COLONNES TOTALES : 8
 	// ORDRE :
-	// ID NOM PRIX DEGRE TYPE QT
-	// 3   30  4     5    30   8
-
+	// ID NOM PRIX  CONTENANCE DEGRE TYPE CATEGORIE QT
+	// 3   30  4         9       5    30     30     8
 
 
 	getchar();
 	free(ligne);
-
-	// si moins de 5 cols par colonne, demander d'agrandir la fenetre
-	// si pas assez de place pour tout afficher dans une col,
-	// separer la chaine avec les espaces et l'afficher dans la ligne de dessous
-	//	-> 2 arrays : 1 avec les chaines a remettre, 1 avec l'emplacement de ces chaines
-	// separer les colonnes par | /
-
-	// COLONNES TOTALES : 6
-
-	/*
-	{
-    char nom[30];
-    float prix;
-    float degre;
-    int quantite;
-    char type[30];
-    char categorie[30];
-    int id;
-	};
-	*/
-
 }
 
 void affichageCentre (char *chaine) {
@@ -422,8 +439,9 @@ char inputMenu () {
 	size_t bufsize = 2;
 	char* buffer = NULL;
 	buffer = (char*)malloc(bufsize * sizeof(char));
+	int taille = 0;
 
-	getline(&buffer, &bufsize, stdin);
+	taille = getline(&buffer, &bufsize, stdin);
 	
 	char caractere = buffer[0];
 	free(buffer);
@@ -563,7 +581,7 @@ char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,char *a
 			retourFonction = commande(stock,id,quantite,id_personne);
 			if(retourFonction == 'v'){
 				printf("Taper sur entrer pour continuer\n\n");
-				printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",((int) quantite),stock[id-1].nom,stock[id-1].prix * quantite);
+				printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",quantite,stock[id-1].nom,stock[id-1].prix * quantite);
 				getchar();
 				etape ++;
 				}
@@ -615,7 +633,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 		break;
 
 		case 1:
-			printf("\tVeuillez entre le type de boisson (ex: sucre / alcool) : \n");
+			printf("\tVeuillez entrer le prix de %s :\n",boisson.nom);
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape --;
@@ -626,7 +644,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 			break;
 			
-		case 2:
+		case 3:
 			printf("\tVeuillez entre le degre ");
 			if (strcmp(interraction,"alcool") == 0 ){
 				printf("d'alcool de %s :\n",boisson.nom);
@@ -644,13 +662,10 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 					etape ++;
 					boisson.degre = (int) interraction_chiffre;
 				}
-				if(boisson.degre == 0){
-					etape = 7;
-				}
 			}
 		break;
 
-		case 3:
+		case 4:
 			printf("\tVeuillez entre la quantite disponible de %s :\n",boisson.nom);
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -665,7 +680,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 		break;
 
-		case 4:
+		case 5:
 			printf("\tVeuillez entre la contenance en cl de %s :\n",boisson.nom);
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -680,7 +695,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 		break;
 
-		case 5:
+		case 6:
 			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");
 			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s, Contenance :  %d\n",boisson.nom ,boisson.prix ,boisson.quantite,boisson.degre,boisson.type,boisson.contenance);
 			interraction = saisie();
@@ -743,6 +758,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
 	char* interraction = calloc(30,sizeof(char));
+	long interraction_chiffre;
 	int id;
 	int compteur_id = 0;
 	int compteur_contenance;
@@ -806,7 +822,10 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				for( int i = compteur_id; i< 5; i++){
 					cocktail.id_boisson[i] = -1;
 				}
-			}
+				else if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(interraction,"") != 0){
+					cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;
+					compteur_id ++;
+				}
 		break;
 
 		case 2:
@@ -898,6 +917,29 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 	return cocktail;
 
 }
+
+
+char afficherStocks(boisson_struc *stock,char* categorie){
+
+	int taille = taille_stock("data_boisson");
+	system("clear");
+	printf("Si vous souhaitez quitter, faite entrer\n\n");
+
+	printf("\tVoici l'etat des stocks :\n\n");
+	for(int i = 0; i<taille; i++){
+
+			if( categorie == "boisson" && strcmp(stock[i].categorie,"boisson") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"boisson") == 0){
+				printf("Boisson : Id %d, Nom : %s, Quantite : %d\n",stock[i].id,stock[i].nom,stock[i].quantite);
+			}
+			else if( categorie == "cocktail" && strcmp(stock[i].categorie,"cocktail") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"cocktail") == 0){
+				printf("Cocktail : Id %d, Nom : %s, Quantite : %d\n",stock[i].id,stock[i].nom,stock[i].quantite);
+			}
+	}
+	getchar();
+
+	return 0;
+}
+
 
 /*
 
