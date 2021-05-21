@@ -20,6 +20,7 @@ void affichageCentre(char *chaine);
 void affichageMarge(char *chaine, int ratio);
 
 void afficherTableau(boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie);
+void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur);
 void remplirEspaces(char tab[], int debut, int fin);
 
 

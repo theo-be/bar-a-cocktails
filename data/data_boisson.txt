@@ -1,9 +1,9 @@
 8
-coca 1.50 5 33 12 soda boisson
-whisky 5.00 40 33 3 alcool boisson
-grenadine 2.00 8 33 3 sucre boisson
-limonade 1.20 5 33 8 soda boisson
-mojito 5.00 5 33 5 alcool cocktail
-whisky-coca 5.00 5 33 5 alcool cocktail
-jus-de-pomme 1.50 8 33 20 fruit boisson
+coca 1.50 10 33 12 soda boisson
+grenadine 2.00 7 33 3 sucre boisson
+limonade 1.20 10 33 8 soda boisson
+jus-de-pomme 1.50 10 33 20 fruit boisson
 eau 1 0 50 20 eau boisson
+whisky 5.00 40 33 3 alcool boisson
+whisky-coca 5.00 5 33 5 alcool cocktail
+mojito 5.00 5 33 5 alcool cocktail

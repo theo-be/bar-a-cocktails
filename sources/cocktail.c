@@ -170,12 +170,12 @@ int verification_type(boisson_struc *stock,char* type){
     return 0;
 }
 
-int verification_id(boisson_struc *stock,long id){
+int verification_id(boisson_struc *stock,char* type,long id){
 
     int taille = taille_stock("data_boisson");
 
     for(int i = 0; i<taille; i++){
-        if (stock[i].id == id){
+        if ( stock[i].id == id && strcmp(stock[i].type,type) == 0 || stock[i].id == id && strcmp(type,"tout") == 0 ){
             return 1;
         }
     }

@@ -30,7 +30,7 @@ char commande(boisson_struc *stock,long boisson_id,long quantite,int id_client);
 char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
 int verification_type(boisson_struc *stock,char* type);
-int verification_id(boisson_struc *stock,long id);
+int verification_id(boisson_struc *stock,char* type,long id);
 int* tableau_id(boisson_struc *stock,char* type);
 char* message_id(boisson_struc *stock,char* type);
 char* message_quantite(boisson_struc *stock,int id);
