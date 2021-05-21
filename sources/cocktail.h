@@ -4,13 +4,13 @@
 typedef struct boisson_struc boisson_struc;
 struct boisson_struc
 {
-    char categorie[30];
     char nom[30];
     float prix;
     int degre;
     int quantite;
     int contenance;
     char type[30];
+    char categorie[30];
     int id;
 };
 
@@ -21,6 +21,14 @@ struct cocktail_struc
     int id_boisson[6];
     int contenance[6];
     float prix;
+};
+
+typedef struct bdd bdd;
+struct bdd
+{
+    cocktail_struc *cocktail_liste;
+    boisson_struc *stock;
+
 };
 
 int taille_stock(char* data);
@@ -36,8 +44,7 @@ int* tableau_id(boisson_struc *stock,char* type);
 char* message_id(boisson_struc *stock,char* type);
 char* message_quantite(boisson_struc *stock,int id);
 int verification_nom(boisson_struc *stock,char* nom);
-char* recherche_boisson(boisson_struc *stock,char* recherche);
-
+char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie);
 char* affichage_boisson(boisson_struc *stock);
 
 long conversion_long(char* chaine);
@@ -48,7 +55,9 @@ char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail);
 int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail);
 float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail);
 
+float prix_boisson(int degre, int contenance);
+
 boisson_struc *ajouterBoisson(boisson_struc *stock);
-cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
+bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
 #endif
