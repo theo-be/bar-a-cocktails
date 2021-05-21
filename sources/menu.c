@@ -107,8 +107,6 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 	}
 	while(verification_mdp(saisie()) == 0);
 
-
-	char retourFonction = 0;
 	int erreurSaisie = 0;
 	int quittterMenu = 0;
 
@@ -137,22 +135,18 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 			switch (inputMenu()) {
 			case '1':
 				afficherTableau (stock,cocktail_liste,"tout");
-				retourFonction = 0;
 				break;
 			case '2':
 				afficherTableau (stock,cocktail_liste,"boisson");
-				retourFonction = 0;
 				break;
 			case '3':
 				stock = ajouterBoisson(stock);
-				retourFonction = 0;
 				break;
 			case '4':
 				afficherTableau (stock,cocktail_liste,"cocktail");
 				break;
 			case '5':
 				ajouterCocktail(stock,cocktail_liste);
-				retourFonction = 0;
 				break;
 			case '6':
 				quittterMenu = 1;
@@ -428,9 +422,8 @@ char inputMenu () {
 	size_t bufsize = 2;
 	char* buffer = NULL;
 	buffer = (char*)malloc(bufsize * sizeof(char));
-	int taille = 0;
 
-	taille = getline(&buffer, &bufsize, stdin);
+	getline(&buffer, &bufsize, stdin);
 	
 	char caractere = buffer[0];
 	free(buffer);
@@ -527,7 +520,7 @@ char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,char *a
 		break;
 
 		case 3:
-			printf(" Votre commande : %s, Quantite : %d, Prix : %.2f€ , Type : %s\n",stock[id-1].nom,quantite ,stock[id-1].prix * quantite,stock[id-1].type);
+			printf(" Votre commande : %s, Quantite : %d, Prix : %.2f€ , Type : %s\n",stock[id-1].nom,((int) quantite) ,stock[id-1].prix * quantite,stock[id-1].type);
 			printf("Taper \'v\' pour valider la commande, sinon taper \'p\' ");
 			interraction = saisie();
 			if (strcmp(interraction,"p") == 0){
@@ -542,7 +535,7 @@ char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,char *a
 			retourFonction = commande(stock,id,quantite,id_personne);
 			if(retourFonction == 'v'){
 				printf("Taper sur entrer pour continuer\n\n");
-				printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",quantite,stock[id-1].nom,stock[id-1].prix * quantite);
+				printf("\tVotre commande de %d %s au prix de %.2f€ a bien ete enregistre \n\n",((int) quantite),stock[id-1].nom,stock[id-1].prix * quantite);
 				getchar();
 				etape = 4;
 				}
@@ -594,33 +587,18 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 		break;
 
 		case 1:
-			printf("\tVeuillez entrer le prix de %s :\n",boisson.nom);
+			printf("\tVeuillez entre le type de boisson (ex: sucre / alcool) : \n");
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 0;
 				}
-				else if(strcmp(interraction,"") != 0 ){
-					interraction_chiffre = (float) conversion_long(interraction);
-					if( interraction_chiffre > 0){
-						etape = 2;
-						boisson.prix = interraction_chiffre;
-					}
-				}
-		break;
-
-		case 2:
-			printf("\tVeuillez entre le type de boisson (ex: sucre / alcool) : \n");
-			interraction = saisie();
-				if (strcmp(interraction,"p") == 0){
-					etape = 1;
-				}
 				else if( strcmp(interraction,"") != 0){
-					etape = 3;
+					etape = 2;
 					strcpy(boisson.type,interraction);
 				}
 			break;
 			
-		case 3:
+		case 2:
 			printf("\tVeuillez entre le degre ");
 			if (strcmp(interraction,"alcool") == 0 ){
 				printf("d'alcool de %s :\n",boisson.nom);
@@ -630,19 +608,37 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 			}
 			interraction = saisie();
 			if (strcmp(interraction,"p") == 0){
-				etape = 2;
+				etape = 1;
 			}
 			else if(strcmp(interraction,"") != 0 ){
 			interraction_chiffre = conversion_long(interraction);
 				if( interraction_chiffre >= 0){
-					etape = 4;
+					etape = 3;
 					boisson.degre = (int) interraction_chiffre;
+				}
+				if(boisson.degre == 0){
+					etape = 7;
 				}
 			}
 		break;
 
-		case 4:
+		case 3:
 			printf("\tVeuillez entre la quantite disponible de %s :\n",boisson.nom);
+			interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = 2;
+				}
+				else if(strcmp(interraction,"") != 0 ){
+					interraction_chiffre = conversion_long(interraction);
+					if( interraction_chiffre > 0){
+						etape = 4;
+						boisson.quantite= (int) interraction_chiffre;
+					}
+				}
+		break;
+
+		case 4:
+			printf("\tVeuillez entre la contenance en cl de %s :\n",boisson.nom);
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 3;
@@ -651,27 +647,12 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 					interraction_chiffre = conversion_long(interraction);
 					if( interraction_chiffre > 0){
 						etape = 5;
-						boisson.quantite= (int) interraction_chiffre;
-					}
-				}
-		break;
-
-		case 5:
-			printf("\tVeuillez entre la contenance en cl de %s :\n",boisson.nom);
-			interraction = saisie();
-				if (strcmp(interraction,"p") == 0){
-					etape = 4;
-				}
-				else if(strcmp(interraction,"") != 0 ){
-					interraction_chiffre = conversion_long(interraction);
-					if( interraction_chiffre > 0){
-						etape = 6;
 						boisson.contenance= (int) interraction_chiffre;
 					}
 				}
 		break;
 
-		case 6:
+		case 5:
 			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");
 			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s, Contenance :  %d\n",boisson.nom ,boisson.prix ,boisson.quantite,boisson.degre,boisson.type,boisson.contenance);
 			interraction = saisie();
@@ -682,6 +663,21 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				etape = 8;
 				boisson.id = -1;
 			}
+		break;
+
+		case 7:	
+			printf("\tVeuillez entrer le prix de %s :\n",boisson.nom);
+			interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = 2;
+				}
+				else if(strcmp(interraction,"") != 0 ){
+					interraction_chiffre = (float) conversion_long(interraction);
+					if( interraction_chiffre > 0){
+						etape = 3;
+						boisson.prix = interraction_chiffre;
+					}
+				}
 		break;
 
 		case 10:
@@ -719,7 +715,6 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
 	char* interraction = calloc(30,sizeof(char));
-	long interraction_chiffre;
 	int id;
 	int compteur_id = 0;
 	int etape = 0;
@@ -756,22 +751,33 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 					printf("%s ",stock[cocktail.id_boisson[i]].nom);
 				}
 			}
-			printf("\nFaire une recherche :");
-			printf("%s\n",recherche_boisson(stock,saisie()));
-			interraction = saisie();
-				if(strcmp(interraction,"p") == 0){
-					etape = 0;
-				}
-				else if( strcmp(interraction,"v") == 0 ){
-					etape = 2;
-					for( int i = compteur_id; i< 5; i++){
-						cocktail.id_boisson[i] = -1;
+
+			if ( compteur_id < 6 ){
+				printf("\nFaire une recherche :");
+				printf("%s\n",recherche_boisson(stock,saisie()));
+				interraction = saisie();
+					if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(interraction,"") != 0){
+						cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;
+						compteur_id ++;
 					}
+			}
+
+			else{
+				printf("\n Vous ne pouvez pas ajouter plus de composant à votre cocktail :");
+				printf("\n Entrer \'v\' si vous souhaitez valider sa composition, sinon entrer \'p\' \n");
+				if(strcmp(saisie(),"p") == 0){
+					compteur_id = 0;
+			}
+			}
+			if(strcmp(interraction,"p") == 0){
+				etape = 0;
+			}
+			else if( strcmp(interraction,"v") == 0 && compteur_id > 1){
+				etape = 2;
+				for( int i = compteur_id; i< 5; i++){
+					cocktail.id_boisson[i] = -1;
 				}
-				else if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(interraction,"") != 0){
-					cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;
-					compteur_id ++;
-				}
+			}
 		break;
 
 		case 2: 
@@ -793,8 +799,31 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 		break;
 
 		case 3:
-			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");	
-			//		printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s, Contenance :  %d\n",cocktail.nom ,cocktail.prix ,boisson.quantite,boisson.degre,boisson.type,boisson.contenance);
+			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");
+			int quantite = stock[cocktail.id_boisson[0]].quantite;
+			int contenance = 0;
+			int degre;
+			char* type = calloc(20, sizeof(char));
+			strcpy(type,"sans-alcool");
+
+			for(int i = 0; i<5; i++){
+				if(cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){
+					quantite = stock[cocktail.id_boisson[i]].quantite;
+				}
+				if(cocktail.id_boisson[i] != -1){
+					cocktail.prix += stock[cocktail.id_boisson[i]].prix *1.10;
+				}
+				if(cocktail.id_boisson[i] != -1){
+					degre = stock[cocktail.id_boisson[i]].degre ;
+				}
+				if(cocktail.id_boisson[i] != -1){
+					contenance += stock[cocktail.id_boisson[i]].contenance ;
+				}
+				if(cocktail.id_boisson[i] != -1 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") ){
+					strcpy(type,"alcool") ;
+				}
+			}
+			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s, Contenance :  %d\n",cocktail.nom ,cocktail.prix ,quantite,degre,type,contenance);
 			printf("\t Veuillez entrer le prix du cocktail\n");
 			interraction = saisie();
 				if(strcmp(interraction,"p") == 0){
@@ -838,29 +867,6 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 	return cocktail;
 
 }
-
-
-char afficherStocks(boisson_struc *stock,char* categorie){
-
-	int taille = taille_stock("data_boisson");
-	system("clear");
-	printf("Si vous souhaitez quitter, faite entrer\n\n");
-
-	printf("\tVoici l'etat des stocks :\n\n");
-	for(int i = 0; i<taille; i++){
-
-			if( categorie == "boisson" && strcmp(stock[i].categorie,"boisson") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"boisson") == 0){
-				printf("Boisson : Id %d, Nom : %s, Quantite : %d\n",stock[i].id,stock[i].nom,stock[i].quantite);
-			}
-			else if( categorie == "cocktail" && strcmp(stock[i].categorie,"cocktail") == 0 || categorie == "tout" && strcmp(stock[i].categorie,"cocktail") == 0){
-				printf("Cocktail : Id %d, Nom : %s, Quantite : %d\n",stock[i].id,stock[i].nom,stock[i].quantite);
-			}
-	}
-	getchar();
-
-	return 0;
-}
-
 
 /*
 

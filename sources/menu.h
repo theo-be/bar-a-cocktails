@@ -11,7 +11,6 @@ void supprimerAPartirDe (char *chaine, char* supp);
 
 char* saisie();
 char saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence,int id_personne);
-char afficherStocks(boisson_struc *stock,char* categorie);
 
 boisson_struc saisie_boisson(boisson_struc *stock);
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);

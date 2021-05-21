@@ -82,7 +82,7 @@ cocktail_struc *remplirstock_cocktail(){
         cocktail_struc *tab_cocktail = malloc(taille * sizeof(cocktail_struc) );
 
         for( int i = 0; i<taille; i++ ){
-            fscanf(lecture, "%s%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d",cocktail.nom,&cocktail.id_boisson[0],&cocktail.id_boisson[1],&cocktail.id_boisson[2],&cocktail.id_boisson[3],&cocktail.id_boisson[4],&cocktail.id_boisson[5]);
+            fscanf(lecture, "%s%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c %d%*c",cocktail.nom,&cocktail.id_boisson[0],&cocktail.id_boisson[1],&cocktail.id_boisson[2],&cocktail.id_boisson[3],&cocktail.id_boisson[4],&cocktail.id_boisson[5],&cocktail.contenance);
             tab_cocktail[i] = cocktail;
         }
 

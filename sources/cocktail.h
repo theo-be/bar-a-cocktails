@@ -19,6 +19,7 @@ struct cocktail_struc
 {
     char nom[30];
     int id_boisson[6];
+    int contenance;
     float prix;
 };
 
