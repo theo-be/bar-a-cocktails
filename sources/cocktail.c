@@ -175,7 +175,7 @@ int verification_id(boisson_struc *stock,char* type,long id){
     int taille = taille_stock("data_boisson");
 
     for(int i = 0; i<taille; i++){
-        if ( stock[i].id == id && strcmp(stock[i].type,type) == 0 || stock[i].id == id && strcmp(type,"tout") == 0 ){
+        if ( (stock[i].id == id && strcmp(stock[i].type,type) == 0) || (stock[i].id == id && strcmp(type,"tout") == 0) ){
             return 1;
         }
     }
@@ -186,7 +186,6 @@ int* tableau_id(boisson_struc *stock,char* type){
 
     int taille = taille_stock("data_boisson");
     int* tableau_id = calloc(taille, sizeof(int));
-    int i = 0;
     for(int i = 0; i<taille; i++){
 
         if(strcmp(type,"tout") == 0){
@@ -326,14 +325,14 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 
                     for(int i = 0 ;i<taille; i++){
                         if(boisson.id == i){
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite+boisson.quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) (stock[i].degre * stock[i].contenance)) ,stock[i].degre,stock[i].quantite+boisson.quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
                         }
                         else{
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) (stock[i].degre * stock[i].contenance) * 0.01) ,stock[i].degre,stock[i].quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
                         }
                     }
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom ,boisson.prix ,boisson.degre,boisson.quantite,boisson.contenance,boisson.type,"boisson");
+                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom , ((float) (boisson.degre*boisson.contenance)),boisson.degre,boisson.quantite,boisson.contenance,boisson.type,"boisson");
                     }
                     fclose(ecriture);
                 }
@@ -348,7 +347,6 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
     return stock;
     
 }
-
 
 cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
@@ -368,7 +366,7 @@ cocktail_struc *ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_li
                 fprintf(ecriture,"%s %d %d %d %d %d %d \n",cocktail_liste[i].nom,cocktail_liste[i].id_boisson[0],cocktail_liste[i].id_boisson[1],cocktail_liste[i].id_boisson[2],cocktail_liste[i].id_boisson[3],cocktail_liste[i].id_boisson[4],cocktail_liste[i].id_boisson[5]);
                 }
 
-                 fprintf(ecriture,"%s %d %d %d %d %d %d \n",cocktail.nom,cocktail.id_boisson[0]&cocktail.id_boisson[1],cocktail.id_boisson[2],cocktail.id_boisson[3],cocktail.id_boisson[4],cocktail.id_boisson[5]);
+                 fprintf(ecriture,"%s %d %d %d %d %d %d \n",cocktail.nom,cocktail.id_boisson[0],cocktail.id_boisson[1],cocktail.id_boisson[2],cocktail.id_boisson[3],cocktail.id_boisson[4],cocktail.id_boisson[5]);
                  fclose(ecriture);
             }
         else{
