@@ -89,6 +89,11 @@ boisson_struc saisie_boisson(boisson_struc *stock);
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
 /*!
+*  \brief Prototype de la procedure afficher_Cocktail
+*/
+void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste);
+
+/*!
 *  \brief Prototype de la procedure administration
 */
 void administration();
