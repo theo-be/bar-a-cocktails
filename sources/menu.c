@@ -495,8 +495,7 @@ void supprimerAPartirDe (char *chaine, char* sousChaine) {
 
 char* saisie() {
     
-    size_t bufsize = 30;
-	char* chaine = malloc(bufsize * sizeof(char));
+	char* chaine = malloc(30 * sizeof(char)); // On alloue la mémoire à la chaine, pour 30 caractères
 	scanf("%s",chaine);
 
 	return chaine;

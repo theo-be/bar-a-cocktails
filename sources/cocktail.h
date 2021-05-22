@@ -7,7 +7,6 @@
 * \brief Le fichier cocktail.c contient l'ensemble des fonctions necessaires pour la gestion des boissons et des cocktails.
 */
 
-
 #ifndef H_cocktail
 #define H_cocktail
 
