@@ -209,7 +209,7 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
-		affichageCentre("Veuillez saisir le mot de passe pour acceder à l\'interface barman .\n");
+		affichageCentre("Veuillez saisir le mot de passe pour acceder a l\'interface barman .\n");
 
 
 	}
@@ -696,8 +696,8 @@ void supprimerAPartirDe (char *chaine, char* sousChaine) {
 */
 char* saisie() {
     
-	char* chaine = malloc(30 * sizeof(char));		 // On alloue la mémoire à la chaine, pour 30 caractres
-	scanf("%s",chaine);								 // On fait saisir à l'utilisateur une chaine de caracteres
+	char* chaine = malloc(30 * sizeof(char));		 // On alloue la mémoire a la chaine, pour 30 caractres
+	scanf("%s",chaine);								 // On fait saisir a l'utilisateur une chaine de caracteres
 
 	return chaine;
 
@@ -724,7 +724,7 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 	char* interraction = calloc(10,sizeof(char));
 	afficherTableau(panier.stock,cocktail_liste,"tout",panier.taille,0);    // On affiche le tableau de la fonction afficherTableau
 
-	if (panier.taille > 0){ 						// On regarde si le panier à quelques choses à l'interieur sinon on passe
+	if (panier.taille > 0){ 						// On regarde si le panier a quelques choses a l'interieur sinon on passe
 		float prix_total;
 
 		for(int i = 0 ; i<panier.taille; i++){
@@ -740,10 +740,10 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 		interraction = saisie();
 		if(strcmp(interraction,"v") == 0){
 			commande(stock,cocktail_liste,panier,id_personne);		// On envoie le panier a la fonction commande
-			panier.taille = 0;										// On remets le panier.taille à 0 , pour le remettre comme si il etait vide
+			panier.taille = 0;										// On remets le panier.taille a 0 , pour le remettre comme si il etait vide
 		}
 		if(strcmp(interraction,"a") == 0){
-			panier.taille = 0;										// On annule panier , en remettant panier.taille à 0
+			panier.taille = 0;										// On annule panier , en remettant panier.taille a 0
 		}
 
 	}
@@ -939,9 +939,9 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 				else if( verification_nom(stock,interraction) == -1){			// On verifie que le nom n'existe pas encore avec la fonction verifation_nom, -1 elle pas de correspondance		
 					strcpy(boisson.nom,interraction);							// Si il existe pas, on mets le nom dans la structure boisson
-					etape ++;													// Et on passe à l'etape suivante
+					etape ++;													// Et on passe a l'etape suivante
 				}
-				else if(verification_nom(stock,interraction) != -1){			// Si le nom existe on va à l'étape 10, la fonction verification_nom qui retourne l'id de la boisson, != -1 une correspondance
+				else if( verification_nom(stock,interraction) != -1 && strcmp(stock[verification_nom(stock,interraction)].categorie,"boisson") == 0 ){			// Si le nom existe on va a l'étape 10, la fonction verification_nom qui retourne l'id de la boisson, != -1 une correspondance
 					etape = 10;
 				}
 		break;
@@ -977,7 +977,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 					boisson.degre = (int) interraction_chiffre;
 				}
 				if(boisson.degre == 0){
-					etape = 7;															// Si elle ne possède pas de degre, le prix serait de 0, donc on va etape 7 pour demander le prix
+					etape = 7;															// Si elle ne possade pas de degre, le prix serait de 0, donc on va etape 7 pour demander le prix
 				}
 			}
 		break;
@@ -1046,7 +1046,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 
 		case 10:																		// Etape 10 : On demande si il veut augmenter/diminuer la quantite disponible de la boisson
 			id = verification_nom(stock,interraction) -1;
-			printf("\t Cette boisson est deja enregistre\n, si vous souhaitez changer la quantite en stock entrer la quantite à ajouter/enlever\n Sinon taper \'p\' \n\n");
+			printf("\t Cette boisson est deja enregistre\n, si vous souhaitez changer la quantite en stock entrer la quantite a ajouter/enlever\n Sinon taper \'p\' \n\n");
 			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s\n",stock[id].nom ,stock[id].prix,stock[id].quantite,stock[id].degre,stock[id].type);
 			interraction = saisie();
 			if(strcmp(interraction,"p") == 0){
@@ -1137,7 +1137,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 					etape --;
 				}
 				else if(strcmp(interraction,"v") == 0 && compteur_id > 1){
-					etape ++;													// On passe à l'etape suivante
+					etape ++;													// On passe a l'etape suivante
 					compteur_contenance = 0;
 					for( int i = compteur_id; i< 6; i++){						// On complete la suite des composants du cocktail non saisie
 						cocktail.id_boisson[i] = -1;							// On mets -1 au id des composants non défini
@@ -1155,7 +1155,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 					}
 			}							
 			else{
-				printf("\n Vous ne pouvez pas ajouter plus de composant à votre cocktail :");								// On affiche le message quand la composition maximale est atteinte
+				printf("\n Vous ne pouvez pas ajouter plus de composant a votre cocktail :");								// On affiche le message quand la composition maximale est atteinte
 				printf("\n Entrer \'v\' si vous souhaitez valider sa composition, sinon entrer \'p\' \n");
 				if(strcmp(saisie(),"p") == 0){
 					compteur_id = 0;																						// Si la saisie est incorrecte on reinitialiser la saisie des id des boissons
@@ -1240,7 +1240,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 		case 8: 																					// Etape 8 : Affiche la compostion d'un cocktail deja enregistre
 			id = verification_nom(stock,interraction) -1;
 			printf("\t Ce nom de %s est déja en stock \n",stock[id].categorie);
-			printf("\t Elle correspond à Nom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s\n",stock[id].nom ,stock[id].prix ,stock[id].quantite,stock[id].degre,stock[id].type);
+			printf("\t Elle correspond a Nom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s\n",stock[id].nom ,stock[id].prix ,stock[id].quantite,stock[id].degre,stock[id].type);
 
 			if ( strcmp(stock[id].categorie,"cocktail") == 0){
 				printf("\t La composition du cocktail est :");

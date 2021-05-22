@@ -302,7 +302,7 @@ int verification_nom(boisson_struc *stock,char* nom){
     for(int i = 0; i<taille; i++){
 
         if(strcmp(stock[i].nom,nom) == 0){              // On cherche dans le tableau de structure de boisson si il y a le nom qui correspond
-            return i+1;                                 // On retourne le rang de le tableau si on trouve un nom qui correspond
+            return i;                                 // On retourne le rang de le tableau si on trouve un nom qui correspond
         }
     }
     return -1;      // On retourne -1 si on trouve aucune correspondance
