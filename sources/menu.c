@@ -926,7 +926,9 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				printf("\t Veuillez entrer la contenance de %s en cl \n",stock[cocktail.id_boisson[compteur_contenance]].nom);
 				interraction = saisie();
 				if(strcmp(interraction,"p") == 0){
-					etape = 1;
+					etape = 0;
+					compteur_id = 0;
+					compteur_contenance = 0;
 				}
 				cocktail.contenance[compteur_contenance] = conversion_long(interraction);
 				if( cocktail.contenance[compteur_contenance] > 0){
@@ -953,7 +955,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 			interraction = saisie();
 				if(strcmp(interraction,"p") == 0){
 					etape --;
-					compteur_contenance = 0;
+					compteur_id = 0;
 				}
 				else if( strcmp(interraction,"v") == 0 ){
 					etape ++;

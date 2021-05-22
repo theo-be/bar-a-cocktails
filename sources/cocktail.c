@@ -411,19 +411,19 @@ char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
 int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
-    int alcool = 0;
+    int quantite_degre = 0;
     int degre;
 
     for(int i = 0; i< 6;i++){
         if ( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) == 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0 ){
-           alcool += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
+           quantite_degre += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
         }
         else if( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) != 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") != 0){
-            alcool += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
+            quantite_degre += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
         }
     }
 
-    degre = alcool / contenance_cocktail(cocktail);
+    degre = quantite_degre / contenance_cocktail(cocktail);
 
     return degre;
 }
@@ -442,9 +442,15 @@ int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,i
 
 float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
-    int contenance = contenance_cocktail(cocktail);
-    int degre = degre_cocktail(stock,cocktail);
-    float prix = contenance * degre * 1.10;
+    float prix = 1;
+
+    for(int i = 0; i< 6;i++){
+        if ( cocktail.id_boisson[i] != -1){
+            prix += cocktail.contenance[i] * (stock[cocktail.id_boisson[i]].prix / stock[cocktail.id_boisson[i]].contenance) ;
+        }
+    }
+
+    prix = prix * 1.10;
 
     return prix;
 }
@@ -452,7 +458,7 @@ float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
 float prix_boisson(int degre, int contenance){
 
-    float prix = contenance * degre * 0.003;
+    float prix = contenance * degre * 0.01;
 
     return prix;
 }
