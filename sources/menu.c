@@ -1,3 +1,39 @@
+/*! \file menu.c
+* \author Belliere Theo
+* \author Rabus Jules
+* \version 1
+* \date 19/04/2021 Debut du travail en groupe
+* \date 21/05/2021 Creation des commentaires doxygen.
+* \brief Le fichier menu.c contient l'ensemble des fonctions pour l'affichage des menus et les interactions utilisateur.
+*/
+
+
+ 
+/*! \mainpage Presentation
+* \section introduction Introduction
+*
+* Programme du bar a cocktail
+*
+* \section fonctions_procedures Fonctions et procédures
+*
+*/
+
+
+
+/*! \file menu.h
+* \section Presentation
+* \brief Le fichier menu.h regroupe tous les prototypes de fonctions necessaires a l'affichage des menus et aux interactions utilisateur.
+*/
+/*! \file cocktail.h
+* \section Presentation
+* \brief Le fichier cocktail.h regroupe tous les prototypes de fonctions et les structures necessaires a la gestion des boissons et des cocktails.
+*/
+/*! \file cryptage.h
+* \section Presentation
+* \brief Le fichier cryptage.h contient les fonctions necessaires pour le cryptage et la verifictation des du mot de passe.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +44,29 @@
 #include "menu.h"
 #include "cryptage.h"
 
+
+
+/*! \fn char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherMenu
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
+*
+*  \return Retourne 'q' pour quitter le programme
+*
+*  \remarks Cette fonction permet de afficher le menu principal.
+*/
+ 
+/* Cette fonction fonctionne comme toutes les fonctions d'affichage de menus :
+ l'arborescence est modidifiee
+ une premiere boucle do while est executee pour afficher le menu
+ une deuxieme boucle do while est executee pour demander a l'utilisateur d'entrer une option
+*/
 char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	char retourFonction = 0;
 	int erreurSaisie = 0;
@@ -52,6 +111,21 @@ char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *ar
 	return retourFonction;
 }
 
+/*! \fn char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherMenuClient
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
+*
+*  \return Retourne 'p' pour revenir au menu precedent
+*
+*  \remarks Cette fonction permet de afficher le menu du client.
+*/
 char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	char retourFonction = 0;
 	int erreurSaisie = 0;
@@ -105,6 +179,23 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 	supprimerAPartirDe(arborescence, menuActuel);
 	return retourFonction;
 }
+
+/*! \fn char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence)
+*  \author Belliere Theo
+*  \author Rabus Jules
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherInterfaceBarman
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
+*
+*  \return Retourne 'p' pour revenir au menu precedent
+*
+*  \remarks Cette fonction permet de afficher le menu du barman.
+*/
 char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	// afficher boissons
 	// -> les lister et pour plus de details les selectionner manuellement
@@ -198,7 +289,19 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 	return 'p';
 }
 
-
+/*! \fn void remplirEspaces (char tab[], int debut, int fin)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction remplirEspaces
+*
+*  \param tab Tableau de caracteres
+*  \param debut Indice de debut (inclus)
+*  \param fin Indice de fin (non inclus)
+*
+*  \remarks Cette fonction permet de remplir le tableau envoye de caracteres ' ' entre le debut inclus et la fin non incluse.
+*/
 void remplirEspaces (char tab[], int debut, int fin) {
 	// fin non incluse
 	for (int i = debut; i < fin; i++) {
@@ -206,6 +309,19 @@ void remplirEspaces (char tab[], int debut, int fin) {
 	}
 } 
 
+/*! \fn void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure separerColonnes
+*
+*  \param ligne Ligne du terminal
+*  \param nbColonnes Nombre de colonnes
+*  \param taillesColonnes Tableau des tailles de chaque colonne dans le bon ordre
+*
+*  \remarks Cette fonction permet de mettre les barres verticales pour separer les colonnes.
+*/
 void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes) {
 	int indiceSeparation = -1;
 	for (int i = 0; i < nbColonnes - 1; i++) {
@@ -214,6 +330,20 @@ void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes) {
 	}
 }
 
+/*! \fn void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure afficherEntete
+*
+*  \param ligne Ligne du terminal
+*  \param taillesColonnes Tableau des tailles de colonnes
+*  \param nbColonnes Nombre de colonnes
+*  \param largeur Largeur du terminal
+*
+*  \remarks Cette fonction permet de mettre les barres verticales pour separer les colonnes.
+*/
 void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur) {
 	// initialisation
 	struct winsize w;
@@ -257,6 +387,21 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 	printf("%s\n", ligne);
 }
 
+/*! \fn void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherTableau
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param categorie Nom de la categorie a afficher ("tout" pour tout afficher)
+*  \param taille_tableau Nombre de lignes du tableau
+*  \param pause Indique si l'utilisateur doit agir pour ne plus afficher le tableau
+*
+*  \remarks Cette fonction permet d'afficher le tableau qui affiche les details des elements voulus (boisson, cocktail ou tout).
+*/
 void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau,int pause) {
 
 	system("clear");
@@ -407,6 +552,17 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 	free(ligne);
 }
 
+/*! \fn void affichageCentre (char *chaine)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure affichageCentre
+*
+*  \param chaine Chaine a centrer
+*
+*  \remarks Cette fonction permet de centrer du texte dans le terminal.
+*/
 void affichageCentre (char *chaine) {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
@@ -434,6 +590,18 @@ void affichageCentre (char *chaine) {
 	printf("%s\n", chaine);
 }
 
+/*! \fn void affichageMarge (char *chaine, int ratio)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure affichageMarge
+*
+*  \param chaine Chaine a centrer
+*  \param ratio Pourcentage de marge
+*
+*  \remarks Cette fonction permet d'afficher du texte dans le terminal avec une certaine marge a gauche.
+*/
 void affichageMarge (char *chaine, int ratio) {
 	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
@@ -467,6 +635,17 @@ void affichageMarge (char *chaine, int ratio) {
 	printf("%s\n", chaine);
 }
 
+/*! \fn char inputMenu ()
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction inputMenu
+*
+*  \return Retourne le premier caractere entre par l'utilisateur
+*
+*  \remarks Cette fonction permet a l'utilisateur d'entrer du contenu.
+*/
 char inputMenu () {
 	size_t bufsize = 2;
 	char* buffer = NULL;
@@ -479,6 +658,18 @@ char inputMenu () {
 	return caractere;
 }
 
+/*! \fn void supprimerAPartirDe (char *chaine, char* sousChaine)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure supprimerAPartirDe
+*
+*  \param chaine Chaine principale
+*  \param sousChaine Sous chaine a localiser
+*
+*  \remarks Cette fonction permet de mettre un \0 sur la chaine a l'emplacement de la premiere occurence de la sous chaine dans la chaine.
+*/
 void supprimerAPartirDe (char *chaine, char* sousChaine) {
 	size_t longueurChaine = strlen(chaine);
 	size_t longueurSupp = strlen(sousChaine);
@@ -492,58 +683,100 @@ void supprimerAPartirDe (char *chaine, char* sousChaine) {
 	// printf("%s\n", chaine);
 }
 
-
+/*! \fn char* saisie()
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie
+*
+*  \return Retourne un pointeur qui pointe vers la chaine saisie par l'utilisateur
+*
+*  \remarks Cette fonction permet a l'utilisateur de saisir du texte.
+*/
 char* saisie() {
     
-	char* chaine = malloc(30 * sizeof(char)); // On alloue la mémoire à la chaine, pour 30 caractères
-	scanf("%s",chaine);
+	char* chaine = malloc(30 * sizeof(char));		 // On alloue la mémoire à la chaine, pour 30 caractres
+	scanf("%s",chaine);								 // On fait saisir à l'utilisateur une chaine de caracteres
 
 	return chaine;
 
 }
 
+/*! \fn panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction panier_affichage
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param panier Affiche le panier
+*  \param id_personne 0 : barman, 1 : client
+*
+*  \return Retourne le panier
+*
+*  \remarks Cette fonction permet d'afficher le panier.
+*/
 panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne){
 
 	char* interraction = calloc(10,sizeof(char));
-	afficherTableau(panier.stock,cocktail_liste,"tout",panier.taille,0);
+	afficherTableau(panier.stock,cocktail_liste,"tout",panier.taille,0);    // On affiche le tableau de la fonction afficherTableau
 
-	if (panier.taille > 0){
+	if (panier.taille > 0){ 						// On regarde si le panier à quelques choses à l'interieur sinon on passe
 		float prix_total;
 
 		for(int i = 0 ; i<panier.taille; i++){
-			prix_total += panier.stock[i].prix;
+			prix_total += panier.stock[i].prix;			// On calcule le prix total du panier , en additionnant le prix de tout ce qu'il y a l'interieur
 		}
 		printf("Le prix total est de : %.2f € \n",prix_total);
-		if( id_personne){
-			printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : valider votre panier entrer \'v\', l'annuler \'a\'  ");
+		if( id_personne){																																	// On regarde si c'est un barman ou un client, client = 1 , serveur = 0
+			printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : valider votre panier entrer \'v\', l'annuler \'a\'  ");		// On affiche pour le client
 		}
 		else{
-			printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : servir le plateau entrer \'v\', l'annuler \'a\'  ");
+			printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : servir le plateau entrer \'v\', l'annuler \'a\'  ");		// On affiche pour le serveur
 		}
 		interraction = saisie();
 		if(strcmp(interraction,"v") == 0){
-			commande(stock,cocktail_liste,panier,id_personne);
-			panier.taille = 0;
+			commande(stock,cocktail_liste,panier,id_personne);		// On envoie le panier a la fonction commande
+			panier.taille = 0;										// On remets le panier.taille à 0 , pour le remettre comme si il etait vide
 		}
 		if(strcmp(interraction,"a") == 0){
-			panier.taille = 0;
+			panier.taille = 0;										// On annule panier , en remettant panier.taille à 0
 		}
 
 	}
 	else{
 		if( id_personne){
-			printf("Votre panier est vide");
+			printf("Votre panier est vide");			// On affiche pour le client
 		}
 		else{
-			printf("Le plateau est vide");
+			printf("Le plateau est vide");				// On affiche pour le serveur
 		}
-		getchar();
+		getchar();	// On fait une pause, l'utilisateur doit presser une touche pour avancer
 	}
 
 	return panier;
 }
 
-
+/*! \fn panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,char *arborescence,int id_personne)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie_commande
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param panier Affiche le panier
+*  \param arborescence Arborescence dans les menus
+*  \param id_personne 0 : barman, 1 : client
+*
+*  \return Retourne le panier de la commande
+*
+*  \remarks Cette fonction permet a l'utilisateur de prendre une commande.
+*/
 panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,char *arborescence,int id_personne){
 
 	char menuActuel[] = "/commander";
@@ -556,37 +789,37 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 	int etape = 0;
 	boisson_struc commande_boisson;
 
-	if ( panier.taille > 18){
+	if ( panier.taille > 18){																		// On regarde si le panier n'a pas atteint sa taille maximale (20 boisson/cocktail), si oui on passe
 		system("clear");
 		affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
 		affichageCentre("\tVotre panier est plein, veuillez le vider ou le commander \'p\'\n");
 	}
 	else{
-		do{
-			system("clear");
+		do{																							// On lance le do while de la saisie
+			system("clear");																		// On efface le terminal
 			affichageCentre(arborescence);
 			printf("\n");
 
 			affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
 
-			switch (etape)
+			switch (etape)																			// On fait un switch pour faire des etapes pour la saisie
 			{
-			case 0:
-				printf("\t Veuillez choisir le type de recherche, par type 0 ou par mots-clés 1 :\n");
+			case 0:																							// Etape 0 : saisie du type de recherche
+				printf("\t Veuillez choisir le type de recherche, par type 0 ou par mots-clés 1 :\n");			
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape --;
 				}
-				else if( conversion_long(interraction) == 0 ){
+				else if( conversion_long(interraction) == 0 ){												// 0 : Recherche par type
 					etape ++;
 				}
-				else if( conversion_long(interraction) == 1){
+				else if( conversion_long(interraction) == 1){												// 0 : Recherche par sous chaine 
 					etape = 3;
 				}
 			break;
 
-			case 1:
-				printf("\t Veuillez choisir le type de boisson :\n");
+			case 1:																// Etape 1 : saisie du type de boisson , recherche par type
+				printf("\t Veuillez choisir le type de boisson :\n");		
 				printf("\t %s", message_type(stock));
 				type = saisie();
 				if (strcmp(type,"p") == 0){
@@ -597,70 +830,70 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 				}
 			break;
 
-			case 2:
+			case 2:																// Etape 2 : saisie de l'id de la boisson , recherche par type
 				printf("\t Veuillez choisir l'id de la boisson :\n");
-				printf("\t %s", message_id(stock,type));
+				printf("\t %s", message_id(stock,type));						// Affichage du message avec les id des boisson correspondant au type rentrer dans etape 1
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape --;
 				}
 				else{
 					id = conversion_long(interraction);
-					if(verification_id(stock,type,id)){
+					if(verification_id(stock,type,id)){							// On vérifie si le type existe bien avec la fonction verification_id
 						etape = 4;
 					}
 				}
 			break;
 
-			case 3:
+			case 3:																// Etape 3 : saisie de l'id de la boisson , recherche par sous chaine
 				printf("\t Veuillez choisir l'id de la boisson :\n");
 				printf("\nFaire une recherche :");
-				printf("%s\n",recherche_boisson(stock,saisie(),"tout"));
+				printf("%s\n",recherche_boisson(stock,saisie(),"tout"));		// Affichage du message de la recherche avec la fonction_recherche_boisson
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 0;
 				}
 				else{
 					id = conversion_long(interraction);
-					if(verification_id(stock,"tout",id)){
+					if(verification_id(stock,"tout",id)){						// On vérifie si le type existe bien avec la fonction verification_id, type = "tout", car on ne cherche pas avec le type	
 						etape ++;
 					}
 				}
 			break;
 
-			case 4:
+			case 4:																// Etape 4 : saisie de la quantite
 				printf("\t Veuillez choisir la quantite : \n");
-				printf("%s", message_quantite(stock,cocktail_liste,id));
+				printf("%s", message_quantite(stock,cocktail_liste,id));		// Affichage du message disant la disponibilite des boissons / cocktails avec la fonction message_quantite
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 0;
 				}
 				else{
 					quantite = (int) conversion_long(interraction);
-					if( stock[id-1].quantite >= quantite || id_personne == 0 ||( quantite_cocktail(stock,cocktail_liste[stock[id-1].id-1]) >=  quantite && quantite > 0) ){
+					if( stock[id-1].quantite >= quantite || id_personne == 0 ||( quantite_cocktail(stock,cocktail_liste[stock[id-1].id-1]) >=  quantite && quantite > 0) ){		// On verifie la quantite si la commande est faite par un client, on passe si elle faite par un serveur
 						etape ++;
 					}
 				}
 			break;
 
-			case 5:
+			case 5:																																											// Etape 5 : Confirmation de la commande
 				printf(" Votre commande : %s, Quantite : %d, Prix : %.2f€ , Type : %s\n",stock[id-1].nom,((int) quantite) ,stock[id-1].prix * quantite,stock[id-1].type);
 				printf("Taper \'v\' pour mettre votre commande au panier, sinon taper \'p\' ");
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape --;
 				}
-				if (strcmp(interraction,"v") == 0){
+				if (strcmp(interraction,"v") == 0){											// Si la commande est 'v', valider On mets toutes les informations de la boisson dans la structure boisson
 					commande_boisson = stock[id-1];
 					commande_boisson.quantite = quantite;
 					commande_boisson.prix = stock[id-1].prix * quantite;
-					panier = ajouterPanier(panier,commande_boisson);
-					etape = 8;
+					panier = ajouterPanier(panier,commande_boisson);						// On ajoute la commande au panier avec la fonction ajouterPanier
+					etape = 8;																// On sort du do while avec etape = 8
 				}
 			break;
 
 			default:
-				return panier;
+				return panier;			// En cas de defaut on retourne le panier
 				break;
 			}
 
@@ -671,6 +904,19 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 	return panier;
 }
 
+/*! \fn boisson_struc saisie_boisson(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie_boisson
+*
+*  \param stock Tableau de boissons
+*
+*  \return Retourne une structure de boisson
+*
+*  \remarks Cette fonction permet au barman d'ajouter une boisson.
+*/
 boisson_struc saisie_boisson(boisson_struc *stock){
 
 	char* interraction = calloc(30,sizeof(char));
@@ -685,22 +931,22 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 
 		switch (etape)
 		{
-		case 0:
+		case 0:																	// Etape 0 : saisie du nom de la boisson
 			printf("\tVeuillez entrer le nom de la boisson :\n");
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape --;
 				}
-				else if( verification_nom(stock,interraction) == -1){				
-					strcpy(boisson.nom,interraction);
-					etape ++;
+				else if( verification_nom(stock,interraction) == -1){			// On verifie que le nom n'existe pas encore avec la fonction verifation_nom, -1 elle pas de correspondance		
+					strcpy(boisson.nom,interraction);							// Si il existe pas, on mets le nom dans la structure boisson
+					etape ++;													// Et on passe à l'etape suivante
 				}
-				else if(verification_nom(stock,interraction) != -1){
+				else if(verification_nom(stock,interraction) != -1){			// Si le nom existe on va à l'étape 10, la fonction verification_nom qui retourne l'id de la boisson, != -1 une correspondance
 					etape = 10;
 				}
 		break;
 
-		case 1:
+		case 1:																			// Etape 1 : saisie du type de la boisson
 			printf("\tVeuillez entre le type de boisson (ex: sucre / alcool) : \n");
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -712,13 +958,13 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 			break;
 			
-		case 2:
+		case 2:																			// Etape 2 : saisie du type de la boisson
 			printf("\tVeuillez entre le degre ");
-			if (strcmp(interraction,"alcool") == 0 ){
+			if (strcmp(interraction,"alcool") == 0 ){									// On demande le degre d'alcool si c'est une boisson alcoolise
 				printf("d'alcool de %s :\n",boisson.nom);
 			}
 			else{
-				printf("de sucre de %s :\n",boisson.nom);
+				printf("de sucre de %s :\n",boisson.nom);								// On demande le degre de sucre si c'est une boisson sans-alcool	
 			}
 			interraction = saisie();
 			if (strcmp(interraction,"p") == 0){
@@ -731,13 +977,13 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 					boisson.degre = (int) interraction_chiffre;
 				}
 				if(boisson.degre == 0){
-					etape = 7;
+					etape = 7;															// Si elle ne possède pas de degre, le prix serait de 0, donc on va etape 7 pour demander le prix
 				}
 			}
 		break;
 
-		case 3:
-			printf("\tVeuillez entre la quantite disponible de %s :\n",boisson.nom);
+		case 3:																				// Etape 3 : saisie de la quantite disponible
+			printf("\tVeuillez entre la quantite disponible de %s :\n",boisson.nom);	
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape --;
@@ -751,7 +997,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 		break;
 
-		case 4:
+		case 4:																				// Etape 4 : saisie de la contenance en cl de la boisson
 			printf("\tVeuillez entre la contenance en cl de %s :\n",boisson.nom);
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -766,10 +1012,10 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 		break;
 
-		case 5:
+		case 5:																									// Etape 5 : Verifie si le demande est celle bien voulu
 			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");
 			if(boisson.degre != 0){
-				boisson.prix = prix_boisson(boisson.degre,boisson.contenance);
+				boisson.prix = prix_boisson(boisson.degre,boisson.contenance);									// On calcule le prix avec le degre et la contenance avec la fonction prix_boisson
 			}
 
 			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s, Contenance :  %d\n",boisson.nom ,boisson.prix,boisson.quantite,boisson.degre,boisson.type,boisson.contenance);
@@ -778,12 +1024,12 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				etape = 0;
 			}
 			else if(strcmp(interraction,"v") == 0){
-				etape = 8;
-				boisson.id = -1;
+				etape = 8;									// On fait quitter le do while
+				boisson.id = -1;							// On mets boisson.id -1 pour que la fonction ajoutBoisson ajoute la boisson
 			}
 		break;
 
-		case 7:	
+		case 7:																			// Etape 7 : On demande le prix en cas de degre nulle
 			printf("\tVeuillez entrer le prix de %s :\n",boisson.nom);
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -798,7 +1044,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 				}
 		break;
 
-		case 10:
+		case 10:																		// Etape 10 : On demande si il veut augmenter/diminuer la quantite disponible de la boisson
 			id = verification_nom(stock,interraction) -1;
 			printf("\t Cette boisson est deja enregistre\n, si vous souhaitez changer la quantite en stock entrer la quantite à ajouter/enlever\n Sinon taper \'p\' \n\n");
 			printf("\tNom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s\n",stock[id].nom ,stock[id].prix,stock[id].quantite,stock[id].degre,stock[id].type);
@@ -812,7 +1058,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 			}
 		break;
 
-		case 11:
+		case 11:																			// Etape 11 : On affiche la quantite disponible apres augmentation/diminution de la quantite disponible de la boisson
 			boisson.id = id;
 			printf("\tLa quantite de %s sera de : %d\n",stock[id].nom,stock[id].quantite+boisson.quantite);
 			getchar();
@@ -820,7 +1066,7 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 		break;
 		
 		default:
-			boisson.id = -2;
+			boisson.id = -2;	// On mets boisson.id -2 pour que la fonction ajoutBoisson ne fasse rien car on est dans le defaut
 			return boisson;
 			break;
 		}
@@ -830,6 +1076,20 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 	return boisson;
 }
 
+/*! \fn cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie_cocktail
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*
+*  \return Retourne une structure de cocktail
+*
+*  \remarks Cette fonction permet au barman d'ajouter un cocktail.
+*/
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
 	char* interraction = calloc(30,sizeof(char));
@@ -845,8 +1105,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 
 		switch (etape)
 		{
-		case 0:
-
+		case 0:																		// Etape 0 : saisie du nom du cocktail
 			printf("\tVeuillez entrer le nom du cocktail :\n");
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -862,45 +1121,44 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				}
 		break;
 
-		case 1:
+		case 1:																		// Etape 1 : saisie de l'id des composants du cocktail
 			printf("\t Veuillez entrer l\' id de la boisson qui va etre ajouter au cocktail, si vous avez fini entrer \'v\' \n");
 			if (compteur_id >0){
 				printf("La composition : ");
-				for(int i = 0; i<compteur_id;i++){
-					printf("%s ",stock[cocktail.id_boisson[i]].nom);
+				for(int i = 0; i<compteur_id;i++){								//	On va de 0 jusqu'a la composition du cocktail saisie
+					printf("%s ",stock[cocktail.id_boisson[i]].nom);			//  On affiche la composition du cocktail
 				}
 			}
 
-			if ( compteur_id < 6 ){
+			if ( compteur_id < 6 ){										// On verifie que compteur_id reste dans la limite maxime du nombre de composant d'un cocktail
 				printf("\nFaire une recherche :");
 				interraction = saisie();
 				if(strcmp(interraction,"p") == 0){
 					etape --;
 				}
 				else if(strcmp(interraction,"v") == 0 && compteur_id > 1){
-					etape ++;
+					etape ++;													// On passe à l'etape suivante
 					compteur_contenance = 0;
-					for( int i = compteur_id; i< 6; i++){
-						cocktail.id_boisson[i] = -1;
+					for( int i = compteur_id; i< 6; i++){						// On complete la suite des composants du cocktail non saisie
+						cocktail.id_boisson[i] = -1;							// On mets -1 au id des composants non défini
 					}
 					break;
 				}
 				else{
-					printf("%s\n",recherche_boisson(stock,interraction,"boisson"));
+					printf("%s\n",recherche_boisson(stock,interraction,"boisson"));		// On affichage la recherche par sous chaine
 				}
 
 				interraction = saisie();
-					if( verification_id(stock,"tout",conversion_long(interraction)) != 0){
-						cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;
-						compteur_id ++;
+					if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(stock[conversion_long(interraction)-1].categorie,"boisson")){			// On verifie que la boisson existe et qu'il s'agit bien d'une boisson
+						cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;																					// Si oui on ajoute l'id de la boisson au cocktail
+						compteur_id ++;																																		// On incrémente pour changer le rang de la prochaine saisie de boisson
 					}
-			}
-
+			}							
 			else{
-				printf("\n Vous ne pouvez pas ajouter plus de composant à votre cocktail :");
+				printf("\n Vous ne pouvez pas ajouter plus de composant à votre cocktail :");								// On affiche le message quand la composition maximale est atteinte
 				printf("\n Entrer \'v\' si vous souhaitez valider sa composition, sinon entrer \'p\' \n");
 				if(strcmp(saisie(),"p") == 0){
-					compteur_id = 0;
+					compteur_id = 0;																						// Si la saisie est incorrecte on reinitialiser la saisie des id des boissons
 			}
 			}
 			if(strcmp(interraction,"p") == 0){
@@ -909,17 +1167,17 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 			else if( strcmp(interraction,"v") == 0 && compteur_id > 1){
 				etape ++;
 				compteur_contenance = 0;
-				for( int i = compteur_id; i< 6; i++){
+				for( int i = compteur_id; i< 6; i++){											// On complete la suite des composants du cocktail non saisie			
 					cocktail.id_boisson[i] = -1;
 				}
-				if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(stock[conversion_long(interraction)-1].categorie,"boisson")){
+				if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(stock[conversion_long(interraction)-1].categorie,"boisson")){	// On verifie que la boisson existe et qu'il s'agit bien d'une boisson
 					cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;
 					compteur_id ++;
 				}
 			}
 		break;
 
-		case 2:
+		case 2:																		// Etape 2 : saisie de la contenance des composants
 			if(compteur_id > compteur_contenance){
 				printf("\t Veuillez entrer la contenance de %s en cl \n",stock[cocktail.id_boisson[compteur_contenance]].nom);
 				interraction = saisie();
@@ -934,20 +1192,20 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 					}
 			}
 			else{
-				for( int i = compteur_id; i< 6 ;i++){
-					cocktail.contenance[i] = 0;
+				for( int i = compteur_id; i< 6 ;i++){ 						// On complete la suite des composants du cocktail non saisie
+					cocktail.contenance[i] = 0;								// On mets 0 au contenances des composants non défini
 				}
 				etape++;
 			}
 		break;
 
 
-		case 3: 
+		case 3: 																										// Etape 3 : Verifie si la saisie des composants est correcte
 			printf("\t Veuillez entrer \'v\', si la saisie de votre cocktail est correcte, sinon entrer \'p\' \n");
 			printf("La composition du cocktail : ");
 			for(int i = 0; i<6; i++){
 				if(cocktail.id_boisson[i] != -1){
-				printf("%dcl %s, ",cocktail.contenance[i],stock[cocktail.id_boisson[i]].nom);
+				printf("%dcl %s, ",cocktail.contenance[i],stock[cocktail.id_boisson[i]].nom);			// On affiche la compostion
 				}
 			}
 			interraction = saisie();
@@ -960,7 +1218,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				}
 		break;
 
-		case 4:
+		case 4: 																										// Etape 4 : Verifie si la saisie est correcte
 			printf("\t Veuillez entrer \'p\' si il y a un probleme de saisie, sinon entrer \'v\'\n");
 			int quantite = quantite_cocktail(stock,cocktail);
 			int contenance = contenance_cocktail(cocktail);
@@ -979,7 +1237,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				}
 		break;
 
-		case 8:
+		case 8: 																					// Etape 8 : Affiche la compostion d'un cocktail deja enregistre
 			id = verification_nom(stock,interraction) -1;
 			printf("\t Ce nom de %s est déja en stock \n",stock[id].categorie);
 			printf("\t Elle correspond à Nom : %s, Prix : %.2f, Quantite : %d, Degre : %d, Type : %s\n",stock[id].nom ,stock[id].prix ,stock[id].quantite,stock[id].degre,stock[id].type);
@@ -1008,6 +1266,19 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 	return cocktail;
 
 }
+
+/*! \fn void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficher_Cocktail
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*
+*  \remarks Cette fonction permet d'afficher les ingredients d'un cocktail et leurs details.
+*/
 void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 
 	int etape = 0;
@@ -1017,8 +1288,8 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 	do{
 		system("clear");
 		affichageCentre("Si vous souhaitez quitter entrer \'p\'\n\n");
-		if (taille_stock("data_cocktail")){
-			afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"),0);
+		if (taille_stock("data_cocktail")){																// On verifie qu"il y est bien des cocktails
+			afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"),0);			// On affiche le tableau sans pause
 			printf("\n\tSi vous voulez plus d'information sur un cocktail entrer son id :\n");
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -1026,10 +1297,10 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 				}
 				id = (int) conversion_long(interraction);
 				if( verification_cocktail(stock,id) ){
-					printf("La composition de %s est :",stock[id].nom);
+					printf("La composition de %s est :",stock[id].nom);				// On affiche le nom du cocktail
 					for(int i = 0; i<6; i++){
 						if(cocktail_liste[stock[id].id-1].id_boisson[i] != -1){
-						printf("%d cl de %s, ",cocktail_liste[stock[id].id-1].contenance[i], stock[ cocktail_liste[stock[id].id-1].id_boisson[i] ].nom);
+						printf("%d cl de %s, ",cocktail_liste[stock[id].id-1].contenance[i], stock[ cocktail_liste[stock[id].id-1].id_boisson[i] ].nom);		// On affiche sa compostion
 						}
 					}
 					printf("\n");
@@ -1039,7 +1310,7 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 				}
 			}
 			else{
-				affichageCentre("Il n'y a pas de cocktail enregistrer\n");
+				affichageCentre("Il n'y a pas de cocktail enregistrer\n");			// On affichage le message quand il n'y a pas de cocktail dans la base de donnee
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 1;
@@ -1050,6 +1321,15 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 
 }
 
+/*! \fn void administration()
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction administration
+*
+*  \remarks Cette fonction affiche toutes les commandes et le chiffre d'affaires.
+*/
 void administration(){
 
 	system("clear");
@@ -1091,30 +1371,10 @@ void administration(){
 
 
 /*
-
 idee : a chaque fois qu'on rentre dans les menus,
 la fonction qui affiche tel menu va retourner un char 
 pour savoir si on retourne dans le menu précédent
 et donc le reafficher
 donc chaque menu est un do while aver un system("clear");
 avec une variable locale quitter
-
-codes de retour des fonctions 
-(idee : renvoyer des parametres si on a besoin 
-d'afficher le menu differemment) :
-	0 : rien
-	p : juste revenir au menu precedent
-	q : quitter
-
-trucs a faire :
-
-voir la securite des inputs
-
-différencier cocktail et boisson /
-
-faire les entetes de tbl /
-faire des fonctions différentes pour chaque entete /
-
-
-
 */
