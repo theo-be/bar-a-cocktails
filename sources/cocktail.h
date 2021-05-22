@@ -57,6 +57,7 @@ char* affichage_boisson(boisson_struc *stock);
 
 long conversion_long(char* chaine);
 
+int verification_cocktail(boisson_struc *stock,int id);
 int contenance_cocktail(cocktail_struc cocktail);
 int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail);
 char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail);

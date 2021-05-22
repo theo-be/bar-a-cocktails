@@ -18,7 +18,7 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 void affichageCentre(char *chaine);
 void affichageMarge(char *chaine, int ratio);
 
-void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau);
+void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau,int pause);
 void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur);
 void remplirEspaces(char tab[], int debut, int fin);
 void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes);
@@ -27,6 +27,7 @@ void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes);
 boisson_struc saisie_boisson(boisson_struc *stock);
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
+void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste);
 void administration();
 
 #endif

@@ -101,10 +101,9 @@ cocktail_struc *remplirstock_cocktail(){
 
 int commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne){
 
-
     for( int i = 0; i<panier.taille; i++){
         if( id_personne != 0){
-            if( strcmp(stock[panier.stock[i].id-1].categorie,"cocktail") == 0){
+            if( strcmp(panier.stock[i].categorie,"cocktail") == 0){
                 for( int j = 0 ; j<6;j++){
                     if (cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] != -1){
                         stock[ cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] ].quantite -= panier.stock[i].quantite;
@@ -112,7 +111,7 @@ int commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc pa
                 }
             }
             else{
-                stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
+                stock[panier.stock[i].id].quantite -= panier.stock[i].quantite;
             }
         }
     }
@@ -359,6 +358,15 @@ long conversion_long(char* chaine){
     char* fin_pointeur;
 
     return strtol(chaine, &fin_pointeur,0);
+}
+
+int verification_cocktail(boisson_struc *stock,int id){
+
+    if( strcmp(stock[id].categorie,"cocktail") == 0 ){
+           return 1;
+
+    }
+    return 0;
 }
 
 int contenance_cocktail(cocktail_struc cocktail){
