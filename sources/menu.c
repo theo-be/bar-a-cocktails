@@ -143,7 +143,6 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 		affichageCentre("Que souhaitez-vous faire ?\n\n");
 		affichageMarge("\t1. Afficher les stocks.\n\n", 30);
 		affichageMarge("\t2. Afficher les boissons.\n\n", 30);
-		affichageMarge("\t2. Afficher les boissons.\n\n", 30);
 		affichageMarge("\t3. Ajouter une boisson.\n\n", 30);
 		affichageMarge("\t4. Afficher les cocktails.\n\n", 30);
 		affichageMarge("\t5. Ajouter un cocktail.\n\n", 30);
