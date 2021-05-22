@@ -1,32 +1,93 @@
+/*! \file menu.c
+* \author Belliere Theo
+* \author Rabus Jules
+* \version 1
+* \date 19/04/2021 Debut du travail en groupe
+* \date 21/05/2021 Creation des commentaires doxygen.
+
+* \brief Le fichier menu.c contient l'ensemble des fonctions pour l'affichage des menus et les interactions utilisateur.
+*/
+
+
+ 
+/*! \mainpage Presentation
+* \section introduction Introduction
+*
+* Programme du bar a cocktail
+*
+* \section fonctions_procedures Fonctions et procédures
+*
+*/
+
+
+
+/*! \file menu.h
+* \section Presentation
+* \brief Le fichier menu.h regroupe tous les prototypes de fonctions necessaires a l'affichage des menus et aux interactions utilisateur.
+*/
+/*! \file cocktail.h
+* \section Presentation
+* \brief Le fichier cocktail.h regroupe tous les prototypes de fonctions et les structures necessaires a la gestion des boissons et des cocktails.
+*/
+/*! \file cryptage.h
+* \section Presentation
+* \brief Le fichier cryptage.h contient les fonctions necessaires pour le cryptage et la verifictation des du mot de passe.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include "cocktail.h"
 #include "menu.h"
+#include "cocktail.h"
 #include "cryptage.h"
 
+
+/*! \fn char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherMenu
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
+*
+*  \return Retourne 'q' pour quitter le programme
+*
+*  \remarks Cette fonction permet de afficher le menu principal.
+*/
+ 
+/* Cette fonction fonctionne comme toutes les fonctions d'affichage de menus :
+ l'arborescence est modidifiee
+ une premiere boucle do while est executee pour afficher le menu
+ une deuxieme boucle do while est executee pour demander a l'utilisateur d'entrer une option
+*/
 char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 
+	// Mise a jour de l'arborescence
 	char *menuActuel = "Accueil";
 	strcat(arborescence, menuActuel);
 
 	do {
-		// on affiche le menu
+		// On affiche le menu
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
 
+		// Affichage des options disponibles
 		affichageCentre("Bonjour, bienvenue dans notre interface de commande de cocktails.");
 		affichageCentre("Etes-vous un client ou bien un barman ?\n");
 		affichageMarge("1. Client\n", 48);
 		affichageMarge("2. Barman\n", 48);
 		affichageMarge("3. Quitter\n", 48);
 
+		// Interaction utilisateur
 		do {
 			erreurSaisie = 0;
 			printf("Votre option : ");
@@ -39,7 +100,7 @@ char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *ar
 				retourFonction = afficherInterfaceBarman(stock,cocktail_liste, arborescence);
 				break;
 			case '3':
-				retourFonction = quitter(stock);
+				retourFonction = 'q';
 				break;
 			default:
 				printf("Erreur dans la saisie\n");
@@ -52,13 +113,25 @@ char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *ar
 	return retourFonction;
 }
 
+/*! \fn char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherMenuClient
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
+*
+*  \return Retourne 'p' pour revenir au menu precedent
+*
+*  \remarks Cette fonction permet de afficher le menu du client.
+*/
 char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	char retourFonction = 0;
 	int erreurSaisie = 0;
-
-	panier_struc panier;
-	panier.taille = 0;
-
+	// Mise a jour de l'arborescence
 	char *menuActuel = "/client";
 	strcat(arborescence, menuActuel);
 
@@ -67,50 +140,54 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 		affichageCentre(arborescence);
 		printf("\n");
 	
+		// Affichage des options disponibles
 		affichageCentre("Que souhaitez-vous faire ?\n");
 		affichageMarge("1. Commander une boisson\n", 45);
-		affichageMarge("2. Afficher le panier\n", 45);
-		affichageMarge("3. Afficher les boissons\n", 45);
-		affichageMarge("4. Afficher les cocktails\n", 45);
 		affichageMarge("Appuyez sur \'p\' pour revenir au menu precedent\n", 45);
 
+		// Interaction utilisateur
 		do {
 			erreurSaisie = 0;
 			printf("Votre option : ");
 
 			switch (inputMenu()) {
 			case '1':
-				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,1);
-			break;
-			case '2':
-				panier = panier_affichage(stock,cocktail_liste,panier,1);
-			break;
-			case '3':
-				afficherTableau (stock,cocktail_liste,"boisson",taille_stock("data_boisson"),1);
-			break;
-			case '4':
-				afficher_Cocktail(stock,cocktail_liste);
-			break;
+				// retourFonction = saisie_commande(stock,cocktail_liste,arborescence,0);
+				break;
 			case 'p':
 				retourFonction = 'p';
-			break;
+				break;
 			default:
+				// En cas d'erreur dans la saisie, on demande encore a l'utilisateur de mettre son option
 				printf("Erreur dans la saisie\n");
 				erreurSaisie = 1;
-			break;
+				break;
 			}
 		} while (erreurSaisie == 1);
 	} while (retourFonction != 'p');
 
+	// A la fin de l'execution de la fonction, on supprime l'arborescence
 	supprimerAPartirDe(arborescence, menuActuel);
 	return retourFonction;
 }
-char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
-	// afficher boissons
-	// -> les lister et pour plus de details les selectionner manuellement
-	// afficher cocktails
-	// creer cocktail
 
+/*! \fn char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence)
+*  \author Belliere Theo
+*  \author Rabus Jules
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherInterfaceBarman
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
+*
+*  \return Retourne 'p' pour revenir au menu precedent
+*
+*  \remarks Cette fonction permet de afficher le menu du barman.
+*/
+char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	panier_struc panier;
 	panier.taille = 0;
 
@@ -130,15 +207,17 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 
 	bdd base_de_donne;
 
-		
-	char menuActuel[] = "/Barman";
+	// Mise a jour de l'arborescence
+	char menuActuel[] = "/barman";
 	strcat(arborescence, menuActuel);
 
+	
 	do {
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
 
+		// Affichage des options disponibles		
 		affichageCentre("Bienvenue dans l\'interface Barman .\n");
 		affichageCentre("Que souhaitez-vous faire ?\n\n");
 		affichageMarge("\t1. Afficher les stocks.\n\n", 30);
@@ -151,6 +230,7 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 		affichageMarge("\t8. Administration.\n\n", 30);
 		affichageMarge("\t9. Revenir au menu principal.\n\n", 30);
 
+		// Interaction utilisateur
 		do{
 			erreurSaisie = 0;
 			printf("Votre option : ");
@@ -185,6 +265,7 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 				quittterMenu = 1;
 			break;
 			
+			// En cas d'erreur dans la saisie, on demande encore a l'utilisateur de mettre son option
 			default:
 				printf("Erreur dans la saisie\n");
 				erreurSaisie = 1;
@@ -193,39 +274,83 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
+	// A la fin de l'execution de la fonction, on supprime l'arborescence
 	supprimerAPartirDe(arborescence, menuActuel);
 
 	return 'p';
 }
 
-
-void remplirEspaces (char tab[], int debut, int fin) {
-	// fin non incluse
+/*! \fn void remplirEspaces (char tab[], int debut, int fin)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction remplirEspaces
+*
+*  \param tab Tableau de caracteres
+*  \param debut Indice de debut (inclus)
+*  \param fin Indice de fin (non inclus)
+*
+*  \remarks Cette fonction permet de remplir le tableau envoye de caracteres ' ' entre le debut inclus et la fin non incluse.
+*/
+void remplirEspaces (char *tab, int debut, int fin) {
 	for (int i = debut; i < fin; i++) {
 		tab[i] = ' ';
 	}
 } 
 
+/*! \fn void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure separerColonnes
+*
+*  \param ligne Ligne du terminal
+*  \param nbColonnes Nombre de colonnes
+*  \param taillesColonnes Tableau des tailles de chaque colonne dans le bon ordre
+*
+*  \remarks Cette fonction permet de mettre les barres verticales pour separer les colonnes.
+*/
 void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes) {
 	int indiceSeparation = -1;
+
+	// On affiche une barre verticale pour separer les colonnes
+	// On ajoute 1 pour mettre la barre apres le dernier caractere de la colonne
 	for (int i = 0; i < nbColonnes - 1; i++) {
 		indiceSeparation += (taillesColonnes[i] + 1);
 		ligne[indiceSeparation] = '|';
 	}
 }
 
+/*! \fn void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure afficherEntete
+*
+*  \param ligne Ligne du terminal
+*  \param taillesColonnes Tableau des tailles de colonnes
+*  \param nbColonnes Nombre de colonnes
+*  \param largeur Largeur du terminal
+*
+*  \remarks Cette fonction permet de mettre les barres verticales pour separer les colonnes.
+*/
 void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur) {
-	// initialisation
+	// Initialisation
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	remplirEspaces(ligne, 0, w.ws_col);
 
 	separerColonnes(ligne, nbColonnes, taillesColonnes);
 
-	// incice de colonne global
+	// Incice de colonne global
 	int indiceDebutCol = 0;
 	int colonne = 0;
 	int tailleChaineAAjouter = 0;
+
+	// Liste des noms de colonnes dans le bon ordre
 	char entetes[8][11] = {
 		"id",
 		"nom",
@@ -237,16 +362,20 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 		"quantite"
 	};
 
+
+	// On copie caractere par caractere les noms dans la ligne
 	for (int i = 0; i < 8; i++) {
 		tailleChaineAAjouter = (int)strlen(entetes[i]);
 		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = entetes[i][j]; // <- nom de l'array qui contient les infos a afficher
+			ligne[indiceDebutCol + j] = entetes[i][j]; // <- nom du tableau qui contient les infos a afficher
 		}
 		indiceDebutCol += (taillesColonnes[colonne] + 1);
 		colonne++;
 	}
 
 	printf("%s\n", ligne);
+
+	// On separe avec des espaces
 
 	remplirEspaces(ligne, 0, w.ws_col);
 
@@ -257,7 +386,22 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 	printf("%s\n", ligne);
 }
 
-void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau,int pause) {
+/*! \fn void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficherTableau
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param categorie Nom de la categorie a afficher ("tout" pour tout afficher)
+*  \param taille_tableau Nombre de lignes du tableau
+*  \param pause Indique si l'utilisateur doit agir pour ne plus afficher le tableau
+*
+*  \remarks Cette fonction permet d'afficher le tableau qui affiche les details des elements voulus (boisson, cocktail ou tout).
+*/
+void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste, char* categorie, int taille_tableau, int pause) {
 
 	system("clear");
 	struct winsize w;
@@ -265,32 +409,36 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
     // printf ("lines %d\n", w.ws_row);
     // printf ("columns %d\n", w.ws_col);
 
+
+	// Mise en place des variables pour la taille le l'affichage
 	int tailleColId = 3;
 	int tailleColPrix = 4;
 	int tailleColContenance = 10;
 	int tailleColDegre = 5;
 	int tailleColQuantite = 8;
 
-	int tailleMaxColFlex = 30;
+	int tailleTotaleColStatiques =  tailleColId + tailleColPrix + tailleColContenance + tailleColDegre + tailleColQuantite;
 
-	int tailleTotaleColSatiques =  tailleColId + tailleColPrix + tailleColContenance + tailleColDegre + tailleColQuantite;
 
+	// Une colonne flexible est une colonne qui peut prendre une taille variable selon la place disponible
 	int nombreColonnesFlex = 3;
-	int nombreColonnesTotal = nombreColonnesFlex + 5;
 
-	int tailleColonnesFlex = (w.ws_col - tailleTotaleColSatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
+	int nombreColonnesTotal = nombreColonnesFlex + 5; // 5 colonnes statiques
+
+	int tailleMaxColFlex = 30;
+	int tailleColonnesFlex = (w.ws_col - tailleTotaleColStatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
 	if (tailleColonnesFlex > tailleMaxColFlex) tailleColonnesFlex = tailleMaxColFlex;
 
-	int tailleTotaleTableau = tailleTotaleColSatiques + tailleColonnesFlex * nombreColonnesFlex + nombreColonnesTotal;
-	
+	int tailleTotaleTableau = tailleTotaleColStatiques + tailleColonnesFlex * nombreColonnesFlex + nombreColonnesTotal;
 
 	//printf("taille colonnes flexibles : %d\n", tailleColonnesFlex);
 
 	int taillesColonnes[] = {tailleColId, tailleColonnesFlex, tailleColPrix, tailleColContenance, tailleColDegre, tailleColonnesFlex, tailleColonnesFlex};
 
-	// tableau de ligne
+	// tableau representant la ligne
 	char *ligne = malloc((w.ws_col + 1) * sizeof(char));
 
+	// Une chaine de caracteres se finit toujours par \0
 	ligne[w.ws_col] = '\0';
 
 
@@ -298,23 +446,29 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 	int indiceDebutCol = 0;
 	int colonne = 0;
 
+	// La chaine temporaire sert a afficher les entiers et flottants en tant que chaine de caracteres
 	char chaineTemporaire[10] = {0};
 
+	// On affiche l'entete du tableau
 	afficherEntete(ligne, taillesColonnes, nombreColonnesTotal, tailleTotaleTableau);
 
+
+	// Boucle pour chaque ligne
 	for (int id = 0; id < taille_tableau; id++) {
 
+		// On peut n'afficher qu'une categorie de boisson si demande
 		if (strcmp(stock[id].categorie, categorie) == 0 || strcmp("tout", categorie) == 0){
 
-			// initialisation
+			// Initialisation de la ligne
 			remplirEspaces(ligne, 0,  w.ws_col);
 
 			separerColonnes(ligne, nombreColonnesTotal, taillesColonnes);
 
-			// incice de colonne global
+			// Incice de colonne global
 			indiceDebutCol = 0;
 			colonne = 0;
-// 
+
+			// Affichage des colonnes
 
 			// ID
 			if ( strcmp(stock[id].categorie,"cocktail") == 0 ){
@@ -323,17 +477,21 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			else{
 				sprintf(chaineTemporaire, "%d", stock[id].id);
 			}
+
+			// On calcule la taille de la chaine
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				// On copie caractere par caractere
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom du tableau qui contient les infos a afficher
 			}
+			// On prepare l'indice pour la prochaine colonne
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
 
 			// NOM
 			tailleChaineAAjouter = (int)strlen(stock[id].nom);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = stock[id].nom[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = stock[id].nom[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -341,7 +499,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			// PRIX
 			sprintf(chaineTemporaire, "%f", stock[id].prix);
 			for (int j = 0; j < 4; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -350,7 +508,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			sprintf(chaineTemporaire, "%d", stock[id].contenance);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -359,7 +517,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			sprintf(chaineTemporaire, "%d", stock[id].degre);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -367,7 +525,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			// TYPE
 			tailleChaineAAjouter = (int)strlen(stock[id].type);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = stock[id].type[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = stock[id].type[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -375,7 +533,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			// CATEGORIE
 			tailleChaineAAjouter = (int)strlen(stock[id].categorie);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = stock[id].categorie[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = stock[id].categorie[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -384,30 +542,38 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			sprintf(chaineTemporaire, "%d", stock[id].quantite);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom du tableau qui contient les infos a afficher
 			}
 			// indiceDebutCol += (taillesColonnes[colonne] + 1);
 			// colonne++;
+
+			// On affiche la ligne
 			printf("%s\n", ligne);
 
 		}
 	}
 
-	// affichage
-	// exemple : 1 coca 1.50 33 0 soda boisson 20
-	// COLONNES TOTALES : 8
-	// ORDRE :
-	// ID NOM PRIX  CONTENANCE DEGRE TYPE CATEGORIE QT
-	// 3   30  4         9       5    30     30     8
-
-	if( pause ){
+	if (pause){
 		getchar();
 	}
 
+	// On libere l'espace demande pour la ligne
 	free(ligne);
 }
 
+/*! \fn void affichageCentre (char *chaine)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure affichageCentre
+*
+*  \param chaine Chaine a centrer
+*
+*  \remarks Cette fonction permet de centrer du texte dans le terminal.
+*/
 void affichageCentre (char *chaine) {
+	// On recupere la taille de la fenetre
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     // printf ("lines %d\n", w.ws_row);
@@ -422,19 +588,32 @@ void affichageCentre (char *chaine) {
 		int longueurEspaces = (w.ws_col - (int)longueurChaine) / 2;
 		char *espaceVide = malloc(longueurEspaces * sizeof(char));
 
-		for (int i = 0; i < longueurEspaces - 1; i++) {
-			espaceVide[i] = ' ';
-		}
+		remplirEspaces(espaceVide, 0, longueurEspaces - 1);
 		espaceVide[longueurEspaces - 1] = '\0';
 
+		// On affiche la marge
 		printf("%s", espaceVide);
-
+		
+		// On libere le malloc
 		free(espaceVide);
 	}
 	printf("%s\n", chaine);
 }
 
+/*! \fn void affichageMarge (char *chaine, int ratio)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure affichageMarge
+*
+*  \param chaine Chaine a centrer
+*  \param ratio Pourcentage de marge
+*
+*  \remarks Cette fonction permet d'afficher du texte dans le terminal avec une certaine marge a gauche.
+*/
 void affichageMarge (char *chaine, int ratio) {
+	// On recupere la taille de la fenetre
 	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     // printf ("lines %d\n", w.ws_row);
@@ -455,18 +634,29 @@ void affichageMarge (char *chaine, int ratio) {
 		}
 		char *espaceVide = malloc(longueurEspaces * sizeof(char));
 
-		for (int i = 0; i < longueurEspaces - 1; i++) {
-			espaceVide[i] = ' ';
-		}
+		remplirEspaces(espaceVide, 0, longueurEspaces - 1);
 		espaceVide[longueurEspaces - 1] = '\0';
 
+		// On affiche la marge
 		printf("%s", espaceVide);
-
+		
+		// On libere le malloc
 		free(espaceVide);
 	}
 	printf("%s\n", chaine);
 }
 
+/*! \fn char inputMenu ()
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Fonction inputMenu
+*
+*  \return Retourne le premier caractere entre par l'utilisateur
+*
+*  \remarks Cette fonction permet a l'utilisateur d'entrer du contenu.
+*/
 char inputMenu () {
 	size_t bufsize = 2;
 	char* buffer = NULL;
@@ -474,34 +664,78 @@ char inputMenu () {
 
 	getline(&buffer, &bufsize, stdin);
 	
+	// On retourne le permier caractere saisi
 	char caractere = buffer[0];
+
+	// on libere l'espace cree par malloc
 	free(buffer);
 	return caractere;
 }
 
+/*! \fn void supprimerAPartirDe (char *chaine, char* sousChaine)
+*  \author Belliere Theo
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure supprimerAPartirDe
+*
+*  \param chaine Chaine principale
+*  \param sousChaine Sous chaine a localiser
+*
+*  \remarks Cette fonction permet de mettre un \0 sur la chaine a l'emplacement de la premiere occurence de la sous chaine dans la chaine.
+*/
 void supprimerAPartirDe (char *chaine, char* sousChaine) {
 	size_t longueurChaine = strlen(chaine);
 	size_t longueurSupp = strlen(sousChaine);
+
+	// On verifie que la sous-chaine est plus petite que la chaine principale
 	if (longueurChaine < longueurSupp) return;
 		
 	char *occurence = strstr(chaine, sousChaine);
 
+
+	// On met un caractere de fin de chaine a l'emplacement du premier caractere de la chaine trouvee
+	// Pour masquer la fin de la chaine
 	if (occurence != NULL) occurence[0] = '\0';
 
 	// printf("%s\n", occurence);
 	// printf("%s\n", chaine);
 }
 
-
+/*! \fn char* saisie()
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie
+*
+*  \return Retourne un pointeur qui pointe vers la chaine saisie par l'utilisateur
+*
+*  \remarks Cette fonction permet a l'utilisateur de saisir du texte.
+*/
 char* saisie() {
-    
-	char* chaine = malloc(30 * sizeof(char)); // On alloue la mémoire à la chaine, pour 30 caractères
+    size_t bufsize = 30;
+	char* chaine = malloc(bufsize * sizeof(char));
 	scanf("%s",chaine);
-
 	return chaine;
-
 }
 
+/*! \fn panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction panier_affichage
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param panier Affiche le panier
+*  \param id_personne 0 : barman, 1 : client
+*
+*  \return Retourne le panier
+*
+*  \remarks Cette fonction permet d'afficher le panier.
+*/
 panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne){
 
 	char* interraction = calloc(10,sizeof(char));
@@ -543,7 +777,23 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 	return panier;
 }
 
-
+/*! \fn panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,char *arborescence,int id_personne)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie_commande
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*  \param panier Affiche le panier
+*  \param arborescence Arborescence dans les menus
+*  \param id_personne 0 : barman, 1 : client
+*
+*  \return Retourne le panier de la commande
+*
+*  \remarks Cette fonction permet a l'utilisateur de prendre une commande.
+*/
 panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,char *arborescence,int id_personne){
 
 	char menuActuel[] = "/commander";
@@ -671,6 +921,19 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 	return panier;
 }
 
+/*! \fn boisson_struc saisie_boisson(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie_boisson
+*
+*  \param stock Tableau de boissons
+*
+*  \return Retourne une structure de boisson
+*
+*  \remarks Cette fonction permet au barman d'ajouter une boisson.
+*/
 boisson_struc saisie_boisson(boisson_struc *stock){
 
 	char* interraction = calloc(30,sizeof(char));
@@ -830,6 +1093,20 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 	return boisson;
 }
 
+/*! \fn cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction saisie_cocktail
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*
+*  \return Retourne une structure de cocktail
+*
+*  \remarks Cette fonction permet au barman d'ajouter un cocktail.
+*/
 cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
 	char* interraction = calloc(30,sizeof(char));
@@ -1008,6 +1285,19 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 	return cocktail;
 
 }
+
+/*! \fn void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction afficher_Cocktail
+*
+*  \param stock Tableau de boissons
+*  \param cocktail_liste Tableau de cocktails
+*
+*  \remarks Cette fonction permet d'afficher les ingredients d'un cocktail et leurs details.
+*/
 void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 
 	int etape = 0;
@@ -1050,6 +1340,15 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 
 }
 
+/*! \fn void administration()
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction administration
+*
+*  \remarks Cette fonction affiche toutes les commandes et le chiffre d'affaires.
+*/
 void administration(){
 
 	system("clear");
@@ -1082,39 +1381,19 @@ void administration(){
     else{
         fclose(lecture);
         exit(-1);
-    }  
+    }
 
     printf("\n\t Nombre de commande %d, chiffre d'affaire : %.2f€",taille,chiffre_daffaire);
 	getchar();
-        
+
 }
 
-
 /*
-
 idee : a chaque fois qu'on rentre dans les menus,
 la fonction qui affiche tel menu va retourner un char 
 pour savoir si on retourne dans le menu précédent
 et donc le reafficher
 donc chaque menu est un do while aver un system("clear");
 avec une variable locale quitter
-
-codes de retour des fonctions 
-(idee : renvoyer des parametres si on a besoin 
-d'afficher le menu differemment) :
-	0 : rien
-	p : juste revenir au menu precedent
-	q : quitter
-
-trucs a faire :
-
-voir la securite des inputs
-
-différencier cocktail et boisson /
-
-faire les entetes de tbl /
-faire des fonctions différentes pour chaque entete /
-
-
 
 */
