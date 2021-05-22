@@ -1041,7 +1041,7 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 				}
 			}
 			else{
-				affichageCentre("Il n'y a pas de cocktail enregistrer pour le moment\n");
+				affichageCentre("Il n'y a pas de cocktail enregistrer\n");
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 1;

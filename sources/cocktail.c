@@ -482,14 +482,14 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 
                     for(int i = 0 ;i<taille; i++){
                         if(boisson.id == i){
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) prix_boisson(stock[i].degre,stock[i].contenance)) ,stock[i].degre,stock[i].contenance,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix,stock[i].degre,stock[i].contenance,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);
                         }
                         else{
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) prix_boisson(stock[i].degre,stock[i].contenance)) ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
                         }
                     }
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom , ((float) prix_boisson(boisson.degre,boisson.contenance)),boisson.degre,boisson.contenance,boisson.quantite,boisson.type,"boisson");
+                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom ,boisson.prix,boisson.degre,boisson.contenance,boisson.quantite,boisson.type,"boisson");
                     }
                     fclose(ecriture);
                 }
