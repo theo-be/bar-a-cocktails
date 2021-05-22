@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
 #include "cocktail.h"
 #include "menu.h"
+
+
 
 int taille_stock(char* data){
 
@@ -41,9 +42,9 @@ boisson_struc *remplirstock_boisson(){
     if (lecture != NULL)
     {
         int taille;                                         // On initialise la taille
-        int cocktail_id = 1;                                // On initialise cocktail id qui va servir plus tard à definir l'id de la boisson, on commence à 1 puis on l'incrementera
+        int cocktail_id = 1;                                // On initialise cocktail id qui va servir plus tard a definir l'id de la boisson, on commence a 1 puis on l'incrementera
         fscanf(lecture,"%d", &taille);                      // On scanf la taille, pour apres allouer la taille, et pour passer la ligne
-        boisson_struc boisson;                                                                //on initialise une structure boisson, qui va servir à recuperer les donnees
+        boisson_struc boisson;                                                                //on initialise une structure boisson, qui va servir a recuperer les donnees
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );                 // On alloue un tableau de structure de boisson, la taille est la lecture de la taille du fichier
 
     for( int i = 0; i<taille;i++ ){                                                                                                                                                             // On fait une boucle pour recuperer toutes les lignes
@@ -53,13 +54,13 @@ boisson_struc *remplirstock_boisson(){
                 boisson.id = i+1 ;                                              // Si c'est une boisson on lui attribue son idee via la boucle for +1
             }
             else{
-                boisson.id = cocktail_id ;                              // On attribue la valeur de l'id pour les cocktails qui correspond à la ligne dans le fichier des cocktails
+                boisson.id = cocktail_id ;                              // On attribue la valeur de l'id pour les cocktails qui correspond a la ligne dans le fichier des cocktails
                 cocktail_id ++;                                         // On incremente la valeur afin de se decaler d'une ligne pour la prochaine lecture d'un cocktail
             }
             tab_boisson[i] = boisson;                                   // On mets la structure de lecture des boissons dans le tableau de structure
         }
 
-        fclose(lecture);                                                // On ferme le fichier de lecture car on n'a plus rien à lire
+        fclose(lecture);                                                // On ferme le fichier de lecture car on n'a plus rien a lire
         return tab_boisson;                                             // On retourne le tableau de structure contenant le stock des boissons
     }
     else{
@@ -77,7 +78,7 @@ cocktail_struc *remplirstock_cocktail(){
     {
         int taille;
         fscanf(lecture,"%d", &taille);
-        cocktail_struc cocktail;                                                                    // On initialise un structure cocktail, qui va servir à recuperer les donnees des cocktails
+        cocktail_struc cocktail;                                                                    // On initialise un structure cocktail, qui va servir a recuperer les donnees des cocktails
         cocktail_struc *tab_cocktail = malloc(taille * sizeof(cocktail_struc) );                    // On alloue un tableau de structure de cocktail
 
         for( int i = 0; i<taille; i++ ){
@@ -102,7 +103,7 @@ void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc p
             if( strcmp(panier.stock[i].categorie,"cocktail") == 0){                                         // Si c'est un cocktail on parcours la structure panier.stock pour reduire la quantite des ingredients du cocktail
                 for( int j = 0 ; j<6;j++){
                     if (cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] != -1){                                                               // On baisse uniquement si l'id est bien defini, -1 = pas defini, le reste oui
-                        stock[ cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] ].quantite -= panier.stock[i].quantite;                        // Si l'id correspond à une boisson on baisse la quantite du nombre de cocktail commande
+                        stock[ cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] ].quantite -= panier.stock[i].quantite;                        // Si l'id correspond a une boisson on baisse la quantite du nombre de cocktail commande
                     }
                 }
             }
@@ -165,9 +166,9 @@ char**tableau_type(boisson_struc *stock){
 
     for (int i = 0; i< taille; i++){
 
-        if(stock[i].quantite > 0 ){                 // On verifie si la quantite disponible de la boisson est superieur à 0 
+        if(stock[i].quantite > 0 ){                 // On verifie si la quantite disponible de la boisson est superieur a 0 
 
-            strcat(chaine[i], stock[i].type);       // Si la taille est superieur à 0, on concatene le type de la boisson dans le tableau de chaine
+            strcat(chaine[i], stock[i].type);       // Si la taille est superieur a 0, on concatene le type de la boisson dans le tableau de chaine
         }
 
     }
@@ -190,7 +191,7 @@ char * message_type(boisson_struc *stock){
         }
 
     }
-    strcat(chaine, " : ");          // On ajoute un deux points à la fin du message
+    strcat(chaine, " : ");          // On ajoute un deux points a la fin du message
     free(tableau);                  // On libere la memoire du tableau de type
     return chaine;                  // On retourne la chaine contenant le message avec les types
 }
@@ -203,11 +204,11 @@ int verification_type(boisson_struc *stock,char* type){
     for(int i =0; i<taille; i++){
 
         if (strcmp(type,tableau[i]) == 0){              // On compare le type du tableau , et le type rentrer en parametre
-            free(tableau);                              // Si on trouve le type dans le tableau on libère le
+            free(tableau);                              // Si on trouve le type dans le tableau on libere le
             return 1;                                   // Et on retourne 1 car on a trouve le type
         }
     }
-    free(tableau);  // On libère le tableau 
+    free(tableau);  // On libere le tableau 
     return 0;       // On retourne qu'on a pas trouve type
 }
 
@@ -229,7 +230,7 @@ int* tableau_id(boisson_struc *stock,char* type){
     int* tableau_id = calloc(taille, sizeof(int));              // On alloue un tableau d'entier
     for(int i = 0; i<taille; i++){
 
-        if(strcmp(type,"tout") == 0){                           // On compare si le type est egale à tout
+        if(strcmp(type,"tout") == 0){                           // On compare si le type est egale a tout
             tableau_id[i] = i+1;                                // Si oui on ajoute l'id au tableau d'entier
 
         }
@@ -249,16 +250,16 @@ char* message_id(boisson_struc *stock,char* type){
     char* conversion = calloc(10, sizeof(char));             // On alloue une chaine de 10 caracteres avec un calloc pour eviter des problemes lors du concatenage, et avoir une chaine pour convertir les entiers en chaine
     for (int i = 0; i< taille; i++){
         
-        if(tableau[i] != 0 ){                                   // On verifie que l'entier dans le tableau n'est pas egale à 0
+        if(tableau[i] != 0 ){                                   // On verifie que l'entier dans le tableau n'est pas egale a 0
 
-                strcat(chaine, stock[tableau[i]-1].nom);        // Si il n'est pas egale à 0, on concatene le nom de la boisson en la recuperant via le tableau de structure des boissons et le tableau d'entier(le rang du tableau)
+                strcat(chaine, stock[tableau[i]-1].nom);        // Si il n'est pas egale a 0, on concatene le nom de la boisson en la recuperant via le tableau de structure des boissons et le tableau d'entier(le rang du tableau)
                 strcat(chaine, " : ");                          
                 sprintf(conversion,"%d",tableau[i]);            // On converti l'entier(id) en chaine
                 strcat(chaine, conversion);                     // On concatene la chaine et la chaine avec la conversion
                 strcat(chaine, " : ");
         }
     }
-    free(conversion);                   // On libère la chaine conversion
+    free(conversion);                   // On libere la chaine conversion
     return chaine;                      // On retourne la chaine avec le message avec les id
 
 }
@@ -269,11 +270,11 @@ char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int i
     char* chaine = calloc(40 * taille, sizeof(char));      // On alloue une chaine de 40 caracteres avec un calloc pour eviter des problemes lors du concatenage, et stocker le message 
 
     char* conversion = calloc(10, sizeof(char));           // On alloue une chaine de 10 caracteres avec un calloc pour eviter des problemes lors du concatenage, et avoir une chaine pour convertir les entiers en chaine
-    id --;                                                 // On descend l'id de 1 , car le tableau de structure de boisson commence à 0 , et l'id que rentre l'utilisateur est decale de 1
+    id --;                                                 // On descend l'id de 1 , car le tableau de structure de boisson commence a 0 , et l'id que rentre l'utilisateur est decale de 1
 
     int quantite = 0;
 
-    if( strcmp(stock[id].categorie,"cocktail") == 0){                               //On regarde dans le tableau de structure de boisson , au rang qui correspond à l'id
+    if( strcmp(stock[id].categorie,"cocktail") == 0){                               //On regarde dans le tableau de structure de boisson , au rang qui correspond a l'id
         quantite = quantite_cocktail(stock,cocktail_liste[stock[id].id-1]);         // Si oui on calcule la quantite disponible via la fonction quantite_cocktail
     }
     else{
@@ -326,7 +327,7 @@ char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
     }
 
     if(vide == 0){
-        return "Il n'existe pas de boisson qui correspond à votre recherche";    // On retourne le message disant que la recherche n'a rien donnee
+        return "Il n'existe pas de boisson qui correspond a votre recherche";    // On retourne le message disant que la recherche n'a rien donnee
     }
     return chaine;          // On retourne le message avec les id qui correspondent au nom des boissons trouve
 
@@ -356,7 +357,7 @@ long conversion_long(char* chaine){
 
 int verification_cocktail(boisson_struc *stock,int id){
 
-    if( strcmp(stock[id].categorie,"cocktail") == 0 ){      // On cherche si l'id correspond bien à un cocktail
+    if( strcmp(stock[id].categorie,"cocktail") == 0 ){      // On cherche si l'id correspond bien a un cocktail
         return 1;                                           // Si c'est un cocktail on retoure oui
     }
     return 0;               // Sinon on retourne non
@@ -379,7 +380,7 @@ int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     int quantite = stock[cocktail.id_boisson[0]].quantite;      // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
 
     for(int i = 1; i< 6;i++){
-        if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){        // On regarde si la quantite du composant suivant est inferieur à celle precedente
+        if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){        // On regarde si la quantite du composant suivant est inferieur a celle precedente
            quantite = stock[cocktail.id_boisson[i]].quantite;                                           // Si oui la nouvelle valeur de quantite est celle du tableau de structure
         }
 
@@ -421,11 +422,11 @@ int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 }
 
 int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail){
-                                                                                            // La difference avec quantite_cocktail est que ici on ne prend pas les meme paramètres
+                                                                                            // La difference avec quantite_cocktail est que ici on ne prend pas les meme parametres
     int quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[0]].quantite;   // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
 
     for(int i = 1; i< 6;i++){
-        if ( stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite < quantite ){       // On regarde si la quantite du composant suivant est inferieur à celle precedente
+        if ( stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite < quantite ){       // On regarde si la quantite du composant suivant est inferieur a celle precedente
             quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite;          // Si oui la nouvelle valeur de quantite est celle du tableau de structure
         }
     }
@@ -458,7 +459,7 @@ float prix_boisson(int degre, int contenance){
 boisson_struc *ajouterBoisson(boisson_struc *stock){
 
 
-    boisson_struc boisson = saisie_boisson(stock);      // On fait saisir une boisson à l'utilisateur
+    boisson_struc boisson = saisie_boisson(stock);      // On fait saisir une boisson a l'utilisateur
 
     if ( boisson.id != -2){      // On ne fait rien car -2 correspond au defaut de la saisie de boisson
 
@@ -469,7 +470,7 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
             if (ecriture != NULL){
 
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%d\n",taille+1);                 // On augmente la car boisson.id -1 correspond à l'ajout d'une boisson
+                        fprintf(ecriture,"%d\n",taille+1);                 // On augmente la car boisson.id -1 correspond a l'ajout d'une boisson
                     }
                     else{
                         fprintf(ecriture,"%d\n",taille);                    // On n'augmente pas car different de boisson.id -1
@@ -493,16 +494,16 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
                 exit(-1);
             }  
 
-        free(stock);                                    // On libère la memoire du tableau de structure des boissons
+        free(stock);                                    // On libere la memoire du tableau de structure des boissons
         stock = remplirstock_boisson();                 // On remplis le tableau de structure des boissons avec la nouvelle boisson
     }
-    return stock;           // On retourne le tableau de structure des boissons pour qu'il soit mis à jour car on l'a free
+    return stock;           // On retourne le tableau de structure des boissons pour qu'il soit mis a jour car on l'a free
     
 }
 
 bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
-    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);            // On fait saisir un cocktail à l'utilisateur            
+    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);            // On fait saisir un cocktail a l'utilisateur            
     bdd base_de_donne ;                                                         // On initialise la structure base de donnee
 
 
@@ -543,16 +544,16 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
             fclose(ecriture);
             exit(-1);
         }
-    free(stock);                                                           // On libère la memoire du tableau de structure des boissons
+    free(stock);                                                           // On libere la memoire du tableau de structure des boissons
     stock = remplirstock_boisson();                                        // On remplis le tableau de structure des boissons avec le nouveau cocktail
-    free(cocktail_liste);                                                  // On libère la memoire du tableau de structure des cocktails
+    free(cocktail_liste);                                                  // On libere la memoire du tableau de structure des cocktails
     cocktail_liste = remplirstock_cocktail();                              // On remplis le tableau de structure des cocktails avec le nouveau cocktail
 
     base_de_donne.stock = stock;                                           // On mets les deux tableaux de structure dans la structure base de bdd
     base_de_donne.cocktail_liste = cocktail_liste;
     }
 
-    return base_de_donne;                                                  // On retourne la base de donnee pour qu'ils soient mis à jour car on les free
+    return base_de_donne;                                                  // On retourne la base de donnee pour qu'ils soient mis a jour car on les free
 }
 
 panier_struc ajouterPanier(panier_struc panier,boisson_struc commande){
