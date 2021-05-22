@@ -42,7 +42,7 @@ struct panier_struc
 int taille_stock(char* data);
 boisson_struc *remplirstock_boisson();
 cocktail_struc *remplirstock_cocktail();
-int commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne);
+void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne);
 
 char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
