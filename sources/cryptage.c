@@ -1,8 +1,32 @@
+/*! \file cryptage.c
+* \author Rabus Jules
+* \version 1
+* \date 22/05/2021 Creation des commentaires doxygen.
+
+* \brief Le fichier cryptage.c contient les fonctions necessaires pour le cryptage et la verifictation des du mot de passe.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
+
+
+/*! \fn char* vigenere(char* saisie)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction vigenere 
+*
+*  \param saisie Chaine a crypter
+*
+*  \return 
+*
+*  \remarks Cette fonction permet de crypter la chaine entree par l'utilisateur avec le systeme de cryptage Vigenere.
+*/
 char* vigenere(char* saisie){
 
     char* cleVigenere = "barman";
@@ -31,12 +55,24 @@ char* vigenere(char* saisie){
             saisie[i] = (char) valeurCryptage;
             i++;
         }
-        
     }
     return saisie;
-    
 }
 
+
+/*! \fn int verification_mdp(char *saisie)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction verification_mdp 
+*
+*  \param saisie Chaine cryptee
+*
+*  \return Retourne 1 si le mot de passe est bon et 0 quand il est faux
+*
+*  \remarks Cette fonction permet de verifier si le mot de passe crypte est le bon
+*/
 int verification_mdp(char *saisie){
 
     char* mot_de_passe = malloc( 20 * sizeof(char));
