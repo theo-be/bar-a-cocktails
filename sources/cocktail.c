@@ -300,11 +300,11 @@ int verification_nom(boisson_struc *stock,char* nom){
 
     for(int i = 0; i<taille; i++){
 
-        if(strcmp(stock[i].nom,nom) == 0){
-            return i+1;
+        if(strcmp(stock[i].nom,nom) == 0){              // On cherche dans le tableau de structure de boisson si il y a le nom qui correspond
+            return i+1;                                 // On retourne le rang de le tableau si on trouve un nom qui correspond
         }
     }
-    return -1;
+    return -1;      // On retourne -1 si on trouve aucune correspondance
 }
 
 char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
@@ -312,10 +312,10 @@ char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
     int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
     char* conversion = calloc(10, sizeof(char));
-    int vide = 0;
+    int vide = 0;                                   // On initialise vide un entier, pour savoir si on trouve une une boisson via la recherche
 
     for (int i = 0; i< taille; i++){
-        if ( (strstr(stock[i].nom,recherche) && strcmp(stock[i].categorie,categorie) == 0) || (strstr(stock[i].nom,recherche) && strcmp(categorie,"tout") == 0)  ){
+        if ( (strstr(stock[i].nom,recherche) && strcmp(stock[i].categorie,categorie) == 0) || (strstr(stock[i].nom,recherche) && strcmp(categorie,"tout") == 0)  ){             // On cherche une sous chaine de recherche dans le nom des boissons dans le tableau de structure, et on verifie la categorie si voulu,
                 strcat(chaine, stock[i].nom);
                 strcat(chaine, " : ");
                 sprintf(conversion,"%d",i+1);
@@ -326,9 +326,9 @@ char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
     }
 
     if(vide == 0){
-        return "Il n'existe pas de boisson qui correspond à votre recherche";
+        return "Il n'existe pas de boisson qui correspond à votre recherche";    // On retourne le message disant que la recherche n'a rien donnée
     }
-    return chaine;
+    return chaine;          // On retourne le message avec les id qui correspondent au nom des boissons trouvé
 
 }
 
@@ -351,16 +351,15 @@ long conversion_long(char* chaine){
 
     char* fin_pointeur;
 
-    return strtol(chaine, &fin_pointeur,0);
+    return strtol(chaine, &fin_pointeur,0);     // On utilise la strlol pour convertir une chaine en long
 }
 
 int verification_cocktail(boisson_struc *stock,int id){
 
-    if( strcmp(stock[id].categorie,"cocktail") == 0 ){
-           return 1;
-
+    if( strcmp(stock[id].categorie,"cocktail") == 0 ){      // On cherche si l'id correspond bien à un cocktail
+        return 1;                                           // Si c'est un cocktail on retoure oui
     }
-    return 0;
+    return 0;               // Sinon on retourne non
 }
 
 int contenance_cocktail(cocktail_struc cocktail){
@@ -368,39 +367,38 @@ int contenance_cocktail(cocktail_struc cocktail){
     int contenance = 0;
 
     for(int i = 0; i< 6;i++){
-        if ( cocktail.id_boisson[i] != -1){
-           contenance += cocktail.contenance[i];
+        if ( cocktail.id_boisson[i] != -1){             // On va jusqu'a 6, qui correspond au nombre de composant maximale que peux avoir un cocktail, (taille max défini dans la structure)
+           contenance += cocktail.contenance[i];        // On additionne la contenance de tout les composants de la boisson
         }
-
     }
     return contenance;
 }
 
 int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
-    int quantite = stock[cocktail.id_boisson[0]].quantite;
+    int quantite = stock[cocktail.id_boisson[0]].quantite;      // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
 
     for(int i = 1; i< 6;i++){
-        if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){
-           quantite = stock[cocktail.id_boisson[i]].quantite;
+        if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){        // On regarde si la quantite du composant suivant est inferieur à celle precedente
+           quantite = stock[cocktail.id_boisson[i]].quantite;                                           // Si oui la nouvelle valeur de quantite est celle du tableau de structure
         }
 
     }
-    return quantite;
+    return quantite;    
 }
 
 char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     char* type = calloc(20, sizeof(char));
-    strcpy(type,"sans-alcool");
+    strcpy(type,"sans-alcool");                     // On mets la chaine "sans alcool" dans la chaine type
 
     for(int i = 0; i< 6;i++){
-        if ( cocktail.id_boisson[i] != -1 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0){
-           strcpy(type,"alcool");
+        if ( cocktail.id_boisson[i] != -1 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0){         // On regarde si le composant existe, et si le composant a le type alcool
+           strcpy(type,"alcool");                                                                               // Si oui le type du cocktail est alcool
         }
     }
 
-    return type;
+    return type;            // On retourne le type
 }
 
 int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
