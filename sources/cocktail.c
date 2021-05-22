@@ -326,9 +326,9 @@ char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
     }
 
     if(vide == 0){
-        return "Il n'existe pas de boisson qui correspond à votre recherche";    // On retourne le message disant que la recherche n'a rien donnée
+        return "Il n'existe pas de boisson qui correspond à votre recherche";    // On retourne le message disant que la recherche n'a rien donnee
     }
-    return chaine;          // On retourne le message avec les id qui correspondent au nom des boissons trouvé
+    return chaine;          // On retourne le message avec les id qui correspondent au nom des boissons trouve
 
 }
 
@@ -367,7 +367,7 @@ int contenance_cocktail(cocktail_struc cocktail){
     int contenance = 0;
 
     for(int i = 0; i< 6;i++){
-        if ( cocktail.id_boisson[i] != -1){             // On va jusqu'a 6, qui correspond au nombre de composant maximale que peux avoir un cocktail, (taille max défini dans la structure)
+        if ( cocktail.id_boisson[i] != -1){             // On va jusqu'a 6, qui correspond au nombre de composant maximale que peux avoir un cocktail, (taille max defini dans la structure)
            contenance += cocktail.contenance[i];        // On additionne la contenance de tout les composants de la boisson
         }
     }
@@ -407,26 +407,26 @@ int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     int degre;
 
     for(int i = 0; i< 6;i++){
-        if ( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) == 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0 ){
-           quantite_degre += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
+        if ( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) == 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") == 0 ){     // On regarde si le composant existe, et si c'est un cocktail avec alcool
+           quantite_degre += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;                                                                          // Si oui on additionne les degres d'alcool
         }
-        else if( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) != 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") != 0){
-            quantite_degre += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;
+        else if( cocktail.id_boisson[i] != -1 && strcmp("alcool",type_cocktail(stock,cocktail)) != 0 && strcmp(stock[cocktail.id_boisson[i]].type,"alcool") != 0){          // On regarde si le composant existe, et si c'est un cocktail avec sans-alcool
+            quantite_degre += cocktail.contenance[i] * stock[cocktail.id_boisson[i]].degre;                                                                                 // Si oui on additionne les degres de sucre
         }
     }
 
-    degre = quantite_degre / contenance_cocktail(cocktail);
+    degre = quantite_degre / contenance_cocktail(cocktail);                 // On calcule le degre finale
 
     return degre;
 }
 
 int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail){
-
-    int quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[0]].quantite;
+                                                                                            // La difference avec quantite_cocktail est que ici on ne prend pas les meme paramètres
+    int quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[0]].quantite;   // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
 
     for(int i = 1; i< 6;i++){
-        if ( stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite < quantite ){
-            quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite;
+        if ( stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite < quantite ){       // On regarde si la quantite du composant suivant est inferieur à celle precedente
+            quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite;          // Si oui la nouvelle valeur de quantite est celle du tableau de structure
         }
     }
     return quantite;
@@ -434,15 +434,15 @@ int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,i
 
 float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
-    float prix = 1;
+    float prix = 0;
 
     for(int i = 0; i< 6;i++){
         if ( cocktail.id_boisson[i] != -1){
-            prix += cocktail.contenance[i] * (stock[cocktail.id_boisson[i]].prix / stock[cocktail.id_boisson[i]].contenance) ;
+            prix += cocktail.contenance[i] * (stock[cocktail.id_boisson[i]].prix / stock[cocktail.id_boisson[i]].contenance) ;      // on calcule prix de chaque composant et on l'adittionne au precedant
         }
     }
 
-    prix = prix * 1.10;
+    prix = prix * 1.10; // On augmente le prix de 10% car c'est un cocktail
 
     return prix;
 }
@@ -450,7 +450,7 @@ float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
 float prix_boisson(int degre, int contenance){
 
-    float prix = contenance * degre * 0.01;
+    float prix = contenance * degre * 0.01;     // On calcule le prix de la boisson
 
     return prix;
 }
@@ -458,9 +458,9 @@ float prix_boisson(int degre, int contenance){
 boisson_struc *ajouterBoisson(boisson_struc *stock){
 
 
-    boisson_struc boisson = saisie_boisson(stock);
+    boisson_struc boisson = saisie_boisson(stock);      // On fait saisir une boisson à l'utilisateur
 
-    if ( boisson.id != -2){
+    if ( boisson.id != -2){      // On ne fait rien car -2 correspond au defaut de la saisie de boisson
 
             FILE* ecriture = NULL;
             int taille = taille_stock("data_boisson");
@@ -469,22 +469,22 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
             if (ecriture != NULL){
 
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%d\n",taille+1);                 
+                        fprintf(ecriture,"%d\n",taille+1);                 // On augmente la car boisson.id -1 correspond à l'ajout d'une boisson
                     }
                     else{
-                        fprintf(ecriture,"%d\n",taille);
+                        fprintf(ecriture,"%d\n",taille);                    // On n'augmente pas car different de boisson.id -1
                     }
 
                     for(int i = 0 ;i<taille; i++){
-                        if(boisson.id == i){
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix,stock[i].degre,stock[i].contenance,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);
+                        if(boisson.id == i){                 // On regarde si le rang correspond au rang de la boisson qu'on veut augmenter la quantite disponible
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix,stock[i].degre,stock[i].contenance,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);   // On augmente la quantite disponible de la boisson     
                         }
                         else{
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);     // On ecrit dans le ficher les anciennes donnees
                         }
                     }
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom ,boisson.prix,boisson.degre,boisson.contenance,boisson.quantite,boisson.type,"boisson");
+                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom ,boisson.prix,boisson.degre,boisson.contenance,boisson.quantite,boisson.type,"boisson");     // On ecrit la nouvelle boisson dans le ficher data des boissons
                     }
                     fclose(ecriture);
                 }
@@ -493,20 +493,20 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
                 exit(-1);
             }  
 
-        free(stock);
-        stock = remplirstock_boisson();
+        free(stock);                                    // On libère la memoire du tableau de structure des boissons
+        stock = remplirstock_boisson();                 // On remplis le tableau de structure des boissons avec la nouvelle boisson
     }
-    return stock;
+    return stock;           // On retourne le tableau de structure des boissons pour qu'il soit mis à jour car on l'a free
     
 }
 
 bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
-    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);
-    bdd base_de_donne ;
+    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);            // On fait saisir un cocktail à l'utilisateur            
+    bdd base_de_donne ;                                                         // On initialise la structure base de donnee
 
 
-    if( strcmp(cocktail.nom,"") != 0){
+    if( strcmp(cocktail.nom,"") != 0){          // On ne fait rien car cocktail.nom "" correspond au defaut de la saisie de cocktail
 
     FILE* ecriture = NULL;
     int taille = taille_stock("data_cocktail");
@@ -516,10 +516,10 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
                 fprintf(ecriture,"%d\n",taille+1);
 
                 for(int i = 0 ;i<taille; i++){
-                fprintf(ecriture,"%s %d %d %d %d %d %d %d %d %d %d %d %d \n",cocktail_liste[i].nom,cocktail_liste[i].id_boisson[0],cocktail_liste[i].id_boisson[1],cocktail_liste[i].id_boisson[2],cocktail_liste[i].id_boisson[3],cocktail_liste[i].id_boisson[4],cocktail_liste[i].id_boisson[5],cocktail_liste[i].contenance[0],cocktail_liste[i].contenance[1],cocktail_liste[i].contenance[2],cocktail_liste[i].contenance[3],cocktail_liste[i].contenance[4],cocktail_liste[i].contenance[5]);
+                fprintf(ecriture,"%s %d %d %d %d %d %d %d %d %d %d %d %d \n",cocktail_liste[i].nom,cocktail_liste[i].id_boisson[0],cocktail_liste[i].id_boisson[1],cocktail_liste[i].id_boisson[2],cocktail_liste[i].id_boisson[3],cocktail_liste[i].id_boisson[4],cocktail_liste[i].id_boisson[5],cocktail_liste[i].contenance[0],cocktail_liste[i].contenance[1],cocktail_liste[i].contenance[2],cocktail_liste[i].contenance[3],cocktail_liste[i].contenance[4],cocktail_liste[i].contenance[5]); // On recrit les cocktails dans le ficher des data des cocktail
                 }
 
-                 fprintf(ecriture,"%s %d %d %d %d %d %d %d %d %d %d %d %d \n",cocktail.nom,cocktail.id_boisson[0],cocktail.id_boisson[1],cocktail.id_boisson[2],cocktail.id_boisson[3],cocktail.id_boisson[4],cocktail.id_boisson[5],cocktail.contenance[0],cocktail.contenance[1],cocktail.contenance[2],cocktail.contenance[3],cocktail.contenance[4],cocktail.contenance[5]);
+                 fprintf(ecriture,"%s %d %d %d %d %d %d %d %d %d %d %d %d \n",cocktail.nom,cocktail.id_boisson[0],cocktail.id_boisson[1],cocktail.id_boisson[2],cocktail.id_boisson[3],cocktail.id_boisson[4],cocktail.id_boisson[5],cocktail.contenance[0],cocktail.contenance[1],cocktail.contenance[2],cocktail.contenance[3],cocktail.contenance[4],cocktail.contenance[5]); // On ecrit les informations du nouveau cocktail dans le ficher des data des cocktail
                  fclose(ecriture);
             }
         else{
@@ -533,39 +533,39 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
                 fprintf(ecriture,"%d\n",taille+1);
 
                 for(int i = 0 ;i<taille; i++){
-                    fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
+                    fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie); // On recrit les boissons dans le ficher des data des boissons
                 }
 
-                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",cocktail.nom ,prix_cocktail(stock,cocktail) ,degre_cocktail(stock,cocktail),contenance_cocktail(cocktail),0,type_cocktail(stock,cocktail),"cocktail");
+                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",cocktail.nom ,prix_cocktail(stock,cocktail) ,degre_cocktail(stock,cocktail),contenance_cocktail(cocktail),0,type_cocktail(stock,cocktail),"cocktail");  // On ecrit le nouveau cocktail dans le ficher des data des boissons
                 fclose(ecriture);
             }
         else{
             fclose(ecriture);
             exit(-1);
         }
-    free(stock);
-    stock = remplirstock_boisson();
-    free(cocktail_liste);
-    cocktail_liste = remplirstock_cocktail();
+    free(stock);                                                           // On libère la memoire du tableau de structure des boissons
+    stock = remplirstock_boisson();                                        // On remplis le tableau de structure des boissons avec le nouveau cocktail
+    free(cocktail_liste);                                                  // On libère la memoire du tableau de structure des cocktails
+    cocktail_liste = remplirstock_cocktail();                              // On remplis le tableau de structure des cocktails avec le nouveau cocktail
 
-    base_de_donne.stock = stock; 
+    base_de_donne.stock = stock;                                           // On mets les deux tableaux de structure dans la structure base de bdd
     base_de_donne.cocktail_liste = cocktail_liste;
     }
 
-    return base_de_donne;
+    return base_de_donne;                                                  // On retourne la base de donnee pour qu'ils soient mis à jour car on les free
 }
 
 panier_struc ajouterPanier(panier_struc panier,boisson_struc commande){
 
-	panier.stock[panier.taille] = commande;
-    panier.taille ++;
+	panier.stock[panier.taille] = commande;     // On ajoute la structure commande, au tableau de structure de boisson de la structure panier
+    panier.taille ++;                           // On incremente panier.taille çar on a ajoute une commande
 
-	return panier;
+	return panier;  
 
 }
 
 char quitter(boisson_struc *stock){
-
+                                                    // On sauvegarder le tableau de structure des boissons
     FILE* ecriture = NULL;
     int taille = taille_stock("data_boisson");
     ecriture = fopen("../data/data_boisson.txt", "w");
@@ -573,7 +573,7 @@ char quitter(boisson_struc *stock){
         fprintf(ecriture,"%d\n",taille);
 
             for(int i = 0 ;i<taille; i++){
-                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
+                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie); // on ecrit le tableau de structure dans le fichier data des boissons afin de sauvegarder le stock
             }
             fclose(ecriture);
         }
