@@ -505,10 +505,13 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 			prix_total += panier.stock[i].prix;
 		}
 		printf("Le prix total est de : %.2f € \n",prix_total);
-		printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez valider commander votre panier entrer \'v\' ");
+		printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : valider votre panier entrer \'v\', l'annuler \'a\'  ");
 		interraction = saisie();
 		if(strcmp(interraction,"v") == 0){
-			commande(stock,panier,id_personne);
+			commande(stock,cocktail_liste,panier,id_personne);
+			panier.taille = 0;
+		}
+		if(strcmp(interraction,"a") == 0){
 			panier.taille = 0;
 		}
 
@@ -534,110 +537,117 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 	int etape = 0;
 	boisson_struc commande_boisson;
 
-	do{
+	if ( panier.taille > 18){
 		system("clear");
-		affichageCentre(arborescence);
-		printf("\n");
-
 		affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
-
-		switch (etape)
-		{
-		case 0:
-			printf("\t Veuillez choisir le type de recherche, par type 0 ou par mots-clés 1 :\n");
-			interraction = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape --;
-			}
-			else if( conversion_long(interraction) == 0 ){
-				etape ++;
-			}
-			else if( conversion_long(interraction) == 1){
-				etape = 3;
-			}
-		break;
-
-		case 1:
-			printf("\t Veuillez choisir le type de boisson :\n");
-			printf("\t %s", message_type(stock));
-			type = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape --;
-			}
-			else if(verification_type(stock,type)){
-				etape = 2;
-			}
-		break;
-
-		case 2:
-			printf("\t Veuillez choisir l'id de la boisson :\n");
-			printf("\t %s", message_id(stock,type));
-			interraction = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape --;
-			}
-			else{
-				id = conversion_long(interraction);
-				if(verification_id(stock,type,id)){
-					etape = 4;
-				}
-			}
-		break;
-
-		case 3:
-			printf("\t Veuillez choisir l'id de la boisson :\n");
-			printf("\nFaire une recherche :");
-			printf("%s\n",recherche_boisson(stock,saisie(),"tout"));
-			interraction = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape = 0;
-			}
-			else{
-				id = conversion_long(interraction);
-				if(verification_id(stock,"tout",id)){
-					etape ++;
-				}
-			}
-		break;
-
-		case 4:
-			printf("\t Veuillez choisir la quantite : \n");
-			printf("%s", message_quantite(stock,id));
-			interraction = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape --;
-			}
-			else{
-				quantite = (int) conversion_long(interraction);
-				if( stock[id-1].quantite >= quantite || id_personne == 0){
-					etape ++;
-				}
-			}
-		break;
-
-		case 5:
-			printf(" Votre commande : %s, Quantite : %d, Prix : %.2f€ , Type : %s\n",stock[id-1].nom,((int) quantite) ,stock[id-1].prix * quantite,stock[id-1].type);
-			printf("Taper \'v\' pour mettre votre commande au panier, sinon taper \'p\' ");
-			interraction = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape --;
-			}
-			if (strcmp(interraction,"v") == 0){
-				commande_boisson = stock[id-1];
-				commande_boisson.quantite = quantite;
-				commande_boisson.prix = stock[id-1].prix * quantite;
-				panier = ajouterPanier(panier,commande_boisson);
-				etape = 8;
-			}
-		break;
-
-		default:
-			return panier;
-			break;
-		}
-
+		affichageCentre("\tVotre panier est plein, veuillez le vider ou le commander \'p\'\n");
 	}
-	while(etape != 8);
+	else{
+		do{
+			system("clear");
+			affichageCentre(arborescence);
+			printf("\n");
+
+			affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
+
+			switch (etape)
+			{
+			case 0:
+				printf("\t Veuillez choisir le type de recherche, par type 0 ou par mots-clés 1 :\n");
+				interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape --;
+				}
+				else if( conversion_long(interraction) == 0 ){
+					etape ++;
+				}
+				else if( conversion_long(interraction) == 1){
+					etape = 3;
+				}
+			break;
+
+			case 1:
+				printf("\t Veuillez choisir le type de boisson :\n");
+				printf("\t %s", message_type(stock));
+				type = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape --;
+				}
+				else if(verification_type(stock,type)){
+					etape = 2;
+				}
+			break;
+
+			case 2:
+				printf("\t Veuillez choisir l'id de la boisson :\n");
+				printf("\t %s", message_id(stock,type));
+				interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape --;
+				}
+				else{
+					id = conversion_long(interraction);
+					if(verification_id(stock,type,id)){
+						etape = 4;
+					}
+				}
+			break;
+
+			case 3:
+				printf("\t Veuillez choisir l'id de la boisson :\n");
+				printf("\nFaire une recherche :");
+				printf("%s\n",recherche_boisson(stock,saisie(),"tout"));
+				interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = 0;
+				}
+				else{
+					id = conversion_long(interraction);
+					if(verification_id(stock,"tout",id)){
+						etape ++;
+					}
+				}
+			break;
+
+			case 4:
+				printf("\t Veuillez choisir la quantite : \n");
+				printf("%s", message_quantite(stock,cocktail_liste,id));
+				interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = 0;
+				}
+				else{
+					quantite = (int) conversion_long(interraction);
+					if( stock[id-1].quantite >= quantite || id_personne == 0 ||( quantite_cocktail(stock,cocktail_liste[stock[id-1].id-1]) >=  quantite ) ){
+						etape ++;
+					}
+				}
+			break;
+
+			case 5:
+				printf(" Votre commande : %s, Quantite : %d, Prix : %.2f€ , Type : %s\n",stock[id-1].nom,((int) quantite) ,stock[id-1].prix * quantite,stock[id-1].type);
+				printf("Taper \'v\' pour mettre votre commande au panier, sinon taper \'p\' ");
+				interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape --;
+				}
+				if (strcmp(interraction,"v") == 0){
+					commande_boisson = stock[id-1];
+					commande_boisson.quantite = quantite;
+					commande_boisson.prix = stock[id-1].prix * quantite;
+					panier = ajouterPanier(panier,commande_boisson);
+					etape = 8;
+				}
+			break;
+
+			default:
+				return panier;
+				break;
+			}
+
+		}
+		while(etape != 8);
+	}
 	supprimerAPartirDe(arborescence, menuActuel);
 	return panier;
 }

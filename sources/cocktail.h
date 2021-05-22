@@ -42,7 +42,7 @@ struct panier_struc
 int taille_stock(char* data);
 boisson_struc *remplirstock_boisson();
 cocktail_struc *remplirstock_cocktail();
-int commande(boisson_struc* stock,panier_struc panier,int id_personne);
+int commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne);
 
 char**tableau_type(boisson_struc *stock);
 char* message_type(boisson_struc *stock);
@@ -50,7 +50,7 @@ int verification_type(boisson_struc *stock,char* type);
 int verification_id(boisson_struc *stock,char* type,long id);
 int* tableau_id(boisson_struc *stock,char* type);
 char* message_id(boisson_struc *stock,char* type);
-char* message_quantite(boisson_struc *stock,int id);
+char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int id);
 int verification_nom(boisson_struc *stock,char* nom);
 char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie);
 char* affichage_boisson(boisson_struc *stock);

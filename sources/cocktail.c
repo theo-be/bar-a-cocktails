@@ -50,7 +50,7 @@ boisson_struc *remplirstock_boisson(){
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );
 
         for( int i = 0; i<taille;i++ ){
-             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.contenance,&boisson.quantite,boisson.type,boisson.categorie);
+             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,&boisson.contenance,boisson.type,boisson.categorie);
 
             if (strcmp(boisson.categorie,"boisson") == 0){
                 boisson.id = i+1 ;
@@ -99,7 +99,23 @@ cocktail_struc *remplirstock_cocktail(){
         
 }
 
-int commande(boisson_struc* stock,panier_struc panier,int id_personne){
+int commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne){
+
+
+    for( int i = 0; i<panier.taille; i++){
+        if( id_personne != 0){
+            if( strcmp(stock[panier.stock[i].id-1].categorie,"cocktail") == 0){
+                for( int j = 0 ; j<6;j++){
+                    if (cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] != -1){
+                        stock[ cocktail_liste[ panier.stock[i].id-1].id_boisson[ j ] ].quantite -= panier.stock[i].quantite;
+                    }
+                }
+            }
+            else{
+                stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
+            }
+        }
+    }
 
     int taille = taille_stock("data_commande");
     boisson_struc *boisson = malloc(taille * sizeof(boisson_struc));
@@ -124,7 +140,6 @@ int commande(boisson_struc* stock,panier_struc panier,int id_personne){
 
     ecriture = fopen("../data/commande.txt", "w");
     if (ecriture != NULL){
-
             fprintf(ecriture,"%d\n",taille+1);
 
             for( int i = 0; i<taille; i++){
@@ -132,12 +147,7 @@ int commande(boisson_struc* stock,panier_struc panier,int id_personne){
             }
             free(boisson);
             free(id_personne_lecture);
-
             for( int i = 0; i<panier.taille; i++){
-                if( id_personne != 0){
-                stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
-                }
-
                 fprintf(ecriture,"%s %.2f %d %d %d %s\n",panier.stock[i].nom ,panier.stock[i].prix,panier.stock[i].quantite,id_personne,panier.stock[i].id,panier.stock[i].categorie);
             }
             fclose(ecriture);
@@ -213,7 +223,7 @@ int verification_id(boisson_struc *stock,char* type,long id){
     int taille = taille_stock("data_boisson");
 
     for(int i = 0; i<taille; i++){
-        if ( (stock[i].id == id && strcmp(stock[i].type,type) == 0) || (stock[i].id == id && strcmp(type,"tout") == 0) ){
+        if ( ( i+1 == id && strcmp(stock[i].type,type) == 0) || ( i+1 == id && strcmp(type,"tout") == 0) ){
             return 1;
         }
     }
@@ -260,7 +270,7 @@ char* message_id(boisson_struc *stock,char* type){
 
 }
 
-char* message_quantite(boisson_struc *stock,int id){
+char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int id){
 
     int taille = taille_stock("data_boisson");
     char* chaine = calloc(40 * taille, sizeof(char));
@@ -268,13 +278,22 @@ char* message_quantite(boisson_struc *stock,int id){
     char* conversion = calloc(10, sizeof(char));
     id --;
 
+    int quantite = 0;
+
+    if( strcmp(stock[id].categorie,"cocktail") == 0){
+        quantite = quantite_cocktail(stock,cocktail_liste[stock[id].id-1]);
+    }
+    else{
+        quantite = stock[id].quantite;
+    }
+
     strcat(chaine,"Quantite disponible de ");
 
     strcat(chaine, stock[id].nom);
 
     strcat(chaine," ");
 
-    sprintf(conversion,"%d",stock[id].quantite);
+    sprintf(conversion,"%d",quantite);
     strcat(chaine, conversion);
     strcat(chaine, " : ");
     free(conversion);
@@ -359,7 +378,7 @@ int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     int quantite = stock[cocktail.id_boisson[0]].quantite;
 
-    for(int i = 0; i< 6;i++){
+    for(int i = 1; i< 6;i++){
         if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){
            quantite = stock[cocktail.id_boisson[i]].quantite;
         }
@@ -399,6 +418,18 @@ int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     degre = alcool / contenance_cocktail(cocktail);
 
     return degre;
+}
+
+int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail){
+
+    int quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[0]].quantite;
+
+    for(int i = 1; i< 6;i++){
+        if ( stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite < quantite ){
+            quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite;
+        }
+    }
+    return quantite;
 }
 
 float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
