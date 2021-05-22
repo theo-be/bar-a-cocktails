@@ -516,7 +516,12 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 			prix_total += panier.stock[i].prix;
 		}
 		printf("Le prix total est de : %.2f € \n",prix_total);
-		printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : valider votre panier entrer \'v\', l'annuler \'a\'  ");
+		if( id_personne){
+			printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : valider votre panier entrer \'v\', l'annuler \'a\'  ");
+		}
+		else{
+			printf("\nSi vous souhaitez revenir en arriere entrer \'p\', si vous souhaitez : servir le plateau entrer \'v\', l'annuler \'a\'  ");
+		}
 		interraction = saisie();
 		if(strcmp(interraction,"v") == 0){
 			commande(stock,cocktail_liste,panier,id_personne);
@@ -528,7 +533,12 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 
 	}
 	else{
-		printf("Votre panier est vide");
+		if( id_personne){
+			printf("Votre panier est vide");
+		}
+		else{
+			printf("Le plateau est vide");
+		}
 		getchar();
 	}
 
@@ -1006,27 +1016,34 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 
 	do{
 		system("clear");
-		afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"),0);
-
-		affichageCentre("\n \tSi vous souhaitez quitter entrer \'p\'\n");
-
-		printf("\n\tSi vous voulez plus d'information sur un cocktail entrer son id :\n");
-		interraction = saisie();
-			if (strcmp(interraction,"p") == 0){
-				etape = 1;
-			}
-			id = (int) conversion_long(interraction);
-			if( verification_cocktail(stock,id) ){
-				printf("La composition de %s est :",stock[id].nom);
-				for(int i = 0; i<6; i++){
-					if(cocktail_liste[stock[id].id-1].id_boisson[i] != -1){
-					printf("%d cl de %s, ",cocktail_liste[stock[id].id-1].contenance[i], stock[ cocktail_liste[stock[id].id-1].id_boisson[i] ].nom);
-					}
+		affichageCentre("Si vous souhaitez quitter entrer \'p\'\n\n");
+		if (taille_stock("data_cocktail")){
+			afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"),0);
+			printf("\n\tSi vous voulez plus d'information sur un cocktail entrer son id :\n");
+			interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = 1;
 				}
-				printf("\n");
-			if (strcmp(saisie(),"p") == 0){
-				etape = 1;
+				id = (int) conversion_long(interraction);
+				if( verification_cocktail(stock,id) ){
+					printf("La composition de %s est :",stock[id].nom);
+					for(int i = 0; i<6; i++){
+						if(cocktail_liste[stock[id].id-1].id_boisson[i] != -1){
+						printf("%d cl de %s, ",cocktail_liste[stock[id].id-1].contenance[i], stock[ cocktail_liste[stock[id].id-1].id_boisson[i] ].nom);
+						}
+					}
+					printf("\n");
+				if (strcmp(saisie(),"p") == 0){
+					etape = 1;
+				}
+				}
 			}
+			else{
+				affichageCentre("Il n'y a pas de cocktail enregistrer pour le moment\n");
+				interraction = saisie();
+				if (strcmp(interraction,"p") == 0){
+					etape = 1;
+				}
 			}
 		}
 	while(etape != 1);

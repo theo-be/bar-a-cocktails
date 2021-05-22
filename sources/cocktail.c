@@ -50,7 +50,7 @@ boisson_struc *remplirstock_boisson(){
         boisson_struc *tab_boisson = malloc(taille * sizeof(boisson_struc) );
 
         for( int i = 0; i<taille;i++ ){
-             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.quantite,&boisson.contenance,boisson.type,boisson.categorie);
+             fscanf(lecture, "%s%*c %f%*c %d%*c %d%*c %d%*c %s%*c %s",boisson.nom,&boisson.prix,&boisson.degre,&boisson.contenance,&boisson.quantite,boisson.type,boisson.categorie);
 
             if (strcmp(boisson.categorie,"boisson") == 0){
                 boisson.id = i+1 ;
@@ -479,14 +479,14 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 
                     for(int i = 0 ;i<taille; i++){
                         if(boisson.id == i){
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) prix_boisson(stock[i].degre,stock[i].contenance)) ,stock[i].degre,stock[i].quantite+boisson.quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) prix_boisson(stock[i].degre,stock[i].contenance)) ,stock[i].degre,stock[i].contenance,stock[i].quantite+boisson.quantite,stock[i].type,stock[i].categorie);
                         }
                         else{
-                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) prix_boisson(stock[i].degre,stock[i].contenance)) ,stock[i].degre,stock[i].quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
+                            fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom , ((float) prix_boisson(stock[i].degre,stock[i].contenance)) ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
                         }
                     }
                     if(boisson.id == -1){
-                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom , ((float) prix_boisson(boisson.degre,boisson.contenance)),boisson.degre,boisson.quantite,boisson.contenance,boisson.type,"boisson");
+                        fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",boisson.nom , ((float) prix_boisson(boisson.degre,boisson.contenance)),boisson.degre,boisson.contenance,boisson.quantite,boisson.type,"boisson");
                     }
                     fclose(ecriture);
                 }
