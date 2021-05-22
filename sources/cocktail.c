@@ -8,10 +8,10 @@
 
 int taille_stock(char* data){
 
-    FILE* lecture = NULL;
+    FILE* lecture = NULL;                                   // On initialise la lecture
 
-    if( strcmp(data,"data_boisson") == 0){
-        lecture = fopen("../data/data_boisson.txt", "r");
+    if( strcmp(data,"data_boisson") == 0){                  // On choisit quelle data on veut lire en fonction du paramètre data
+        lecture = fopen("../data/data_boisson.txt", "r");   // On ouvre le ficher
     }
     else if(strcmp(data,"data_cocktail") == 0){
         lecture = fopen("../data/data_cocktail.txt", "r");
@@ -19,18 +19,15 @@ int taille_stock(char* data){
     else if(strcmp(data,"data_commande") == 0){
         lecture = fopen("../data/commande.txt", "r");
     }
-    else{
-        exit(-1);
-    }
 
-    if (lecture != NULL)
+    if (lecture != NULL)                    // On vérifie que la fichier de lecture n'est pas nulle
     {
-        int taille;
-        fscanf(lecture,"%d", &taille);
+        int taille;                         // On initialise l'entier taille
+        fscanf(lecture,"%d", &taille);      // On lit la valeur de l'entier présent au début du fichier lecture
         fclose(lecture);
         return taille;
     }
-    else{
+    else{                                   // La lecture est nulle, on ferme et quitte le programme
     fclose(lecture);
     exit(-1);
     }  
@@ -39,8 +36,8 @@ int taille_stock(char* data){
 
 boisson_struc *remplirstock_boisson(){
 
-    FILE* lecture = NULL;
-    lecture = fopen("../data/data_boisson.txt", "r");
+    FILE* lecture = NULL;                                   // On initialise la lecture
+    lecture = fopen("../data/data_boisson.txt", "r");       // on ouvre le fichier des data
     if (lecture != NULL)
     {
         int taille;
@@ -111,7 +108,7 @@ int commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc pa
                 }
             }
             else{
-                stock[panier.stock[i].id].quantite -= panier.stock[i].quantite;
+                stock[panier.stock[i].id-1].quantite -= panier.stock[i].quantite;
             }
         }
     }
@@ -541,10 +538,10 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
                 fprintf(ecriture,"%d\n",taille+1);
 
                 for(int i = 0 ;i<taille; i++){
-                    fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].quantite,stock[i].contenance,stock[i].type,stock[i].categorie);
+                    fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,stock[i].quantite,stock[i].type,stock[i].categorie);
                 }
 
-                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",cocktail.nom ,prix_cocktail(stock,cocktail) ,degre_cocktail(stock,cocktail),0,contenance_cocktail(cocktail),type_cocktail(stock,cocktail),"cocktail");
+                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",cocktail.nom ,prix_cocktail(stock,cocktail) ,degre_cocktail(stock,cocktail),contenance_cocktail(cocktail),0,type_cocktail(stock,cocktail),"cocktail");
                 fclose(ecriture);
             }
         else{
@@ -570,4 +567,24 @@ panier_struc ajouterPanier(panier_struc panier,boisson_struc commande){
 
 	return panier;
 
+}
+
+char quitter(boisson_struc *stock){
+
+    FILE* ecriture = NULL;
+    int taille = taille_stock("data_boisson");
+    ecriture = fopen("../data/data_boisson.txt", "w");
+    if (ecriture != NULL){
+        fprintf(ecriture,"%d\n",taille);
+
+            for(int i = 0 ;i<taille; i++){
+                fprintf(ecriture,"%s %.2f %d %d %d %s %s\n",stock[i].nom ,stock[i].prix ,stock[i].degre,stock[i].contenance,,stock[i].quantite,stock[i].type,stock[i].categorie);
+            }
+            fclose(ecriture);
+        }
+    else{
+        fclose(ecriture);
+        exit(-1);
+    }
+    return 'q';
 }

@@ -71,5 +71,7 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
 
 panier_struc ajouterPanier(panier_struc panier,boisson_struc commande);
 
+char quitter(boisson_struc *stock);
+
 
 #endif

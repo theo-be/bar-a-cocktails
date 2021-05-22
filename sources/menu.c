@@ -39,7 +39,7 @@ char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *ar
 				retourFonction = afficherInterfaceBarman(stock,cocktail_liste, arborescence);
 				break;
 			case '3':
-				retourFonction = 'q';
+				retourFonction = quitter(stock);
 				break;
 			default:
 				printf("Erreur dans la saisie\n");
