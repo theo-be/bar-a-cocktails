@@ -178,7 +178,6 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 				afficher_Cocktail(stock,cocktail_liste);
 			break;
 			case '5':
-				afficher_Cocktail(stock,cocktail_liste);
 				base_de_donne = ajouterCocktail(stock,cocktail_liste);
 				stock = base_de_donne.stock;
 				cocktail_liste = base_de_donne.cocktail_liste;
