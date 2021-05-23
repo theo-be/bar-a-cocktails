@@ -360,14 +360,16 @@ void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes) {
 *  \remarks Cette fonction permet de mettre les barres verticales pour separer les colonnes.
 */
 void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int largeur) {
-	// initialisation
+	// Recuperation de la taille du terminal
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	remplirEspaces(ligne, 0, w.ws_col);
 
+	// Initialisation de la ligne
+	remplirEspaces(ligne, 0, w.ws_col);
 	separerColonnes(ligne, nbColonnes, taillesColonnes);
 
-	// incice de colonne global
+	// Incice de debut de chaque colonne dans la ligne
+	// Est incremente a chaque nouvelle colonne
 	int indiceDebutCol = 0;
 	int colonne = 0;
 	int tailleChaineAAjouter = 0;
@@ -385,16 +387,18 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 	for (int i = 0; i < 8; i++) {
 		tailleChaineAAjouter = (int)strlen(entetes[i]);
 		for (int j = 0; j < tailleChaineAAjouter; j++) {
-			ligne[indiceDebutCol + j] = entetes[i][j]; // <- nom de l'array qui contient les infos a afficher
+			ligne[indiceDebutCol + j] = entetes[i][j]; // <- Nom du tableau qui contient les infos a afficher
 		}
 		indiceDebutCol += (taillesColonnes[colonne] + 1);
 		colonne++;
 	}
 
+	// On affiche l'entete
 	printf("%s\n", ligne);
 
 	remplirEspaces(ligne, 0, w.ws_col);
 
+	// On separe l'entete du tableau par une ligne de caracteres
 	for (int i = 0; i < largeur; i++) {
 		ligne[i] = '=';
 	}
@@ -420,10 +424,14 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau,int pause) {
 
 	system("clear");
+
+	// Recuperation de la taille du terminal
 	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     // printf ("lines %d\n", w.ws_row);
     // printf ("columns %d\n", w.ws_col);
+
+	// Premiere partie de la procedure, on calcule le nombre et la taille des colonnes
 
 	int tailleColId = 3;
 	int tailleColPrix = 4;
@@ -433,31 +441,38 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 	int tailleMaxColFlex = 30;
 
-	int tailleTotaleColSatiques =  tailleColId + tailleColPrix + tailleColContenance + tailleColDegre + tailleColQuantite;
+	int tailleTotaleColStatiques =  tailleColId + tailleColPrix + tailleColContenance + tailleColDegre + tailleColQuantite;
 
 	int nombreColonnesFlex = 3;
 	int nombreColonnesTotal = nombreColonnesFlex + 5;
 
-	int tailleColonnesFlex = (w.ws_col - tailleTotaleColSatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
+	// Une colonne flexible est une colonne qui peut prendre une taille variable en fonction de la place disponible dans le terminal
+	int tailleColonnesFlex = (w.ws_col - tailleTotaleColStatiques - nombreColonnesTotal + 1) / nombreColonnesFlex;
 	if (tailleColonnesFlex > tailleMaxColFlex) tailleColonnesFlex = tailleMaxColFlex;
 
-	int tailleTotaleTableau = tailleTotaleColSatiques + tailleColonnesFlex * nombreColonnesFlex + nombreColonnesTotal;
+	int tailleTotaleTableau = tailleTotaleColStatiques + tailleColonnesFlex * nombreColonnesFlex + nombreColonnesTotal;
 	
 
 	//printf("taille colonnes flexibles : %d\n", tailleColonnesFlex);
 
+	// Tableau de tailles de colonnes
 	int taillesColonnes[] = {tailleColId, tailleColonnesFlex, tailleColPrix, tailleColContenance, tailleColDegre, tailleColonnesFlex, tailleColonnesFlex};
 
-	// tableau de ligne
+	// Ligne du tableau
 	char *ligne = malloc((w.ws_col + 1) * sizeof(char));
 
 	ligne[w.ws_col] = '\0';
 
-
+	// Taille du texte dans la chaine temporaire
 	int tailleChaineAAjouter = 0;
+
+	// Incice de debut de chaque colonne dans la ligne
+	// Est incremente a chaque nouvelle colonne
 	int indiceDebutCol = 0;
 	int colonne = 0;
 
+
+	// La chaine temporaire sert pour la conversion de int ou float en char
 	char chaineTemporaire[10] = {0};
 
 	afficherEntete(ligne, taillesColonnes, nombreColonnesTotal, tailleTotaleTableau);
@@ -466,17 +481,15 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 
 		if (strcmp(stock[id].categorie, categorie) == 0 || strcmp("tout", categorie) == 0){
 
-			// initialisation
+			// Initialisation de la ligne
 			remplirEspaces(ligne, 0,  w.ws_col);
-
 			separerColonnes(ligne, nombreColonnesTotal, taillesColonnes);
 
-			// incice de colonne global
 			indiceDebutCol = 0;
 			colonne = 0;
-// 
 
 			// ID
+			// On regarde si on affiche l'element
 			if ( strcmp(stock[id].categorie,"cocktail") == 0 ){
 				sprintf(chaineTemporaire, "%d", id);
 			}
@@ -484,16 +497,18 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 				sprintf(chaineTemporaire, "%d", stock[id].id);
 			}
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
+			// On copie caractere par caractere les elements a afficher
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
+			// On passe a la colonne suivante
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
 
 			// NOM
 			tailleChaineAAjouter = (int)strlen(stock[id].nom);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = stock[id].nom[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = stock[id].nom[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -501,7 +516,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			// PRIX
 			sprintf(chaineTemporaire, "%f", stock[id].prix);
 			for (int j = 0; j < 4; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -510,7 +525,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			sprintf(chaineTemporaire, "%d", stock[id].contenance);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -519,7 +534,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			sprintf(chaineTemporaire, "%d", stock[id].degre);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -527,7 +542,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			// TYPE
 			tailleChaineAAjouter = (int)strlen(stock[id].type);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = stock[id].type[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = stock[id].type[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -535,7 +550,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			// CATEGORIE
 			tailleChaineAAjouter = (int)strlen(stock[id].categorie);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = stock[id].categorie[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = stock[id].categorie[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			indiceDebutCol += (taillesColonnes[colonne] + 1);
 			colonne++;
@@ -544,26 +559,22 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 			sprintf(chaineTemporaire, "%d", stock[id].quantite);
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
-				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- nom de l'array qui contient les infos a afficher
+				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- Nom du tableau qui contient les infos a afficher
 			}
 			// indiceDebutCol += (taillesColonnes[colonne] + 1);
 			// colonne++;
-			printf("%s\n", ligne);
 
+
+			// Ensuite on affiche la ligne
+			printf("%s\n", ligne);
 		}
 	}
-
-	// affichage
-	// exemple : 1 coca 1.50 33 0 soda boisson 20
-	// COLONNES TOTALES : 8
-	// ORDRE :
-	// ID NOM PRIX  CONTENANCE DEGRE TYPE CATEGORIE QT
-	// 3   30  4         9       5    30     30     8
 
 	if( pause ){
 		getchar();
 	}
 
+	// On libere l'espace cree par malloc
 	free(ligne);
 }
 
@@ -579,7 +590,9 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* 
 *  \remarks Cette fonction permet de centrer du texte dans le terminal.
 */
 void affichageCentre (char *chaine) {
-    struct winsize w;
+
+    // Recuperation de la taille du terminal
+	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     // printf ("lines %d\n", w.ws_row);
     // printf ("columns %d\n", w.ws_col);
@@ -618,6 +631,7 @@ void affichageCentre (char *chaine) {
 *  \remarks Cette fonction permet d'afficher du texte dans le terminal avec une certaine marge a gauche.
 */
 void affichageMarge (char *chaine, int ratio) {
+	// Recuperation de la taille du terminal
 	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     // printf ("lines %d\n", w.ws_row);
@@ -666,8 +680,10 @@ char inputMenu () {
 	char* buffer = NULL;
 	buffer = (char*)malloc(bufsize * sizeof(char));
 
+	// getline sert a vider le buffer
 	getline(&buffer, &bufsize, stdin);
 	
+	// On retourne uniquement le premier caractere
 	char caractere = buffer[0];
 	free(buffer);
 	return caractere;
@@ -688,14 +704,13 @@ char inputMenu () {
 void supprimerAPartirDe (char *chaine, char* sousChaine) {
 	size_t longueurChaine = strlen(chaine);
 	size_t longueurSupp = strlen(sousChaine);
+	// On verifie que la sous-chaine est plus petite que la chaine principale
 	if (longueurChaine < longueurSupp) return;
-		
+
 	char *occurence = strstr(chaine, sousChaine);
 
+	// On place un caractere de fin de ligne a l'endroit de la sous-chaine pour ne plus l'afficher
 	if (occurence != NULL) occurence[0] = '\0';
-
-	// printf("%s\n", occurence);
-	// printf("%s\n", chaine);
 }
 
 /*! \fn char* saisie()
