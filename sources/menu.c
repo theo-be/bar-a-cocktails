@@ -580,7 +580,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char *
 
 			// QT
 			if ( strcmp(stock[id].categorie,"cocktail") == 0 ){
-				sprintf(chaineTemporaire, "%d", quantite_cocktail(stock,cocktail_liste[id]) );
+				sprintf(chaineTemporaire, "%d", quantite_cocktail(stock,cocktail_liste[stock[id].id-1]) );
 			}
 			else{
 				sprintf(chaineTemporaire, "%d", stock[id].quantite);

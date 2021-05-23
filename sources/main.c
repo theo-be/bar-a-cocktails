@@ -24,11 +24,11 @@
 */
 /*! \file cocktail.h
 * \section Presentation
-* \brief Le fichier menu.h regroupe tous les prototypes de fonctions et les structures necessaires a la gestion des boissons et des cocktails.
+* \brief Le fichier cocktail.h regroupe tous les prototypes de fonctions et les structures necessaires a la gestion des boissons et des cocktails.
 */
 /*! \file cryptage.h
 * \section Presentation
-* \brief Le fichier menu.h regroupe tous les prototypes de fonctions necessaires au cryptage du mot de passe du barman.
+* \brief Le fichier cryptage.h regroupe tous les prototypes de fonctions necessaires au cryptage du mot de passe du barman.
 */
 
 

@@ -651,13 +651,11 @@ int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     int quantite = stock[cocktail.id_boisson[0]].quantite;      // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
 
     for(int i = 1; i< 6;i++){
-        printf("id %d quantite %d nom %s",cocktail.id_boisson[i],stock[cocktail.id_boisson[i]].quantite,stock[cocktail.id_boisson[i]].nom);
         if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){        // On regarde si la quantite du composant suivant est inferieur a celle precedente
            quantite = stock[cocktail.id_boisson[i]].quantite;                                           // Si oui la nouvelle valeur de quantite est celle du tableau de structure
         }
 
     }
-    getchar();
     return quantite;    
 }
 
