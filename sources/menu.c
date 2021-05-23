@@ -71,25 +71,29 @@ char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *ar
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 
+	// Mise a jour de l'arborescence
 	char *menuActuel = "Accueil";
 	strcat(arborescence, menuActuel);
 
+	// Affichage du menu
 	do {
-		// on affiche le menu
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
 
+		// On affiche les options disponibles
 		affichageCentre("Bonjour, bienvenue dans notre interface de commande de cocktails.");
 		affichageCentre("Etes-vous un client ou bien un barman ?\n");
 		affichageMarge("1. Client\n", 48);
 		affichageMarge("2. Barman\n", 48);
 		affichageMarge("3. Quitter\n", 48);
 
+		// Interaction utilisateur
 		do {
 			erreurSaisie = 0;
 			printf("Votre option : ");
 
+			// On regarde le premier caractere demande par l'utilisateur
 			switch (inputMenu()) {
 			case '1':
 				retourFonction = afficherMenuClient(stock,cocktail_liste, arborescence);
@@ -108,6 +112,8 @@ char afficherMenu (boisson_struc *stock,cocktail_struc *cocktail_liste, char *ar
 		} while (erreurSaisie == 1);
 	} while (retourFonction != 'q');
 
+	// On supprime de dernier elemant de l'arborescence
+	supprimerAPartirDe(arborescence, menuActuel);
 	return retourFonction;
 }
 
@@ -133,14 +139,17 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 	panier_struc panier;
 	panier.taille = 0;
 
+	// Mise a jour de l'arborescence
 	char *menuActuel = "/client";
 	strcat(arborescence, menuActuel);
 
+	// Affichage du menu
 	do {
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
 	
+		// On affiche les options disponibles
 		affichageCentre("Que souhaitez-vous faire ?\n");
 		affichageMarge("1. Commander une boisson\n", 45);
 		affichageMarge("2. Afficher le panier\n", 45);
@@ -152,6 +161,7 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 			erreurSaisie = 0;
 			printf("Votre option : ");
 
+			// On regarde le premier caractere demande par l'utilisateur
 			switch (inputMenu()) {
 			case '1':
 				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,1);
@@ -176,6 +186,7 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 		} while (erreurSaisie == 1);
 	} while (retourFonction != 'p');
 
+	// On supprime de dernier elemant de l'arborescence
 	supprimerAPartirDe(arborescence, menuActuel);
 	return retourFonction;
 }
@@ -197,23 +208,16 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 *  \remarks Cette fonction permet de afficher le menu du barman.
 */
 char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
-	// afficher boissons
-	// -> les lister et pour plus de details les selectionner manuellement
-	// afficher cocktails
-	// creer cocktail
-
 	panier_struc panier;
 	panier.taille = 0;
 
+	// On demande la mot de passe avant de rentrer dans l'interface barman
 	do {
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
 		affichageCentre("Veuillez saisir le mot de passe pour acceder a l\'interface barman .\n");
-
-
-	}
-	while(verification_mdp(saisie()) == 0);
+	} while(verification_mdp(saisie()) == 0);
 
 
 	int erreurSaisie = 0;
@@ -221,15 +225,17 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 
 	bdd base_de_donne;
 
-		
-	char menuActuel[] = "/Barman";
+	// Mise a jour de l'arborescence
+	char menuActuel[] = "/barman";
 	strcat(arborescence, menuActuel);
 
+	// Affichage du menu
 	do {
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
-
+	
+		// On affiche les options disponibles
 		affichageCentre("Bienvenue dans l\'interface Barman .\n");
 		affichageCentre("Que souhaitez-vous faire ?\n\n");
 		affichageMarge("\t1. Afficher les stocks.\n\n", 30);
@@ -246,6 +252,7 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 			erreurSaisie = 0;
 			printf("Votre option : ");
 
+			// On regarde le premier caractere demande par l'utilisateur
 			switch (inputMenu()) {
 			case '1':
 				afficherTableau (stock,cocktail_liste,"tout",taille_stock("data_boisson"),1);
@@ -284,8 +291,9 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 		} while (erreurSaisie == 1);
 	} while (!quittterMenu);
 
-	supprimerAPartirDe(arborescence, menuActuel);
 
+	// On supprime de dernier elemant de l'arborescence
+	supprimerAPartirDe(arborescence, menuActuel);
 	return 'p';
 }
 
@@ -1287,9 +1295,9 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 
 	do{
 		system("clear");
-		affichageCentre("Si vous souhaitez quitter entrer \'p\'\n\n");
 		if (taille_stock("data_cocktail")){																// On verifie qu"il y est bien des cocktails
 			afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"),0);			// On affiche le tableau sans pause
+			printf("\n\tSi vous souhaitez quitter entrez \'p\'\n");
 			printf("\n\tSi vous voulez plus d'information sur un cocktail entrer son id :\n");
 			interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
@@ -1310,7 +1318,7 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 				}
 			}
 			else{
-				affichageCentre("Il n'y a pas de cocktail enregistrer\n");			// On affichage le message quand il n'y a pas de cocktail dans la base de donnee
+				affichageCentre("Il n'y a pas de cocktail enregistre\n");			// On affichage le message quand il n'y a pas de cocktail dans la base de donnee
 				interraction = saisie();
 				if (strcmp(interraction,"p") == 0){
 					etape = 1;
@@ -1368,13 +1376,3 @@ void administration(){
 	getchar();
         
 }
-
-
-/*
-idee : a chaque fois qu'on rentre dans les menus,
-la fonction qui affiche tel menu va retourner un char 
-pour savoir si on retourne dans le menu précédent
-et donc le reafficher
-donc chaque menu est un do while aver un system("clear");
-avec une variable locale quitter
-*/

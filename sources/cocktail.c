@@ -1,3 +1,34 @@
+/*! \file cocktail.c
+* \author Rabus Jules
+* \version 1
+* \date 19/04/2021 Debut du travail en groupe
+* \date 22/05/2021 Creation des commentaires doxygen.
+
+* \brief Le fichier cocktail.c contient l'ensemble des fonctions pour la gestion des boissons et des cocktails.
+*/
+
+
+
+/*! \mainpage Presentation
+* \section introduction Introduction
+*
+* Programme du bar a cocktail
+*
+* \section fonctions_procedures Fonctions et procédures
+*
+*/
+
+
+/*! \file menu.h
+* \section Presentation
+* \brief Le fichier menu.h regroupe tous les prototypes de fonctions necessaires a l'affichage des menus et aux interactions utilisateur.
+*/
+/*! \file cocktail.h
+* \section Presentation
+* \brief Le fichier cocktail.h regroupe tous les prototypes de fonctions et les structures necessaires a la gestion des boissons et des cocktails.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +37,19 @@
 #include "menu.h"
 
 
-
+/*! \fn int taille_stock(char* data)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction taille_stock
+*
+*  \param data type d'element a lire
+*
+*  \return Retourne le nombre d'elements du type souhaite.
+*
+*  \remarks Cette fonction permet de calculer la taille du stock.
+*/
 int taille_stock(char* data){
 
     FILE* lecture = NULL;                                   // On initialise la lecture
@@ -35,6 +78,17 @@ int taille_stock(char* data){
 
 }
 
+/*! \fn boisson_struc *remplirstock_boisson()
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction remplirstock_boisson
+*
+*  \return Retourne un poiteur vers un tableau de structure de boissons.
+*
+*  \remarks Cette fonction permet de remplir le stock de boissons pour l'initialisation du programme.
+*/
 boisson_struc *remplirstock_boisson(){
 
     FILE* lecture = NULL;                                   // On initialise la lecture
@@ -70,6 +124,17 @@ boisson_struc *remplirstock_boisson(){
         
 }
 
+/*! \fn boisson_struc *remplirstock_cocktail()
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction remplirstock_cocktail
+*
+*  \return Retourne un poiteur vers un tableau de structure de cocktails.
+*
+*  \remarks Cette fonction permet de remplir le stock de cocktails pour l'initialisation du programme.
+*/
 cocktail_struc *remplirstock_cocktail(){
 
     FILE* lecture = NULL;                                                   // On initialise la lecture
@@ -96,6 +161,20 @@ cocktail_struc *remplirstock_cocktail(){
         
 }
 
+/*! \fn void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne)
+*  \author Rabus Jules
+*  \version 1
+*  \date 21/05/2021 Commentaires doxygen
+*
+*  \brief Procedure commande
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail_liste Tableau de cocktails
+*  \param panier Affiche le panier
+*  \param id_personne 0 : barman, 1 : client
+*
+*  \remarks Cette fonction permet de passer une commande et de la stocker dans l'historique.
+*/
 void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc panier,int id_personne){
                                                                                                             // 1ere partie on baisse la quantite disponible si besoin                                                                                                        
     for( int i = 0; i<panier.taille; i++){                                                                  // On parcourt tout le panier, la taille du panier est stocker dans sa structure panier.taille
@@ -154,6 +233,21 @@ void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc p
     }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/*! \fn char**tableau_type(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction tableau_type
+*
+*  \param stock Tableau contenant le stock
+*
+*  \return Retourne le panier
+*
+*  \remarks Cette fonction permet de
+*/
 char**tableau_type(boisson_struc *stock){
 
     int taille = taille_stock("data_boisson");      // On recupere la taille
@@ -176,11 +270,25 @@ char**tableau_type(boisson_struc *stock){
     return chaine;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+/*! \fn char * message_type(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction message_type
+*
+*  \param stock Tableau contenant le stock
+*
+*  \return Retourne 
+*
+*  \remarks Cette fonction permet d'afficher le panier.
+*/
 char * message_type(boisson_struc *stock){
 
     char** tableau = tableau_type(stock);       // On recupere le tableau de caractere de la fonction tableau_type
     int taille = taille_stock("data_boisson");
-    char* chaine = calloc(30 * taille, sizeof(char));    // On alloue une chaine de 8 caracteres avec un calloc pour eviter des problemes lors du concatenage, et stocker le message
+    char* chaine = calloc(30 * taille, sizeof(char));    // On alloue une chaine de 8 caracteres avec un calloc pour eviter des problemes lors de la concatenation, et stocker le message
 
     for(int i =0; i<taille;i++){
 
@@ -195,7 +303,22 @@ char * message_type(boisson_struc *stock){
     free(tableau);                  // On libere la memoire du tableau de type
     return chaine;                  // On retourne la chaine contenant le message avec les types
 }
+////////////////////////////////////////////////////////////////////////////////////////////
 
+/*! \fn int verification_type(boisson_struc *stock,char* type)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction verification_type
+*
+*  \param stock Tableau contenant le stock
+*  \param type nom du type a verifier
+*
+*  \return Retourne 1 pour un bon type, 0 sinon.
+*
+*  \remarks Cette fonction sert a verifier le type du stock.
+*/
 int verification_type(boisson_struc *stock,char* type){
 
     char** tableau = tableau_type(stock);                // On recupere le tableau de caractere de la fonction tableau_type
@@ -211,7 +334,22 @@ int verification_type(boisson_struc *stock,char* type){
     free(tableau);  // On libere le tableau 
     return 0;       // On retourne qu'on a pas trouve type
 }
+////////////////////////////////////////////////////////////////////////////////////////////
 
+/*! \fn int verification_id(boisson_struc *stock,char* type,long id)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction verification_id
+*
+*  \param stock Tableau contenant le stock
+*  \param type nom de l'id a verifier
+*
+*  \return Retourne 1 pour un bon id, 0 sinon.
+*
+*  \remarks Cette fonction sert a verifier si les elements de stock existent.
+*/
 int verification_id(boisson_struc *stock,char* type,long id){
 
     int taille = taille_stock("data_boisson");
@@ -223,7 +361,22 @@ int verification_id(boisson_struc *stock,char* type,long id){
     }
     return 0;       // On retourne 0 car on n'a pas trouve une correspondance
 }
+////////////////////////////////////////////////////////////////////////////////////////////
 
+/*! \fn int* tableau_id(boisson_struc *stock,char* type)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction tableau_id
+*
+*  \param stock Tableau contenant le stock
+*  \param type nom du type
+*
+*  \return Retourne un pointeur vers un tableau d'entiers.
+*
+*  \remarks Cette fonction cree un tableau qui regroupe les id des elemants corracpondant au type.
+*/
 int* tableau_id(boisson_struc *stock,char* type){
 
     int taille = taille_stock("data_boisson");
@@ -241,18 +394,33 @@ int* tableau_id(boisson_struc *stock,char* type){
     return tableau_id;                  // On retourne le tableau d'entier
 
 }
+////////////////////////////////////////////////////////////////////////////////////////////
 
+/*! \fn char* message_id(boisson_struc *stock,char* type)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction message_id
+*
+*  \param stock Tableau contenant le stock
+*  \param type nom du type
+*
+*  \return Retourne un pointeur vers une chaine de caracteres.
+*
+*  \remarks Cette fonction permet de faire un message structure opur les elements d'un certain type.
+*/
 char* message_id(boisson_struc *stock,char* type){
 
     int* tableau = tableau_id(stock,type);                  // On recupere le tableau d'entier de tableau_id
     int taille = taille_stock("data_boisson");
-    char* chaine = calloc(40 * taille, sizeof(char));        // On alloue une chaine de 40 caracteres avec un calloc pour eviter des problemes lors du concatenage, et stocker le message
-    char* conversion = calloc(10, sizeof(char));             // On alloue une chaine de 10 caracteres avec un calloc pour eviter des problemes lors du concatenage, et avoir une chaine pour convertir les entiers en chaine
+    char* chaine = calloc(40 * taille, sizeof(char));        // On alloue une chaine de 40 caracteres avec un calloc pour eviter des problemes lors de la concatenation, et stocker le message
+    char* conversion = calloc(10, sizeof(char));             // On alloue une chaine de 10 caracteres avec un calloc pour eviter des problemes lors de la concatenation, et avoir une chaine pour convertir les entiers en chaine
     for (int i = 0; i< taille; i++){
         
-        if(tableau[i] != 0 ){                                   // On verifie que l'entier dans le tableau n'est pas egale a 0
+        if(tableau[i] != 0 ){                                   // On verifie que l'entier dans le tableau n'est pas egal a 0
 
-                strcat(chaine, stock[tableau[i]-1].nom);        // Si il n'est pas egale a 0, on concatene le nom de la boisson en la recuperant via le tableau de structure des boissons et le tableau d'entier(le rang du tableau)
+                strcat(chaine, stock[tableau[i]-1].nom);        // Si il n'est pas egal a 0, on concatene le nom de la boisson en la recuperant via le tableau de structure des boissons et le tableau d'entier(le rang du tableau)
                 strcat(chaine, " : ");                          
                 sprintf(conversion,"%d",tableau[i]);            // On converti l'entier(id) en chaine
                 strcat(chaine, conversion);                     // On concatene la chaine et la chaine avec la conversion
@@ -264,6 +432,22 @@ char* message_id(boisson_struc *stock,char* type){
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+/*! \fn char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int id)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction message_quantite
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail_liste Tableau de cocktails
+*  \param id z
+*
+*  \return Retourne un pointeur vers une chaine de caracteres.
+*
+*  \remarks Cette fonction permet de faire un message structure opur les elements d'un certain type.
+*/
 char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int id){
 
     int taille = taille_stock("data_boisson");
@@ -295,6 +479,20 @@ char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int i
 
 }
 
+/*! \fn int verification_nom(boisson_struc *stock,char* nom)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction verification_nom 
+*
+*  \param stock Tableau contenant le stock
+*  \param nom nom de la boissson
+*
+*  \return Retourne 1 : si le nom correspond, 0 : sinon.
+*
+*  \remarks Cette fonction permet de rechercher une boisson d'une certaine categorie (si precise) dans le stock.
+*/
 int verification_nom(boisson_struc *stock,char* nom){
 
     int taille = taille_stock("data_boisson");
@@ -308,6 +506,21 @@ int verification_nom(boisson_struc *stock,char* nom){
     return -1;      // On retourne -1 si on trouve aucune correspondance
 }
 
+/*! \fn char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction recherche_boisson 
+*
+*  \param stock Tableau contenant le stock
+*  \param recherche boisson ou cocktail rechreche
+*  \param categorie categorie de la boisson (facultatif)
+*
+*  \return Retourne un pointeur vers une chaine de caracteres qui est le nom de la boisson recherchee.
+*
+*  \remarks Cette fonction permet de rechercher une boisson d'une certaine categorie (si precise) dans le stock.
+*/
 char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
 
     int taille = taille_stock("data_boisson");
@@ -316,7 +529,7 @@ char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
     int vide = 0;                                   // On initialise vide un entier, pour savoir si on trouve une une boisson via la recherche
 
     for (int i = 0; i< taille; i++){
-        if ( (strstr(stock[i].nom,recherche) && strcmp(stock[i].categorie,categorie) == 0) || (strstr(stock[i].nom,recherche) && strcmp(categorie,"tout") == 0)  ){             // On cherche une sous chaine de recherche dans le nom des boissons dans le tableau de structure, et on verifie la categorie si voulu,
+        if ( (strstr(stock[i].nom,recherche) && strcmp(stock[i].categorie,categorie) == 0) || (strstr(stock[i].nom,recherche) && strcmp(categorie,"tout") == 0)  ){             // On cherche une sous-chaine de recherche dans le nom des boissons dans le tableau de structure, et on verifie la categorie si voulu,
                 strcat(chaine, stock[i].nom);
                 strcat(chaine, " : ");
                 sprintf(conversion,"%d",i+1);
@@ -330,9 +543,21 @@ char* recherche_boisson(boisson_struc *stock,char* recherche,char *categorie){
         return "Il n'existe pas de boisson qui correspond a votre recherche";    // On retourne le message disant que la recherche n'a rien donnee
     }
     return chaine;          // On retourne le message avec les id qui correspondent au nom des boissons trouve
-
 }
 
+/*! \fn char* affichage_boisson(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction affichage_boisson 
+*
+*  \param stock Tableau contenant le stock
+*
+*  \return Retourne un pointeur vers une chaine de caracteres qui est le nom de la boisson.
+*
+*  \remarks Cette fonction permet d'afficher le nom d'une boisson avec un certain format.
+*/
 char* affichage_boisson(boisson_struc *stock){
 
     int taille = taille_stock("data_boisson");
@@ -348,6 +573,19 @@ char* affichage_boisson(boisson_struc *stock){
 
 }
 
+/*! \fn long conversion_long(char* chaine)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction conversion_long 
+*
+*  \param chaine chaine a convertir
+*
+*  \return Retourne un long.
+*
+*  \remarks Cette fonction sert a convertir une chaine en type long.
+*/
 long conversion_long(char* chaine){
 
     char* fin_pointeur;
@@ -355,6 +593,20 @@ long conversion_long(char* chaine){
     return strtol(chaine, &fin_pointeur,0);     // On utilise la strlol pour convertir une chaine en long
 }
 
+/*! \fn int verification_cocktail(boisson_struc *stock,int id)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction verification_cocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param id id dans le stock
+*
+*  \return Retourne 1 : si l'element est un cocktail, 0 : l'element n'est pas un cocktail.
+*
+*  \remarks Cette fonction sert a verifier si l'element est un cocktail ou non.
+*/
 int verification_cocktail(boisson_struc *stock,int id){
 
     if( strcmp(stock[id].categorie,"cocktail") == 0 ){      // On cherche si l'id correspond bien a un cocktail
@@ -363,6 +615,19 @@ int verification_cocktail(boisson_struc *stock,int id){
     return 0;               // Sinon on retourne non
 }
 
+/*! \fn int contenance_cocktail(cocktail_struc cocktail)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction contenance_cocktail 
+*
+*  \param cocktail cocktail
+*
+*  \return Retourne la contenance du cocktail.
+*
+*  \remarks Cette fonction donne la contenance d'un cocktail en cL.
+*/
 int contenance_cocktail(cocktail_struc cocktail){
 
     int contenance = 0;
@@ -375,6 +640,20 @@ int contenance_cocktail(cocktail_struc cocktail){
     return contenance;
 }
 
+/*! \fn int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction quantite_cocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail cocktail
+*
+*  \return Retourne la quantite de cocktails.
+*
+*  \remarks Cette fonction permet de calculer la quantite d'un cocktail.
+*/
 int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     int quantite = stock[cocktail.id_boisson[0]].quantite;      // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
@@ -388,6 +667,20 @@ int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     return quantite;    
 }
 
+/*! \fn char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction type_cocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail cocktail
+*
+*  \return Retourne un pointeur vers une chaine de caracteres.
+*
+*  \remarks Cette fonction donne le type d'un cocktail.
+*/
 char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     char* type = calloc(20, sizeof(char));
@@ -398,10 +691,23 @@ char* type_cocktail(boisson_struc *stock,cocktail_struc cocktail){
            strcpy(type,"alcool");                                                                               // Si oui le type du cocktail est alcool
         }
     }
-
     return type;            // On retourne le type
 }
 
+/*! \fn int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction degre_cocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail cocktail
+*
+*  \return Retourne le degre du cocktail.
+*
+*  \remarks Cette fonction permet de calculer le degre d'un cocktail.
+*/
 int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     int quantite_degre = 0;
@@ -416,11 +722,26 @@ int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
         }
     }
 
-    degre = quantite_degre / contenance_cocktail(cocktail);                 // On calcule le degre finale
+    degre = quantite_degre / contenance_cocktail(cocktail);                 // On calcule le degre final
 
     return degre;
 }
 
+/*! \fn int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction disponibilite_cocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail Tableau de cocktails
+*  \param id_cocktail id du cocktail
+*
+*  \return Retourne le nombre de cocktails disponibles.
+*
+*  \remarks Cette fonction permet de calculer la disponibilite d'un cocktail.
+*/
 int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail){
                                                                                             // La difference avec quantite_cocktail est que ici on ne prend pas les meme parametres
     int quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[0]].quantite;   // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
@@ -433,6 +754,20 @@ int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,i
     return quantite;
 }
 
+/*! \fn float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction prix_cocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail cocktail
+*
+*  \return Retourne le prix du cocktail.
+*
+*  \remarks Cette fonction permet de calculer le prix d'un cocktail.
+*/
 float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     float prix = 0;
@@ -448,7 +783,20 @@ float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     return prix;
 }
 
-
+/*! \fn float prix_boisson(int degre, int contenance)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction prix_boisson 
+*
+*  \param degre degre de sucre ou d'alcool
+*  \param contenance contenance de la boisson en cL
+*
+*  \return Retourne le prix de la boisson.
+*
+*  \remarks Cette fonction permet de calculer le prix d'une boisson.
+*/
 float prix_boisson(int degre, int contenance){
 
     float prix = contenance * degre * 0.01;     // On calcule le prix de la boisson
@@ -456,6 +804,19 @@ float prix_boisson(int degre, int contenance){
     return prix;
 }
 
+/*! \fn boisson_struc *ajouterBoisson(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction ajouterBoisson 
+*
+*  \param stock Tableau contenant le stock
+*
+*  \return Retourne un pointeur vers un tableau de structure de boissons.
+*
+*  \remarks Cette fonction permet d'ajouter une boisson dans le stock.
+*/
 boisson_struc *ajouterBoisson(boisson_struc *stock){
 
 
@@ -501,6 +862,20 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
     
 }
 
+/*! \fn bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction ajouterCocktail 
+*
+*  \param stock Tableau contenant le stock
+*  \param cocktail_liste Tableau de cocktails
+*
+*  \return Retourne un pointeur vers une base de donnees qui contient boissons et cocktail.
+*
+*  \remarks Cette fonction permet d'ajouter un cocktail dans le stock.
+*/
 bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
 
     cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);            // On fait saisir un cocktail a l'utilisateur            
@@ -556,6 +931,20 @@ bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
     return base_de_donne;                                                  // On retourne la base de donnee pour qu'ils soient mis a jour car on les free
 }
 
+/*! \fn panier_struc ajouterPanier(panier_struc panier,boisson_struc commande)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction ajouterPanier
+*
+*  \param panier panier de la commande
+*  \param commande element commande
+*
+*  \return Retourne le panier.
+*
+*  \remarks Cette fonction permet d'ajouter l'element commande au panier.
+*/
 panier_struc ajouterPanier(panier_struc panier,boisson_struc commande){
 
 	panier.stock[panier.taille] = commande;     // On ajoute la structure commande, au tableau de structure de boisson de la structure panier
@@ -565,8 +954,21 @@ panier_struc ajouterPanier(panier_struc panier,boisson_struc commande){
 
 }
 
+/*! \fn char quitter(boisson_struc *stock)
+*  \author Rabus Jules
+*  \version 1
+*  \date 22/05/2021 Commentaires doxygen
+*
+*  \brief Fonction quitter
+*
+*  \param stock Tableau contenant le stock
+*
+*  \return Retourne 'q' pour quitter.
+*
+*  \remarks Cette fonction permet de sauvegarder des donnees.
+*/
 char quitter(boisson_struc *stock){
-                                                    // On sauvegarder le tableau de structure des boissons
+                                                    // On sauvegarde le tableau de structure des boissons
     FILE* ecriture = NULL;
     int taille = taille_stock("data_boisson");
     ecriture = fopen("../data/data_boisson.txt", "w");
