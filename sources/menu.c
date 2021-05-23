@@ -136,6 +136,7 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 	char retourFonction = 0;
 	int erreurSaisie = 0;
 
+	bdd base_de_donne;
 	panier_struc panier;
 	panier.taille = 0;
 
@@ -155,6 +156,7 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 		affichageMarge("2. Afficher le panier\n", 45);
 		affichageMarge("3. Afficher les boissons\n", 45);
 		affichageMarge("4. Afficher les cocktails\n", 45);
+		affichageMarge("5. Ajouter un cocktail\n", 45);
 		affichageMarge("Appuyez sur \'p\' pour revenir au menu precedent\n", 45);
 
 		do {
@@ -174,6 +176,12 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 			break;
 			case '4':
 				afficher_Cocktail(stock,cocktail_liste);
+			break;
+			case '5':
+				afficher_Cocktail(stock,cocktail_liste);
+				base_de_donne = ajouterCocktail(stock,cocktail_liste);
+				stock = base_de_donne.stock;
+				cocktail_liste = base_de_donne.cocktail_liste;
 			break;
 			case 'p':
 				retourFonction = 'p';
