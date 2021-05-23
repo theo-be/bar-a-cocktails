@@ -3,7 +3,6 @@
 * \version 1
 * \date 19/04/2021 Debut du travail en groupe
 * \date 22/05/2021 Creation des commentaires doxygen.
-
 * \brief Le fichier menu.h regroupe tous les prototypes de fonctions necessaires a l'affichage des menus et aux interactions utilisateur.
 */
 

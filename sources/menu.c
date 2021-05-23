@@ -8,17 +8,6 @@
 */
 
 
- 
-/*! \mainpage Presentation
-* \section introduction Introduction
-*
-* Programme du bar a cocktail
-*
-* \section fonctions_procedures Fonctions et procédures
-*
-*/
-
-
 
 /*! \file menu.h
 * \section Presentation
