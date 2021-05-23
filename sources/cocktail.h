@@ -3,8 +3,7 @@
 * \version 1
 * \date 19/04/2021 Debut du travail en groupe
 * \date 22/05/2021 Creation des commentaires doxygen.
-
-* \brief Le fichier cocktail.c contient l'ensemble des fonctions necessaires pour la gestion des boissons et des cocktails.
+* \brief Le fichier cocktail.h contient l'ensemble des fonctions necessaires pour la gestion des boissons et des cocktails.
 */
 
 #ifndef H_cocktail

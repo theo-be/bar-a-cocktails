@@ -3,19 +3,7 @@
 * \version 1
 * \date 19/04/2021 Debut du travail en groupe
 * \date 22/05/2021 Creation des commentaires doxygen.
-
 * \brief Le fichier cocktail.c contient l'ensemble des fonctions pour la gestion des boissons et des cocktails.
-*/
-
-
-
-/*! \mainpage Presentation
-* \section introduction Introduction
-*
-* Programme du bar a cocktail
-*
-* \section fonctions_procedures Fonctions et procédures
-*
 */
 
 
