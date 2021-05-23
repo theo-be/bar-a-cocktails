@@ -181,12 +181,12 @@ float prix_boisson(int degre, int contenance);
 /*!
 *  \brief Prototype de la fonction ajouterBoisson
 */
-boisson_struc *ajouterBoisson(boisson_struc *stock);
+boisson_struc *ajouterBoisson(boisson_struc *stock,char *arborescence);
 
 /*!
 *  \brief Prototype de la fonction ajouterCocktail
 */
-bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
+bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,char *arborescence);
 
 /*!
 *  \brief Prototype de la fonction ajouterPanier

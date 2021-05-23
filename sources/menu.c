@@ -144,6 +144,9 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 	char *menuActuel = "/client";
 	strcat(arborescence, menuActuel);
 
+	
+	char menuActuel_tableau[30];
+
 	// Affichage du menu
 	do {
 		system("clear");
@@ -169,16 +172,19 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,1);
 			break;
 			case '2':
-				panier = panier_affichage(stock,cocktail_liste,panier,1);
+				panier = panier_affichage(stock,cocktail_liste,arborescence,panier,1);
 			break;
 			case '3':
-				afficherTableau (stock,cocktail_liste,"boisson",taille_stock("data_boisson"),1);
+				strcpy(menuActuel_tableau,"/afficher_tableau_boisson");
+				strcat(arborescence, menuActuel_tableau);
+				afficherTableau (stock,cocktail_liste,arborescence,"boisson",taille_stock("data_boisson"),1);
+				supprimerAPartirDe(arborescence, menuActuel_tableau);
 			break;
 			case '4':
-				afficher_Cocktail(stock,cocktail_liste);
+				afficher_Cocktail(stock,cocktail_liste,arborescence);
 			break;
 			case '5':
-				base_de_donne = ajouterCocktail(stock,cocktail_liste);
+				base_de_donne = ajouterCocktail(stock,cocktail_liste,arborescence);
 				stock = base_de_donne.stock;
 				cocktail_liste = base_de_donne.cocktail_liste;
 			break;
@@ -236,6 +242,7 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 	char menuActuel[] = "/barman";
 	strcat(arborescence, menuActuel);
 
+	char menuActuel_tableau[30];
 	// Affichage du menu
 	do {
 		system("clear");
@@ -262,18 +269,25 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 			// On regarde le premier caractere demande par l'utilisateur
 			switch (inputMenu()) {
 			case '1':
-				afficherTableau (stock,cocktail_liste,"tout",taille_stock("data_boisson"),1);
+				strcpy(menuActuel_tableau,"/afficher_tableau");
+				strcat(arborescence, menuActuel_tableau);
+				afficherTableau (stock,cocktail_liste,arborescence,"tout",taille_stock("data_boisson"),1);
+				supprimerAPartirDe(arborescence, menuActuel_tableau);
+			break;
 			case '2':
-				afficherTableau (stock,cocktail_liste,"boisson",taille_stock("data_boisson"),1);
+				strcpy(menuActuel_tableau,"/afficher_tableau_boisson");
+				strcat(arborescence, menuActuel_tableau);
+				afficherTableau (stock,cocktail_liste,arborescence,"boisson",taille_stock("data_boisson"),1);
+				supprimerAPartirDe(arborescence, menuActuel_tableau);
 			break;
 			case '3':
-				stock = ajouterBoisson(stock);
+				stock = ajouterBoisson(stock,arborescence);
 			break;
 			case '4':
-				afficher_Cocktail(stock,cocktail_liste);
+				afficher_Cocktail(stock,cocktail_liste,arborescence);
 			break;
 			case '5':
-				base_de_donne = ajouterCocktail(stock,cocktail_liste);
+				base_de_donne = ajouterCocktail(stock,cocktail_liste,arborescence);
 				stock = base_de_donne.stock;
 				cocktail_liste = base_de_donne.cocktail_liste;
 			break;
@@ -281,10 +295,10 @@ char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_list
 				panier = saisie_commande(stock,cocktail_liste,panier,arborescence,0);
 			break;
 			case '7':
-				panier = panier_affichage(stock,cocktail_liste,panier,0);
+				panier = panier_affichage(stock,cocktail_liste,arborescence,panier,0);
 			break;
 			case '8':
-				administration();
+				administration(arborescence);
 			break;
 			case '9':
 				quittterMenu = 1;
@@ -415,15 +429,17 @@ void afficherEntete (char *ligne, int *taillesColonnes, int nbColonnes, int larg
 *
 *  \param stock Tableau de boissons
 *  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
 *  \param categorie Nom de la categorie a afficher ("tout" pour tout afficher)
 *  \param taille_tableau Nombre de lignes du tableau
 *  \param pause Indique si l'utilisateur doit agir pour ne plus afficher le tableau
 *
 *  \remarks Cette fonction permet d'afficher le tableau qui affiche les details des elements voulus (boisson, cocktail ou tout).
 */
-void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau,int pause) {
+void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char * arborescence,char* categorie,int taille_tableau,int pause) {
 
 	system("clear");
+	affichageCentre(arborescence);
 
 	// Recuperation de la taille du terminal
 	struct winsize w;
@@ -742,6 +758,7 @@ char* saisie() {
 *
 *  \param stock Tableau de boissons
 *  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence
 *  \param panier Affiche le panier
 *  \param id_personne 0 : barman, 1 : client
 *
@@ -749,10 +766,22 @@ char* saisie() {
 *
 *  \remarks Cette fonction permet d'afficher le panier.
 */
-panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne){
+panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,char *arborescence,panier_struc panier,int id_personne){
+	
+	char *menuActuel;
 
+	if( id_personne){
+		menuActuel = "/Panier";
+	}
+	else{
+		menuActuel = "/Plateau";
+	}
+
+	strcat(arborescence, menuActuel);
+	affichageCentre(arborescence);
+	
 	char* interraction = calloc(10,sizeof(char));
-	afficherTableau(panier.stock,cocktail_liste,"tout",panier.taille,0);    // On affiche le tableau de la fonction afficherTableau
+	afficherTableau(panier.stock,cocktail_liste,arborescence,"tout",panier.taille,0);    // On affiche le tableau de la fonction afficherTableau
 
 	if (panier.taille > 0){ 						// On regarde si le panier a quelques choses a l'interieur sinon on passe
 		float prix_total;
@@ -786,7 +815,7 @@ panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_list
 		}
 		getchar();	// On fait une pause, l'utilisateur doit presser une touche pour avancer
 	}
-
+	supprimerAPartirDe(arborescence, menuActuel);
 	return panier;
 }
 
@@ -821,6 +850,7 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 
 	if ( panier.taille > 18){																		// On regarde si le panier n'a pas atteint sa taille maximale (20 boisson/cocktail), si oui on passe
 		system("clear");
+		affichageCentre(arborescence);
 		affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
 		affichageCentre("\tVotre panier est plein, veuillez le vider ou le commander \'p\'\n");
 	}
@@ -923,6 +953,7 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 			break;
 
 			default:
+				supprimerAPartirDe(arborescence, menuActuel);
 				return panier;			// En cas de defaut on retourne le panier
 				break;
 			}
@@ -942,12 +973,13 @@ panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste
 *  \brief Fonction saisie_boisson
 *
 *  \param stock Tableau de boissons
+*  \param arborescence Arborescence dans les menus
 *
 *  \return Retourne une structure de boisson
 *
 *  \remarks Cette fonction permet au barman d'ajouter une boisson.
 */
-boisson_struc saisie_boisson(boisson_struc *stock){
+boisson_struc saisie_boisson(boisson_struc *stock, char* arborescence){
 
 	char* interraction = calloc(30,sizeof(char));
 	long interraction_chiffre;
@@ -955,8 +987,13 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 	int etape = 0;
 	boisson_struc boisson;
 
+		char *menuActuel = "/Saisie_boisson";
+		strcat(arborescence, menuActuel);
+
 	do{
 		system("clear");
+		affichageCentre(arborescence);
+		
 		affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
 
 		switch (etape)
@@ -1097,12 +1134,13 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 		
 		default:
 			boisson.id = -2;	// On mets boisson.id -2 pour que la fonction ajoutBoisson ne fasse rien car on est dans le defaut
+			supprimerAPartirDe(arborescence, menuActuel);
 			return boisson;
 			break;
 		}
 	}
 	while(etape != 8);
-
+	supprimerAPartirDe(arborescence, menuActuel);
 	return boisson;
 }
 
@@ -1115,12 +1153,13 @@ boisson_struc saisie_boisson(boisson_struc *stock){
 *
 *  \param stock Tableau de boissons
 *  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence dans les menus
 *
 *  \return Retourne une structure de cocktail
 *
 *  \remarks Cette fonction permet au barman d'ajouter un cocktail.
 */
-cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
+cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste, char* arborescence){
 
 	char* interraction = calloc(30,sizeof(char));
 	int id;
@@ -1129,8 +1168,12 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 	int etape = 0;
 	cocktail_struc cocktail;
 
+	char *menuActuel = "/Saisie_boisson";
+	strcat(arborescence, menuActuel);
+
 	do{
 		system("clear");
+		affichageCentre(arborescence);
 		affichageCentre("\tSi vous souhaitez revenir en arriere entrer \'p\'\n");
 
 		switch (etape)
@@ -1287,12 +1330,14 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 		
 		default:
 			strcpy(cocktail.nom,"");
+			supprimerAPartirDe(arborescence, menuActuel);
 			return cocktail;
 			break;
 		}
 	}
 	while(etape != 6);
 
+	supprimerAPartirDe(arborescence, menuActuel);
 	return cocktail;
 
 }
@@ -1306,19 +1351,24 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 *
 *  \param stock Tableau de boissons
 *  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence dans les menus
 *
 *  \remarks Cette fonction permet d'afficher les ingredients d'un cocktail et leurs details.
 */
-void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
+void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste,char *arborescence){
 
 	int etape = 0;
 	int id ;
 	char* interraction = calloc(10,sizeof(char));
 
+	char *menuActuel = "/Affichage_cocktail";
+	strcat(arborescence, menuActuel);
+
 	do{
 		system("clear");
+		affichageCentre(arborescence);
 		if (taille_stock("data_cocktail")){																// On verifie qu"il y est bien des cocktails
-			afficherTableau (stock,cocktail_liste,"cocktail",taille_stock("data_boisson"),0);			// On affiche le tableau sans pause
+			afficherTableau (stock,cocktail_liste,arborescence,"cocktail",taille_stock("data_boisson"),0);			// On affiche le tableau sans pause
 			printf("\n\tSi vous souhaitez quitter entrez \'p\'\n");
 			printf("\n\tSi vous voulez plus d'information sur un cocktail entrer son id :\n");
 			interraction = saisie();
@@ -1348,6 +1398,8 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 			}
 		}
 	while(etape != 1);
+	
+	supprimerAPartirDe(arborescence, menuActuel);
 
 }
 
@@ -1355,14 +1407,20 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste){
 *  \author Rabus Jules
 *  \version 1
 *  \date 22/05/2021 Commentaires doxygen
-*
+*p
 *  \brief Fonction administration
+*  \param arborescence Arborescence dans les menus
 *
 *  \remarks Cette fonction affiche toutes les commandes et le chiffre d'affaires.
 */
-void administration(){
+void administration(char *arborescence){
+
+	
+	char *menuActuel = "/Administration";
+	strcat(arborescence, menuActuel);
 
 	system("clear");
+	affichageCentre(arborescence);
     affichageCentre("Les commandes enregistrés :");
     FILE* lecture = NULL;
     int taille;
@@ -1396,5 +1454,6 @@ void administration(){
 
     printf("\n\t Nombre de commande %d, chiffre d'affaire : %.2f€",taille,chiffre_daffaire);
 	getchar();
+	supprimerAPartirDe(arborescence, menuActuel);
         
 }

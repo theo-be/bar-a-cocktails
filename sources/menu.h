@@ -34,12 +34,12 @@ char* saisie();
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,int id_personne);
+panier_struc panier_affichage(boisson_struc *stock,cocktail_struc *cocktail_liste,char *arborescence,panier_struc panier,int id_personne);
 
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier, char *arborescence,int id_personne);
+panier_struc saisie_commande(boisson_struc *stock,cocktail_struc *cocktail_liste,panier_struc panier,char *arborescence,int id_personne);
 
 /*!
 *  \brief Prototype de la fonction vigenere
@@ -54,7 +54,7 @@ void affichageMarge(char *chaine, int ratio);
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char* categorie,int taille_tableau,int pause);
+void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char *arborescence,char* categorie,int taille_tableau,int pause);
 
 /*!
 *  \brief Prototype de la fonction vigenere
@@ -74,21 +74,21 @@ void separerColonnes (char *ligne, int nbColonnes, int *taillesColonnes);
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-boisson_struc saisie_boisson(boisson_struc *stock);
+boisson_struc saisie_boisson(boisson_struc *stock,char* arborescence);
 
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste);
+cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,char* arborescence);
 
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste);
+void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste,char *arborescence);
 
 /*!
 *  \brief Prototype de la fonction vigenere
 */
-void administration();
+void administration(char *arborescence);
 
 #endif

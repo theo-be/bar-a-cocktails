@@ -804,15 +804,16 @@ float prix_boisson(int degre, int contenance){
 *  \brief Fonction ajouterBoisson 
 *
 *  \param stock Tableau contenant le stock
+*  \param arborescence Arborescence 
 *
 *  \return Retourne un pointeur vers un tableau de structure de boissons.
 *
 *  \remarks Cette fonction permet d'ajouter une boisson dans le stock.
 */
-boisson_struc *ajouterBoisson(boisson_struc *stock){
+boisson_struc *ajouterBoisson(boisson_struc *stock,char *arborescence){
 
 
-    boisson_struc boisson = saisie_boisson(stock);      // On fait saisir une boisson a l'utilisateur
+    boisson_struc boisson = saisie_boisson(stock,arborescence);      // On fait saisir une boisson a l'utilisateur
 
     if ( boisson.id != -2){      // On ne fait rien car -2 correspond au defaut de la saisie de boisson
 
@@ -863,16 +864,16 @@ boisson_struc *ajouterBoisson(boisson_struc *stock){
 *
 *  \param stock Tableau contenant le stock
 *  \param cocktail_liste Tableau de cocktails
+*  \param arborescence Arborescence 
 *
 *  \return Retourne un pointeur vers une base de donnees qui contient boissons et cocktail.
 *
 *  \remarks Cette fonction permet d'ajouter un cocktail dans le stock.
 */
-bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste){
+bdd ajouterCocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,char *arborescence){
 
-    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste);            // On fait saisir un cocktail a l'utilisateur            
+    cocktail_struc cocktail = saisie_cocktail(stock,cocktail_liste,arborescence);            // On fait saisir un cocktail a l'utilisateur            
     bdd base_de_donne ;                                                         // On initialise la structure base de donnee
-
 
     if( strcmp(cocktail.nom,"") != 0){          // On ne fait rien car cocktail.nom "" correspond au defaut de la saisie de cocktail
 
