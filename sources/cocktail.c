@@ -233,8 +233,6 @@ void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc p
     }
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////
 /*! \fn char**tableau_type(boisson_struc *stock)
 *  \author Rabus Jules
 *  \version 1
@@ -246,7 +244,7 @@ void commande(boisson_struc* stock,cocktail_struc* cocktail_liste,panier_struc p
 *
 *  \return Retourne le panier
 *
-*  \remarks Cette fonction permet de
+*  \remarks Cette fonction permet de generer un tableau de chaine de caractere, dans lequel on va mettre chaque type qu'on a trouve dans le stock
 */
 char**tableau_type(boisson_struc *stock){
 
@@ -270,7 +268,6 @@ char**tableau_type(boisson_struc *stock){
     return chaine;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
 /*! \fn char * message_type(boisson_struc *stock)
 *  \author Rabus Jules
 *  \version 1
@@ -282,7 +279,7 @@ char**tableau_type(boisson_struc *stock){
 *
 *  \return Retourne 
 *
-*  \remarks Cette fonction permet d'afficher le panier.
+*  \remarks Cette fonction permet de retourner une chaine contenant tout les types disponible dans le stock, sans double
 */
 char * message_type(boisson_struc *stock){
 
@@ -303,7 +300,6 @@ char * message_type(boisson_struc *stock){
     free(tableau);                  // On libere la memoire du tableau de type
     return chaine;                  // On retourne la chaine contenant le message avec les types
 }
-////////////////////////////////////////////////////////////////////////////////////////////
 
 /*! \fn int verification_type(boisson_struc *stock,char* type)
 *  \author Rabus Jules
@@ -317,7 +313,7 @@ char * message_type(boisson_struc *stock){
 *
 *  \return Retourne 1 pour un bon type, 0 sinon.
 *
-*  \remarks Cette fonction sert a verifier le type du stock.
+*  \remarks Cette fonction sert a verifier si le type existe
 */
 int verification_type(boisson_struc *stock,char* type){
 
@@ -334,7 +330,6 @@ int verification_type(boisson_struc *stock,char* type){
     free(tableau);  // On libere le tableau 
     return 0;       // On retourne qu'on a pas trouve type
 }
-////////////////////////////////////////////////////////////////////////////////////////////
 
 /*! \fn int verification_id(boisson_struc *stock,char* type,long id)
 *  \author Rabus Jules
@@ -348,7 +343,7 @@ int verification_type(boisson_struc *stock,char* type){
 *
 *  \return Retourne 1 pour un bon id, 0 sinon.
 *
-*  \remarks Cette fonction sert a verifier si les elements de stock existent.
+*  \remarks Cette fonction sert a verifier si l'id existe, et si l'id existe et si le type de l'id correspond
 */
 int verification_id(boisson_struc *stock,char* type,long id){
 
@@ -361,7 +356,6 @@ int verification_id(boisson_struc *stock,char* type,long id){
     }
     return 0;       // On retourne 0 car on n'a pas trouve une correspondance
 }
-////////////////////////////////////////////////////////////////////////////////////////////
 
 /*! \fn int* tableau_id(boisson_struc *stock,char* type)
 *  \author Rabus Jules
@@ -375,7 +369,7 @@ int verification_id(boisson_struc *stock,char* type,long id){
 *
 *  \return Retourne un pointeur vers un tableau d'entiers.
 *
-*  \remarks Cette fonction cree un tableau qui regroupe les id des elemants corracpondant au type.
+*  \remarks Cette fonction cree un tableau qui regroupe les id des elements dans le stock correspondant au type ou un tableau qui retroupe tout les id des elements dans le stock
 */
 int* tableau_id(boisson_struc *stock,char* type){
 
@@ -394,7 +388,6 @@ int* tableau_id(boisson_struc *stock,char* type){
     return tableau_id;                  // On retourne le tableau d'entier
 
 }
-////////////////////////////////////////////////////////////////////////////////////////////
 
 /*! \fn char* message_id(boisson_struc *stock,char* type)
 *  \author Rabus Jules
@@ -408,7 +401,7 @@ int* tableau_id(boisson_struc *stock,char* type){
 *
 *  \return Retourne un pointeur vers une chaine de caracteres.
 *
-*  \remarks Cette fonction permet de faire un message structure opur les elements d'un certain type.
+*  \remarks Cette fonction permet de faire un message structure pour afficher l'id des boissons
 */
 char* message_id(boisson_struc *stock,char* type){
 
@@ -432,7 +425,6 @@ char* message_id(boisson_struc *stock,char* type){
 
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
 /*! \fn char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int id)
 *  \author Rabus Jules
 *  \version 1
@@ -446,7 +438,7 @@ char* message_id(boisson_struc *stock,char* type){
 *
 *  \return Retourne un pointeur vers une chaine de caracteres.
 *
-*  \remarks Cette fonction permet de faire un message structure opur les elements d'un certain type.
+*  \remarks Cette fonction permet de faire un message structure pour afficher la quantite disponible de l'id
 */
 char* message_quantite(boisson_struc *stock,cocktail_struc *cocktail_liste,int id){
 
