@@ -644,18 +644,20 @@ int contenance_cocktail(cocktail_struc cocktail){
 *
 *  \return Retourne la quantite de cocktails.
 *
-*  \remarks Cette fonction permet de calculer la quantite d'un cocktail.
+*  \remarks Cette fonction permet de calculer la quantite d'un cocktail à partir de sa structure.
 */
 int quantite_cocktail(boisson_struc *stock,cocktail_struc cocktail){
 
     int quantite = stock[cocktail.id_boisson[0]].quantite;      // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
 
     for(int i = 1; i< 6;i++){
+        printf("id %d quantite %d nom %s",cocktail.id_boisson[i],stock[cocktail.id_boisson[i]].quantite,stock[cocktail.id_boisson[i]].nom);
         if ( cocktail.id_boisson[i] != -1 && stock[cocktail.id_boisson[i]].quantite < quantite){        // On regarde si la quantite du composant suivant est inferieur a celle precedente
            quantite = stock[cocktail.id_boisson[i]].quantite;                                           // Si oui la nouvelle valeur de quantite est celle du tableau de structure
         }
 
     }
+    getchar();
     return quantite;    
 }
 
@@ -719,32 +721,6 @@ int degre_cocktail(boisson_struc *stock,cocktail_struc cocktail){
     return degre;
 }
 
-/*! \fn int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail)
-*  \author Rabus Jules
-*  \version 1
-*  \date 22/05/2021 Commentaires doxygen
-*
-*  \brief Fonction disponibilite_cocktail 
-*
-*  \param stock Tableau contenant le stock
-*  \param cocktail Tableau de cocktails
-*  \param id_cocktail id du cocktail
-*
-*  \return Retourne le nombre de cocktails disponibles.
-*
-*  \remarks Cette fonction permet de calculer la disponibilite d'un cocktail.
-*/
-int disponibilite_cocktail(boisson_struc *stock,cocktail_struc *cocktail_liste,int id_cocktail){
-                                                                                            // La difference avec quantite_cocktail est que ici on ne prend pas les meme parametres
-    int quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[0]].quantite;   // On prend la quantite disponible du 1er composant du cocktail, on va la chercher dans le tableau de structure, le rang est le 1er id contenu dans la structure cocktail
-
-    for(int i = 1; i< 6;i++){
-        if ( stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite < quantite ){       // On regarde si la quantite du composant suivant est inferieur a celle precedente
-            quantite = stock[cocktail_liste[stock[id_cocktail].id].id_boisson[i]].quantite;          // Si oui la nouvelle valeur de quantite est celle du tableau de structure
-        }
-    }
-    return quantite;
-}
 
 /*! \fn float prix_cocktail(boisson_struc *stock,cocktail_struc cocktail)
 *  \author Rabus Jules

@@ -223,14 +223,21 @@ char afficherMenuClient (boisson_struc *stock,cocktail_struc *cocktail_liste, ch
 char afficherInterfaceBarman (boisson_struc *stock,cocktail_struc *cocktail_liste, char *arborescence) {
 	panier_struc panier;
 	panier.taille = 0;
+	char * interraction = malloc(20 * sizeof(char));
 
 	// On demande la mot de passe avant de rentrer dans l'interface barman
 	do {
 		system("clear");
 		affichageCentre(arborescence);
 		printf("\n");
-		affichageCentre("Veuillez saisir le mot de passe pour acceder a l\'interface barman .\n");
-	} while(verification_mdp(saisie()) == 0);
+		affichageCentre("Veuillez saisir le mot de passe pour acceder a l\'interface barman, Sinon taper \'p\'.\n\n");
+		interraction = saisie();
+
+		if (strcmp(interraction,"p") == 0){
+			return 'p';
+		}
+
+	} while(verification_mdp(interraction) == 0);
 
 
 	int erreurSaisie = 0;
@@ -507,7 +514,7 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char *
 			// ID
 			// On regarde si on affiche l'element
 			if ( strcmp(stock[id].categorie,"cocktail") == 0 ){
-				sprintf(chaineTemporaire, "%d", id);
+				sprintf(chaineTemporaire, "%d", id+1);
 			}
 			else{
 				sprintf(chaineTemporaire, "%d", stock[id].id);
@@ -572,7 +579,12 @@ void afficherTableau (boisson_struc *stock,cocktail_struc *cocktail_liste,char *
 			colonne++;
 
 			// QT
-			sprintf(chaineTemporaire, "%d", stock[id].quantite);
+			if ( strcmp(stock[id].categorie,"cocktail") == 0 ){
+				sprintf(chaineTemporaire, "%d", quantite_cocktail(stock,cocktail_liste[id]) );
+			}
+			else{
+				sprintf(chaineTemporaire, "%d", stock[id].quantite);
+			}
 			tailleChaineAAjouter = (int)strlen(chaineTemporaire);
 			for (int j = 0; j < tailleChaineAAjouter; j++) {
 				ligne[indiceDebutCol + j] = chaineTemporaire[j]; // <- Nom du tableau qui contient les infos a afficher
@@ -1375,7 +1387,7 @@ void afficher_Cocktail(boisson_struc* stock,cocktail_struc* cocktail_liste,char 
 				if (strcmp(interraction,"p") == 0){
 					etape = 1;
 				}
-				id = (int) conversion_long(interraction);
+				id = (int) conversion_long(interraction)-1;
 				if( verification_cocktail(stock,id) ){
 					printf("La composition de %s est :",stock[id].nom);				// On affiche le nom du cocktail
 					for(int i = 0; i<6; i++){
