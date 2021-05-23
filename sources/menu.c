@@ -1164,7 +1164,7 @@ cocktail_struc saisie_cocktail(boisson_struc *stock,cocktail_struc *cocktail_lis
 				}
 
 				interraction = saisie();
-					if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(stock[conversion_long(interraction)-1].categorie,"boisson")){			// On verifie que la boisson existe et qu'il s'agit bien d'une boisson
+					if( verification_id(stock,"tout",conversion_long(interraction)) != 0 && strcmp(stock[conversion_long(interraction)-1].categorie,"boisson") == 0){			// On verifie que la boisson existe et qu'il s'agit bien d'une boisson
 						cocktail.id_boisson[compteur_id] = conversion_long(interraction)-1;																					// Si oui on ajoute l'id de la boisson au cocktail
 						compteur_id ++;																																		// On incrémente pour changer le rang de la prochaine saisie de boisson
 					}
